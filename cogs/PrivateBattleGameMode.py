@@ -7,7 +7,7 @@ class pbgm(commands.Cog):
     
   @commands.command()  
   async def pbgm(self, ctx):
-    PrivateBattleModes = ['Turf War (Splatfest)', 'Turf War', 'Splat Zones', 'Rainmaker', 'Tower Control']
+    PrivateBattleModes = ['Turf War (Splatfest)', 'Turf War', 'Splat Zones', 'Rainmaker', 'Tower Control', 'Clam Blitz']
 
     Selection = []
 
