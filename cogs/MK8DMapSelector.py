@@ -6,7 +6,7 @@ class MK8Map(commands.Cog):
     self.bot = bot
 
   @commands.command()
-  async def mk8m(self, ctx, Cup):
+  async def mk8m(self, ctx, Cup = 'General'):
     """Random Map Generator for MK8DX, cuz apparently it doesn't have one
        Mushroom, Flower, Star, Special, Shell, Banana, Leaf, Lightning,
        Egg, Crossing, Triforce, Bell, Golden Dash, Lucky Cat, General"""
@@ -28,19 +28,19 @@ class MK8Map(commands.Cog):
 
     General = list(Mushroom + Flower + Star + Special + Shell + Banana + Leaf + Lightning + Egg + Crossing + Triforce + Bell + GoldenDash + LuckyCat)
 
-    Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning,
-                  'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'General' : General}
-
+    Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning, 'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'General' : General}
+  
     if Cup in Dictionary:
       if Cup == 'General':
         random.shuffle(Dictionary[Cup])
         Selection = random.choice(Dictionary[Cup])
+        await ctx.send(Selection)
+        
       else:
         Selection = random.choice(Dictionary[Cup])
+        await ctx.send(Selection)
     else:
-      await ctx.send('Please select one of the cups currently playable')
-    
-    await ctx.send(Selection)
+      await ctx.send('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')
 
 def setup(bot):
   bot.add_cog(MK8Map(bot))
