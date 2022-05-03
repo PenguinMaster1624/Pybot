@@ -6,7 +6,7 @@ class Splat2nRandomWeapon(commands.Cog):
     self.bot = bot
 
   @commands.command()
-  async def rsw(self, ctx, arg):
+  async def rsw(self, ctx, arg = 'General'):
     Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
     Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
     Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber']
