@@ -12,3 +12,5 @@
 ###### .mk8m <[Cup]>                <-- Chooses a track from an inputted cup from Mario Kart 8 Deluxe. If not cup is inputted, it will default to the General pool
 ###### .pbgm                        <-- Chooses any game mode available in Splatoon 2's Private Battle randomly
 ###### .rsw <[Weapon Class]>        <-- Chooses a weapon line. You get to choose which one you play with that name). Will default to every class if none specified
+###### .join                        <-- Joins the voice channel you're in. Can be moved to a new one if you're in it
+###### .dc                          <-- Leaves a voice call. This can be a little finnicky when you're not in it
