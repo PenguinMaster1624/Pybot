@@ -6,7 +6,9 @@ import os
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix = '.', intents = intents)
+activity = discord.Game(name = 'under the hood')
+
+bot = commands.Bot(command_prefix = '.', intents = intents, activity = activity)
 
 @bot.event
 async def on_ready():
