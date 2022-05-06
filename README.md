@@ -1,4 +1,4 @@
-# Python-Bot-3.0
+# Python Bot 3.0
 
 ## A basic bot with some commands coming from other, more sophisticated bots while also having some unique commands
 ## As the name implies, this was made in Python
