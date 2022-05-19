@@ -7,6 +7,9 @@ class FlipCoin(commands.Cog):
 
   @commands.command()
   async def fac(self, ctx):
+
+    """Flips a coin for you"""
+    
     lst = ['Heads', 'Tails']
 
     Choice = random.choice(lst)

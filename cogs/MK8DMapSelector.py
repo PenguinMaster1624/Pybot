@@ -7,7 +7,7 @@ class MK8Map(commands.Cog):
 
   @commands.command()
   async def mk8m(self, ctx, Cup = 'General'):
-    """Random Map Generator for MK8DX, cuz apparently it doesn't have one
+    """Random Map Generator for MK8DX
        Mushroom, Flower, Star, Special, Shell, Banana, Leaf, Lightning,
        Egg, Crossing, Triforce, Bell, Golden Dash, Lucky Cat, General"""
     

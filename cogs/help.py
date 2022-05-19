@@ -1,0 +1,26 @@
+from discord.ext import commands
+import discord
+
+class help(commands.Cog):
+  def __init__(self, bot):
+    self.bot = bot
+
+  @commands.command()
+  async def help(self, ctx):
+    embed = discord.Embed(title = 'Usable Commands', description = 'A set of available commands', color = discord.Color.orange())
+    embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+
+    embed.add_field(name = 'hello', value = 'Returns a peppy hello', inline = False)
+    embed.add_field(name = 'choose <option1> <"option 2"> [Option 3] ...', value = 'Chooses an option for you. You can put in as many items as you want', inline = True)
+    embed.add_field(name = 'fac', value = 'Flips a coin for you', inline = True)
+    embed.add_field(name = 'mk8m', value = 'Returns a map from any cup if no cup is specified. Otherwise, returns one from within that cup', inline = False)
+    embed.add_field(name = 'mk8bm', value = 'Like mk8m, but with Battle Mode stages', inline = False)
+    embed.add_field(name = 'purge <number>', value = "Deletes a specified amount of messages", inline = False)
+    embed.add_field(name = 'rsw', value = 'Chooses a random weapon line from Splatoon 2 if no weapon class is specified', inline = False)
+    embed.add_field(name = 'join', value = 'Joins the voice call you\'re in', inline = True)
+    embed.add_field(name = 'dc', value = 'Leaves the voice call it is currently in', inline = True)
+    embed.add_field(name = 'help', value = 'Pulls this up', inline = True)
+
+    await ctx.send(embed = embed)
+def setup(bot):
+  bot.add_cog(help(bot))

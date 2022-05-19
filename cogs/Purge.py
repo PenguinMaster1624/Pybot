@@ -1,0 +1,23 @@
+from discord.ext import commands
+from discord.ext.commands import MissingPermissions
+
+class purge(commands.Cog):
+  def __init__(self, bot):
+    self.bot = bot
+
+  @commands.has_permissions(manage_messages = True)
+  @commands.command()
+  async def purge(self, ctx, amount):
+
+    """Deletes a specified amount of messages"""
+    
+    amount = int(amount)
+    await ctx.channel.purge(limit = amount + 1)
+
+  @purge.error
+  async def PurgeError(self, ctx, error):
+    if isinstance(error, MissingPermissions):
+      await ctx.send('You don\'t have permission to use this command')
+
+def setup(bot):
+  bot.add_cog(purge(bot))

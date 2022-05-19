@@ -8,23 +8,11 @@ intents.members = True
 
 activity = discord.Game(name = 'under the hood')
 
-bot = commands.Bot(command_prefix = '.', intents = intents, activity = activity)
+bot = commands.Bot(command_prefix = 'pybot.', help_command = None, intents = intents, activity = activity)
 
 @bot.event
 async def on_ready():
   print(f'{bot.user} at your service')
-
-@bot.command()
-async def repeat(ctx, msg, chnl = None):
-  await ctx.channel.purge(limit = 1)
-  
-  if chnl == None:
-    await ctx.channel.send(msg)
-    
-  else:
-    place = int(chnl) 
-    channel = bot.get_channel(place)
-    await channel.send(msg)
 
 @bot.command()
 async def hello(ctx):
@@ -33,11 +21,6 @@ async def hello(ctx):
 @bot.command()
 async def choose(ctx, *choices: str):
   await ctx.send(random.choice(choices))
-
-@bot.command()
-async def purge(ctx, amount):
-  amount = int(amount)
-  await ctx.channel.purge(limit = amount)
 
 for file in os.listdir('./cogs'):
   if file.endswith('.py'):
