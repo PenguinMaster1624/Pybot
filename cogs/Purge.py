@@ -7,11 +7,10 @@ class purge(commands.Cog):
 
   @commands.has_permissions(manage_messages = True)
   @commands.command()
-  async def purge(self, ctx, amount):
+  async def purge(self, ctx, amount: int):
 
     """Deletes a specified amount of messages"""
     
-    amount = int(amount)
     await ctx.channel.purge(limit = amount + 1)
 
   @purge.error

@@ -20,6 +20,8 @@ class help(commands.Cog):
     embed.add_field(name = 'join', value = 'Joins the voice call you\'re in', inline = True)
     embed.add_field(name = 'dc', value = 'Leaves the voice call it is currently in', inline = True)
     embed.add_field(name = 'help', value = 'Pulls this up', inline = True)
+    embed.add_field(name = 'mayor', value = 'Shows information on Hypixel Skyblock\'s current mayor', inline = False)
+    embed.add_field(name = 'election', value = 'Shows information about an ongoing election in Hypixel Skyblock')
 
     await ctx.send(embed = embed)
 def setup(bot):
