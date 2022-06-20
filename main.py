@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
-import dotenv
+from dotenv import load_dotenv
 import requests
 import random  
 import os
 
-dotenv.load_dotenv()
+load_dotenv()
 intents = discord.Intents.default()
 intents.members = True
 
