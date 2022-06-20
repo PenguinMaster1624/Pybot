@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 import random
 
@@ -7,10 +8,7 @@ class MK8Map(commands.Cog):
 
   @commands.command()
   async def mk8m(self, ctx, Cup = 'General'):
-    """Random Map Generator for MK8DX
-       Mushroom, Flower, Star, Special, Shell, Banana, Leaf, Lightning,
-       Egg, Crossing, Triforce, Bell, Golden Dash, Lucky Cat, General"""
-    
+
     Mushroom = ['Mushroom Cup: Mario Kart Stadium', 'Mushroom Cup: Water Park', 'Mushroom Cup: Sweet Sweet Canyon', 'Mushroom Cup: Thwomp Ruins']
     Flower = ['Flower Cup: Mario Circuit', 'Flower Cup: Toad Harbor', 'Flower Cup: Twisted Mansion', ' Flower Cup: Shy Guy Falls']
     Star = ['Star Cup: Sunshine Airport', 'Star Cup: Dolphin Shoals', 'Star Cup: Electrodome', 'Star Cup: Mount Wario']
@@ -29,16 +27,24 @@ class MK8Map(commands.Cog):
     General = list(Mushroom + Flower + Star + Special + Shell + Banana + Leaf + Lightning + Egg + Crossing + Triforce + Bell + GoldenDash + LuckyCat)
 
     Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning, 'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'General' : General}
+
+    
   
     if Cup in Dictionary:
       if Cup == 'General':
         random.shuffle(Dictionary[Cup])
         Selection = random.choice(Dictionary[Cup])
-        await ctx.send(Selection)
         
       else:
         Selection = random.choice(Dictionary[Cup])
-        await ctx.send(Selection)
+
+      Split = Selection.split(': ')
+      embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
+      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      embed.add_field(name = Split[1], value = Split[0])
+
+      await ctx.send(embed = embed)
+        
     else:
       await ctx.send('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')
 

@@ -19,3 +19,7 @@
 ###### bt <msg>                    <-- turns a message into binary code. Only creator of this bos can use this
 ###### join                        <-- Joins the voice channel you're in. Can be moved to a new one if you're in it
 ###### dc                          <-- Leaves a voice call. This can be a little finnicky when you're not in it
+###### mayor                       <-- Displays info on Hypixel Skyblock's current mayor
+###### election                    <-- Displays info on any ongoing elections in Hypixel Skyblock <Bazaar Item>
+###### bz                          <-- Displays price info on a specified item in Hypixel Skyblock's Bazaar
+###### ah                          <-- Displays price info on a specified item in Hypixel Skyblock's Auction House. Might not work sometimes

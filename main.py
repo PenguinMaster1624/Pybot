@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+import dotenv
 import requests
 import random  
 import os
 
+dotenv.load_dotenv()
 intents = discord.Intents.default()
 intents.members = True
 
@@ -30,7 +32,7 @@ for file in os.listdir('./cogs'):
 r = requests.head(url="https://discord.com/api/v1")
 try:
     print(f"Rate limit: {int(r.headers['Retry-After']) / 60} minutes left")
-except:
+except KeyError:
     print("No rate limit")
 
 bot.run(os.getenv('TOKEN'))
