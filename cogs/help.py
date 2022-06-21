@@ -1,3 +1,4 @@
+from optparse import Values
 from discord.ext import commands
 import discord
 
@@ -21,7 +22,9 @@ class help(commands.Cog):
     embed.add_field(name = 'dc', value = 'Leaves the voice call it is currently in', inline = True)
     embed.add_field(name = 'help', value = 'Pulls this up', inline = True)
     embed.add_field(name = 'mayor', value = 'Shows information on Hypixel Skyblock\'s current mayor', inline = False)
-    embed.add_field(name = 'election', value = 'Shows information about an ongoing election in Hypixel Skyblock')
+    embed.add_field(name = 'election', value = 'Shows information about an ongoing election in Hypixel Skyblock', inline = True)
+    embed.add_field(name = 'bz <ItemID>', value = 'Show you price info for a speecified item in Hypixel Skyblock\'s Bazaar', inline = True)
+    embed.add_field(name = 'ah <Item Name>', value = 'Shows you price info on a specified item imn Hypixel Skyblock\'s Auction House', inline = True)
 
     await ctx.send(embed = embed)
 def setup(bot):
