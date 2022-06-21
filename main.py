@@ -31,9 +31,8 @@ for file in os.listdir('./cogs'):
 
 r = requests.head(url="https://discord.com/api/v1")
 try:
-    print(f"Rate limit: {int(r.headers['Retry-After']) / 60} minutes left")
-    bot.run(os.getenv('TOKEN'))
+  print(f"Rate limit: {int(r.headers['Retry-After']) / 60} minutes left")
 
 except KeyError:
-    print("No rate limit")
-
+  print("No rate limit")
+  bot.run(os.getenv('TOKEN'))
