@@ -34,5 +34,4 @@ try:
   print(f"Rate limit: {int(r.headers['Retry-After']) / 60} minutes left")
 
 except KeyError:
-  print("No rate limit")
   bot.run(os.getenv('TOKEN'))
