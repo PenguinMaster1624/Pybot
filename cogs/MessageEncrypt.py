@@ -8,9 +8,6 @@ class EncryptDecrypt(commands.Cog):
   @commands.is_owner()
   @commands.command()
   async def rot(self, ctx, msg, n = None):
-
-    """Rotates message forward n letter positions
-       in the alphabet. Only the owner of the bot can use this"""
     
     uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lowercase = 'abcdefghijklmnopqrstuvwxyz'
@@ -49,10 +46,6 @@ class EncryptDecrypt(commands.Cog):
   @commands.is_owner()  
   @commands.command()
   async def mt(self, ctx, msg):
-
-    """Translates a message into morse code
-        Also works the other way around. Only the 
-        owner of the bot can use this"""
     
     Morse = {'A':'.-', 'B':'-...',
              'C':'-.-.', 'D':'-..', 'E':'.',
@@ -100,10 +93,6 @@ class EncryptDecrypt(commands.Cog):
   @commands.command()
   async def bt(self, ctx, msg):
     
-    """Translates English to Binary
-       Also works the other way around. 
-       Only the owner of the bot can use this"""
-    
     Binary = {
       "a" : "01100001", "b" : "01100010", "c" : "01100011",
       "d" : "01100100", "e" : "01100101", "f" : "01100110",
@@ -133,7 +122,7 @@ class EncryptDecrypt(commands.Cog):
       "0" : "00110000", "1" : "00110001", "2" : "00110010",
       "3" : "00110011", "4" : "00110100", "5" : "00110101",
       "6" : "00110110", "7" : "00110111", "8" : "00111000",
-      "9" : "00111001", 
+      "9" : "00111001" 
     }
 
     Reversed = dict([(v, k) for k, v in Binary.items()])

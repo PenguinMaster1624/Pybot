@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import requests
-import random  
+import random
 import os
 
 load_dotenv()
@@ -10,7 +10,6 @@ intents = discord.Intents.default()
 intents.members = True
 
 activity = discord.Game(name = 'under the hood')
-
 bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
 @bot.event

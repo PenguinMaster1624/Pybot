@@ -7,8 +7,6 @@ class pbgm(commands.Cog):
     
   @commands.command()  
   async def pbgm(self, ctx):
-
-    """A Private Battle Game Mode selector for Splatoon 2"""
     
     PrivateBattleModes = ['Turf War (Splatfest)', 'Turf War', 'Splat Zones', 'Rainmaker', 'Tower Control', 'Clam Blitz']
 
