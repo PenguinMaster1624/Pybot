@@ -11,17 +11,19 @@ intents.members = True
 activity = discord.Game(name = 'under the hood')
 bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
-@bot.event
-async def on_ready():
-  print(f'{bot.user} at your service')
-
 for file in os.listdir('./cogs'):
   if file.endswith('.py'):
     bot.load_extension('cogs.' + file[:-3])
 
-r = requests.head(url="https://discord.com/api/v1")
+@bot.event
+async def on_ready():
+  print(f'{bot.user} at your service')
+
 try:
-  print(f"Rate limit: {int(r.headers['Retry-After']) / 60} minutes left")
+  r = requests.head(url="https://discord.com/api/v1")
+  TimeLeft = int(r.headers['Retry-After']) / 60
+  TotalTime = TimeLeft
+  print(f"Rate limited for {TimeLeft/60 if TimeLeft >= 60 else TimeLeft} {'hours' if TotalTime/60 >= 60 else 'minutes'}")
 
 except KeyError:
   bot.run(os.getenv('TOKEN'))
