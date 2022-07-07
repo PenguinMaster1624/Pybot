@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import requests
-import random
 import os
 
 load_dotenv()
@@ -15,14 +14,6 @@ bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = int
 @bot.event
 async def on_ready():
   print(f'{bot.user} at your service')
-
-@bot.command()
-async def hello(ctx):
-  await ctx.send('Hello there, {}'.format(ctx.author.mention))
-
-@bot.command()
-async def choose(ctx, *choices: str):
-  await ctx.send(random.choice(choices))
 
 for file in os.listdir('./cogs'):
   if file.endswith('.py'):
