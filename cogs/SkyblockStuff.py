@@ -128,7 +128,7 @@ class SkyblockItems(commands.Cog):
         # creates individual fields for each mayor and their perks
         for i in range(len(PerkNames)):
           Perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(PerkNames[i], PerkDescriptions[i]))
-          embed.add_field(name = Name[i], value = f'{Perk}Votes: {Votes[i]}', inline = False)
+          embed.add_field(name = Name[i], value = f'{Perk}\nVotes: {Votes[i]}', inline = False)
             
         await ctx.send(embed = embed)
 
