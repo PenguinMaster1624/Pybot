@@ -43,7 +43,6 @@ class EncryptDecrypt(commands.Cog):
     if isinstance(error, MissingPermissions):
       return None
 
-  @commands.is_owner()  
   @commands.command()
   async def mt(self, ctx, msg):
     
@@ -84,12 +83,6 @@ class EncryptDecrypt(commands.Cog):
           
     await ctx.channel.send(Translation.strip())
 
-  @mt.error
-  async def mt_error(self, ctx, error):
-    if isinstance(error, MissingPermissions):
-      return None
-
-  @commands.is_owner()
   @commands.command()
   async def bt(self, ctx, msg):
     
@@ -142,11 +135,6 @@ class EncryptDecrypt(commands.Cog):
             Translation += str(Binary.get(y)) + ' '
 
     await ctx.channel.send(Translation.strip())
-
-  @bt.error
-  async def bt_error(self, ctx, error):
-    if isinstance(error, MissingPermissions):
-      return None
 
 def setup(bot):
   bot.add_cog(EncryptDecrypt(bot))

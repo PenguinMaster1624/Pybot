@@ -1,3 +1,5 @@
+from pydoc import describe
+from tokenize import Special
 from discord.ext import commands
 import discord
 import random
@@ -28,7 +30,6 @@ class Splat2nRandomWeapon(commands.Cog):
 
     try:
       Selection = []
-      random.shuffle(Class[arg])
       Selection.append(random.choice(Class[arg]))
       select = ''.join(Selection)
 
@@ -40,6 +41,42 @@ class Splat2nRandomWeapon(commands.Cog):
 
     except KeyError:
       await ctx.send('Something went wrong. Maybe you misspelled something?')
+
+  @commands.command()
+  async def rss(self, ctx, special):
+    TentaMissiles = ['Neo Sploosh-o-matic', 'Kensa Splattershot', 'N-ZAP \'89', 'Jet Squelcher', 'Grim Range Blaster', 'Clash Blaster Neo', 'H-3 Nozzlenose', 'Foil Flingza Roller', 'Octobrush Nouveau', 'Bamboozler 14 Mk I', 'Slosher', 'Hero Slosher Replica', 'Mini Splatling', 'Splat Dualies', 'Hero Splat Dualies', 'Dualie Squelchers']
+    StingRay = ['.52 Gal Deco', 'Custom Jet Squelcher', 'Squeezer', 'Clash Blaster', 'Dynamo Roller', 'Splat Charger', 'Hero Charger Replica', 'Splatterscope', 'Heavy Splatling', 'Hero Splatling Replica']
+    Inkjet = ['Splash-o-matic', 'Tentatek Splattershot', 'Octo Shot Replica', 'Custom Blaster', 'Rapid Blaster Deco', 'L-3 Nozzlenose D', 'Octobrush', 'Hero Brush Replica', 'Fresh Squiffer', 'Custom Goo Tuber', 'Ballpoint Splatling', 'Nautilus 79', 'Emperry Splat Dualies', 'Glooga Dualies']
+    Splashdown = ['Sploosh-o-matic', 'Splattershot', 'Hero Shot Replica', '.96 Gal Deco', 'Blaster', 'Hero Blaster Replica', 'Splat Roller', 'Hero Roller Replica', 'Inkbrush', 'Goo Tuber', 'Kensa Sloshing Machine', 'Hydra Splatling', 'Clear Dapple Dualies', 'Dark Tetra Dualies', 'Undercover Brella']
+    InkArmor = ['Splattershot Jr.', '.96 Gal', 'N-ZAP \'85', 'Rapid Blaster Pro Deco', 'Gold Dynamo Roller', 'Permanent Inkbrush', 'Classic Squiffer', 'Tri Slosher', 'Custom Hydra Splatling', 'Kensa Glooga Dualies', 'Kensa Undercover Brella']
+    SplatBombLauncher = ['Rapid Blaster', 'Flingza Roller', 'Sloshing Machine Neo', 'Sorella Brella']
+    SuctionBombLauncher = ['Neo Splash-o-matic', 'Luna Blaster Neo', 'Firefin Splat Charger', 'Firefin Splatterscope', 'Bloblobber Deco', 'Dapple Dualies']
+    BurstBombLauncher = ['Soda Slosher', 'Bamboozler 14 Mk II']
+    CurlingBombLauncher = ['Aerospray MG', 'Tenta Sorella Brella']
+    AutoBombLauncher = ['Carbon Roller Deco', 'Light Tetra Dualies']
+    InkStorm = ['Custom Splattershot Jr.', 'N-ZAP \'83', 'Splattershot Pro', 'Kensa Luna Blaster', 'Range Blaster', 'Rapid Blaster Pro', 'Carbon Roller', 'E-Liter 4K', 'E-Liter 4K Scope', 'Tri Slosher Nouveau', 'Bloblobber', 'Zink Mini Splatling', 'Ballpoint Splatling Nouveau', 'Dapple Dualies Nouveau', 'Custom Jet Squelchers', 'Splat Brella', 'Hero Brella Replica']
+    Baller = ['Aerospray RG', '.52 Gal', 'Luna Blaster', 'Kensa Rapid Blaster', 'L-3 Nozzlenose', 'Krak-On Splat Roller', 'Inkbrush Nouveau', 'New Squiffer', 'Kensa Charger', 'Kensa Splatterscope', 'Slosher Deco', 'Custom Explosher', 'Nautilus 47', 'Kensa Splat Dualies', 'Glooga Dualies Deco', 'Uncercover Sorella Brella']
+    BubbleBlower = ['Kensa Splattershot Jr.', 'Forge Splattershot Pro', 'Foil Squeezer', 'Custom Range Blaster', 'Cherry H-3 Nozzlenose', 'Kensa Splat Roller', 'Custom E-Liter 4K', 'Custom E-Liter 4K Scope', 'Bamboozler 14 Mk III', 'Explosher', 'Heavy Splatling Deco', 'Tenta Brella']
+    BooyahBomb = ['Aerospray PG', 'Kensa .52 Gal', 'Kensa Splattershot Pro', 'Kensa Dynamo Roller', 'Heavy Splatling Remix']
+    UltraStamp = ['Sploosh-o-matic 7', 'Kensa L-3 Nozzlenose', 'Kensa Octobrush', 'Kensa Mini Splatling', 'Tenta Camo Brella']
+
+    Specials = {'Tenta Missiles' : TentaMissiles, 'Sting Ray' : StingRay, 'Inkjet' : Inkjet, 'Splashdown' : Splashdown, 'Ink Armor' : InkArmor, 'Splat Bomb Launcher' : SplatBombLauncher,
+                'Suction Bomb Launcer' : SuctionBombLauncher, 'Burst Bomb Launcher' : BurstBombLauncher, 'Curling Bomb Launcher' : CurlingBombLauncher, 'Auto Bomb Launcher' : AutoBombLauncher,
+                'Ink Storm' : InkStorm, 'Baller' : Baller, 'Bubble Blower' : BubbleBlower, 'Booyah Bomb' : BooyahBomb, 'Ultra Stamp' : UltraStamp}
+
+    try:
+      selection = []
+      selection.append(random.choice(Specials[Special]))
+      select = ''.join(selection)
+
+      embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer With Specific Special', description = f'Specified Special: {special}', color = discord.Color.random())
+      embed.add_field(name = 'Weapon Selected!', value = select)
+      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      embed.set_footer(text = 'If disliked weapon, reroll')
+      await ctx.send(embed = embed)
+
+    except KeyError:
+      await ctx.send('Try again, maybe there was a typo somewhere')
 
 def setup(bot):
   bot.add_cog(Splat2nRandomWeapon(bot))
