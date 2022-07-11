@@ -23,10 +23,10 @@ class Splat2nRandomWeapon(commands.Cog):
     Hero = ['Hero Shot', 'Hero Roller', 'Hero Charger', 'Hero Dualies', 'Hero Brella', 'Hero Splatling', 'Hero Blaster', 'Hero Brush']
     General = list(Shooter + Roller + Charger + Slosher + Dualies + Brella + Blaster + Brush + Splatling)
 
-    Class = {'Shooter' : Shooter, 'Roller' : Roller, 'Charger' : Charger, 'Slosher' : Slosher, 'Dualies' : Dualies,
-             'Brella' : Brella, 'Blaster' : Blaster, 'Brush' : Brush, 'Splatling' : Splatling, 'Hero' : Hero, 'General' : General,
-            'shooter' : Shooter, 'roller' : Roller, 'charger' : Charger, 'slosher' : Slosher, 'dualies' : Dualies,
-             'brella' : Brella, 'blaster' : Blaster, 'brush' : Brush, 'splatling' : Splatling, 'hero' : Hero, 'general' : General}
+    Class = {'Shooter': Shooter, 'Roller': Roller, 'Charger': Charger, 'Slosher': Slosher, 'Dualies': Dualies,
+             'Brella': Brella, 'Blaster': Blaster, 'Brush': Brush, 'Splatling': Splatling, 'Hero': Hero, 'General': General,
+            'shooter': Shooter, 'roller': Roller, 'charger': Charger, 'slosher': Slosher, 'dualies': Dualies,
+             'brella': Brella, 'blaster': Blaster, 'brush': Brush, 'splatling': Splatling, 'hero': Hero, 'general': General}
 
     try:
       Selection = []
@@ -60,16 +60,17 @@ class Splat2nRandomWeapon(commands.Cog):
     BooyahBomb = ['Aerospray PG', 'Kensa .52 Gal', 'Kensa Splattershot Pro', 'Kensa Dynamo Roller', 'Heavy Splatling Remix']
     UltraStamp = ['Sploosh-o-matic 7', 'Kensa L-3 Nozzlenose', 'Kensa Octobrush', 'Kensa Mini Splatling', 'Tenta Camo Brella']
 
-    Specials = {'Tenta Missiles' : TentaMissiles, 'Sting Ray' : StingRay, 'Inkjet' : Inkjet, 'Splashdown' : Splashdown, 'Ink Armor' : InkArmor, 'Splat Bomb Launcher' : SplatBombLauncher,
-                'Suction Bomb Launcer' : SuctionBombLauncher, 'Burst Bomb Launcher' : BurstBombLauncher, 'Curling Bomb Launcher' : CurlingBombLauncher, 'Auto Bomb Launcher' : AutoBombLauncher,
-                'Ink Storm' : InkStorm, 'Baller' : Baller, 'Bubble Blower' : BubbleBlower, 'Booyah Bomb' : BooyahBomb, 'Ultra Stamp' : UltraStamp}
+    Specials = {'Tenta Missiles': TentaMissiles, 'Sting Ray': StingRay, 'Stingray': StingRay, 'Inkjet': Inkjet, 'Splashdown': Splashdown, 'Ink Armor': InkArmor, 'Splat Bomb Launcher': SplatBombLauncher,
+                'Suction Bomb Launcher': SuctionBombLauncher, 'Burst Bomb Launcher': BurstBombLauncher, 'Curling Bomb Launcher': CurlingBombLauncher, 'Auto Bomb Launcher': AutoBombLauncher,
+                'Ink Storm': InkStorm, 'Baller': Baller, 'Bubble Blower': BubbleBlower, 'Booyah Bomb': BooyahBomb, 'Ultra Stamp': UltraStamp}
+
 
     try:
       selection = []
-      selection.append(random.choice(Specials[Special]))
+      selection.append(random.choice(Specials[special]))
       select = ''.join(selection)
 
-      embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer With Specific Special', description = f'Specified Special: {special}', color = discord.Color.random())
+      embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer With Specific Special', description = f'{special} go brrr', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
       embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
