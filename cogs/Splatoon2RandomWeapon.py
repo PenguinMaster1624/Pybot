@@ -67,7 +67,6 @@ class Splat2nRandomWeapon(commands.Cog):
 
     try:
       selection = []
-      tester = []
       selection.append(random.choice(Specials[special]))
       select = ''.join(selection)
 
