@@ -22,8 +22,10 @@ async def on_ready():
 try:
   r = requests.head(url="https://discord.com/api/v1")
   TimeLeft = int(r.headers['Retry-After']) / 60
-  TotalTime = TimeLeft
-  print(f"Rate limited for {TimeLeft/60 if TimeLeft >= 60 else TimeLeft} {'hours' if TotalTime/60 >= 60 else 'minutes'}")
 
 except KeyError:
   bot.run(os.getenv('TOKEN'))
+
+else:
+  TotalTime = TimeLeft
+  print(f"Rate limited for {TimeLeft/60 if TimeLeft >= 60 else TimeLeft} {'hours' if TotalTime/60 >= 60 else 'minutes'}")

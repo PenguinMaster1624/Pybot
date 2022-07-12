@@ -9,7 +9,7 @@ class Splat2nRandomWeapon(commands.Cog):
     self.bot = bot
 
   @commands.command()
-  async def rsw(self, ctx, arg = 'General'):
+  async def rsw(self, ctx, WeaponClass = 'General'):
     
     Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
     Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
@@ -30,20 +30,21 @@ class Splat2nRandomWeapon(commands.Cog):
 
     try:
       Selection = []
-      Selection.append(random.choice(Class[arg]))
+      Selection.append(random.choice(Class[WeaponClass]))
       select = ''.join(Selection)
 
+    except KeyError:
+      await ctx.send('Something went wrong. Maybe you misspelled something?')
+    
+    else:
       embed = discord.Embed(title = 'Splatoon 2 Random Weapon Line Selector', description = 'Scopes go with their respective charger lines', color = discord.Color.random())
       embed.add_field(name = 'Weapon Line:', value = select)
       embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'You can choose any weapon within the line')
       await ctx.send(embed = embed)
 
-    except KeyError:
-      await ctx.send('Something went wrong. Maybe you misspelled something?')
-
   @commands.command()
-  async def rss(self, ctx, special):
+  async def rsp(self, ctx, special):
     TentaMissiles = ['Neo Sploosh-o-matic', 'Kensa Splattershot', 'N-ZAP \'89', 'Jet Squelcher', 'Grim Range Blaster', 'Clash Blaster Neo', 'H-3 Nozzlenose', 'Foil Flingza Roller', 'Octobrush Nouveau', 'Bamboozler 14 Mk I', 'Slosher', 'Hero Slosher Replica', 'Mini Splatling', 'Splat Dualies', 'Hero Splat Dualies', 'Dualie Squelchers']
     StingRay = ['.52 Gal Deco', 'Custom Jet Squelcher', 'Squeezer', 'Clash Blaster', 'Dynamo Roller', 'Splat Charger', 'Hero Charger Replica', 'Splatterscope', 'Heavy Splatling', 'Hero Splatling Replica']
     Inkjet = ['Splash-o-matic', 'Tentatek Splattershot', 'Octo Shot Replica', 'Custom Blaster', 'Rapid Blaster Deco', 'L-3 Nozzlenose D', 'Octobrush', 'Hero Brush Replica', 'Fresh Squiffer', 'Custom Goo Tuber', 'Ballpoint Splatling', 'Nautilus 79', 'Emperry Splat Dualies', 'Glooga Dualies']
@@ -67,17 +68,25 @@ class Splat2nRandomWeapon(commands.Cog):
 
     try:
       selection = []
+      special = special.strip()
       selection.append(random.choice(Specials[special]))
       select = ''.join(selection)
 
+    except KeyError:
+      await ctx.send('Try again, maybe there was a typo somewhere')
+
+    else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer With Specific Special', description = f'{special} go brrr', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
       embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
       await ctx.send(embed = embed)
 
-    except KeyError:
-      await ctx.send('Try again, maybe there was a typo somewhere')
+  @rsp.error
+  async def rsp_error(self, ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send('You might\'ve forgetten to add something')
+    
 
 def setup(bot):
   bot.add_cog(Splat2nRandomWeapon(bot))
