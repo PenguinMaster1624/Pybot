@@ -19,6 +19,11 @@ for file in os.listdir('./cogs'):
 async def on_ready():
   print(f'{bot.user} at your service')
 
+@bot.event
+async def on_command_error(ctx, exception):
+  if isinstance(exception, commands.CommandNotFound):
+    await ctx.send('Command not recognized')
+
 try:
   r = requests.head(url="https://discord.com/api/v1")
   TimeLeft = int(r.headers['Retry-After']) / 60

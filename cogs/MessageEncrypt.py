@@ -42,6 +42,12 @@ class EncryptDecrypt(commands.Cog):
   async def rot_error(self, ctx, error):
     if isinstance(error, MissingPermissions):
       return None
+    
+    elif isinstance(error, commands.ExpectedClosingQuoteError):
+      ctx.send('You forgot a quotation mark')
+
+    elif isinstance(error, commands.MissingRequiredArgument):
+      ctx.send('Did you forget how this command works? You\'ll need to give me something to work with.')
 
   @commands.command()
   async def mt(self, ctx, msg):
@@ -82,6 +88,14 @@ class EncryptDecrypt(commands.Cog):
             Translation += Morse.get(y) + ' '
           
     await ctx.channel.send(Translation.strip())
+  
+  @mt.error
+  async def mt_error(self, ctx, error):
+    if isinstance(error,  commands.ExpectedClosingQuoteError):
+      await ctx.send('Looks like you forgot a double quote')
+
+    elif isinstance(error, commands.ExpectedClosingQuoteError):
+      await ctx.send('I am unable to translate nothing, silence is universally understood, even in different contexts')
 
   @commands.command()
   async def bt(self, ctx, msg):
@@ -135,6 +149,14 @@ class EncryptDecrypt(commands.Cog):
             Translation += str(Binary.get(y)) + ' '
 
     await ctx.channel.send(Translation.strip())
+  
+  @bt.error
+  async def mt_error(self, ctx, error):
+    if isinstance(error,  commands.ExpectedClosingQuoteError):
+      await ctx.send('Looks like you forgot the closing double quote')
+    
+    elif isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send('I need something to translate')
 
 def setup(bot):
   bot.add_cog(EncryptDecrypt(bot))

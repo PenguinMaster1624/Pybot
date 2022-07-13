@@ -24,7 +24,7 @@ class help(commands.Cog):
     embed.add_field(name = 'election', value = 'Shows information about an ongoing election in Hypixel Skyblock', inline = True)
     embed.add_field(name = 'bz <ItemID>', value = 'Show you price info for a speecified item in Hypixel Skyblock\'s Bazaar', inline = True)
     embed.add_field(name = 'ah <Item Name>', value = 'Shows you price info on a specified item imn Hypixel Skyblock\'s Auction House', inline = True)
-    embed.add_field(name = 'rss <Special', value = 'Randomly chooses a weapon with a specified special in Splatoon 2')
+    embed.add_field(name = 'rss <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2')
     embed.add_field(name = 'mt <Message>', value = 'Translates a message into Morse Code and back')
     embed.add_field(name = 'bt <Message>', value = 'Translates a message into Binary Code and back')
 

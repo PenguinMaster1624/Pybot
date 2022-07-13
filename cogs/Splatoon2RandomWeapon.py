@@ -87,6 +87,9 @@ class Splat2nRandomWeapon(commands.Cog):
     if isinstance(error, commands.MissingRequiredArgument):
       await ctx.send('You might\'ve forgetten to add something')
     
+    elif isinstance(error, commands.ExpectedClosingQuoteError):
+      await ctx.send('Close the message with a double quote buddy')
+    
 
 def setup(bot):
   bot.add_cog(Splat2nRandomWeapon(bot))

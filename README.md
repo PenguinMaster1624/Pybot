@@ -6,7 +6,7 @@
 
 #### The commands include as follows:
 ###### hello                       <-- Pretty much this bot's version of the ping pong command
-###### choose <str1, "str 2", etc> <-- Chooses one of the given choices randomly, you can input however many strings
+###### choose <str1, str 2, etc> <-- Chooses one of the given choices randomly, you can input however many strings
 ###### purge <int />               <-- Deletes the amount of messages inputted. Only people with the Manage Messages permission can use this command
 ###### mk8bm                       <-- Chooses one of the maps from the battle mode in Mario Kart 8 Deluxe. Sure it's already got this, but it was fun to make
 ###### mk8m <[Cup]>                <-- Chooses a track from an inputted cup from Mario Kart 8 Deluxe. If not cup is inputted, it will default to the General pool

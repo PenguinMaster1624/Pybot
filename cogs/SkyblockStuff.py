@@ -238,5 +238,13 @@ class SkyblockItems(commands.Cog):
     elif r.status_code == 503:
       await ctx.send('Data hasn\'t loaded yet, try again in a bit')
 
+  @bz.error
+  async def bz_error(self, ctx, error):
+    if isinstance(error, commands.ExpectedClosingQuoteError):
+      await ctx.send('You forgot to close it with a second double quote. I\'ll need that to know if you\'re finished so that I could get started with this.')
+    
+    elif isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send('You expect me to read your mind or something? I can\'t look for nothing in the bazaar')
+
 def setup(bot):
   bot.add_cog(SkyblockItems(bot))
