@@ -23,6 +23,10 @@ async def on_ready():
 async def on_command_error(ctx, exception):
   if isinstance(exception, commands.CommandNotFound):
     await ctx.send('Command not recognized')
+  
+  else:
+    await ctx.send('Something went wrong. Talk to the guy who made me.')
+    print(exception)
 
 try:
   r = requests.head(url="https://discord.com/api/v1")

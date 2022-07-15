@@ -16,7 +16,6 @@ class help(commands.Cog):
     embed.add_field(name = 'mk8m', value = 'Returns a map from any cup if no cup is specified. Otherwise, returns one from within that cup', inline = False)
     embed.add_field(name = 'mk8bm', value = 'Like mk8m, but with Battle Mode stages', inline = False)
     embed.add_field(name = 'purge <number>', value = "Deletes a specified amount of messages", inline = False)
-    embed.add_field(name = 'rsw', value = 'Chooses a random weapon line from Splatoon 2 if no weapon class is specified', inline = False)
     embed.add_field(name = 'join', value = 'Joins the voice call you\'re in', inline = True)
     embed.add_field(name = 'dc', value = 'Leaves the voice call it is currently in', inline = True)
     embed.add_field(name = 'help', value = 'Pulls this up', inline = True)
@@ -24,7 +23,9 @@ class help(commands.Cog):
     embed.add_field(name = 'election', value = 'Shows information about an ongoing election in Hypixel Skyblock', inline = True)
     embed.add_field(name = 'bz <ItemID>', value = 'Show you price info for a speecified item in Hypixel Skyblock\'s Bazaar', inline = True)
     embed.add_field(name = 'ah <Item Name>', value = 'Shows you price info on a specified item imn Hypixel Skyblock\'s Auction House', inline = True)
-    embed.add_field(name = 'rss <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2')
+    embed.add_field(name = 'rsw', value = 'Chooses a random weapon line from Splatoon 2 if no weapon class is specified', inline = False)
+    embed.add_field(name = 'rsp <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2')
+    embed.add_field(name = 'pbgm', value = 'Randomly selects a game mode from those available in private battles')
     embed.add_field(name = 'mt <Message>', value = 'Translates a message into Morse Code and back')
     embed.add_field(name = 'bt <Message>', value = 'Translates a message into Binary Code and back')
 

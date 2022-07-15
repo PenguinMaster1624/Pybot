@@ -1,5 +1,3 @@
-from pydoc import describe
-from tokenize import Special
 from discord.ext import commands
 import discord
 import random

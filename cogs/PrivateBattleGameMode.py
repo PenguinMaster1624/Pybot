@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 import random
 
 class pbgm(commands.Cog):
@@ -17,7 +18,12 @@ class pbgm(commands.Cog):
 
     select = ''.join(Selection)
 
-    await ctx.channel.send('Private Battle Game Mode: ' + select)
+    embed = discord.Embed(title = 'Splatoon 2 Game Mode Randomizer', description = 'Randomly chooses a random game mode to play', color = discord.Color.random())
+    embed.add_field(name = 'Game Mode Selected!!', value = select)
+    embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+    embed.set_footer(text = 'if unfavorable game mode, reroll')
+
+    await ctx.channel.send(embed = embed)
 
 def setup(bot):
   bot.add_cog(pbgm(bot))
