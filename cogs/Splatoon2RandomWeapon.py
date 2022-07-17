@@ -36,10 +36,10 @@ class Splat2nRandomWeapon(commands.Cog):
       await ctx.send('Something went wrong. Maybe you misspelled something?')
     
     else:
-      embed = discord.Embed(title = 'Splatoon 2 Random Weapon Line Selector', description = 'Scopes go with their respective charger lines', color = discord.Color.random())
+      embed = discord.Embed(title = 'Splatoon 2 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = discord.Color.random())
       embed.add_field(name = 'Weapon Line:', value = select)
       embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
-      embed.set_footer(text = 'You can choose any weapon within the line')
+      embed.set_footer(text = 'You can choose any weapon kit with the name above')
       await ctx.send(embed = embed)
 
   @commands.command()
@@ -118,7 +118,7 @@ class Splat2nRandomWeapon(commands.Cog):
       await ctx.send('Try again, I think you mispelled something. Don\'t forget to capitalize all words.')
 
     else:
-      embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Sub Weapon')
+      embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Sub Weapon', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
       embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
@@ -128,7 +128,7 @@ class Splat2nRandomWeapon(commands.Cog):
   @rss.error
   async def rss_error(self, ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send('You forgot to give me a sub weapon')
+      await ctx.send(f'You forgot to give me a sub weapon')
 
     elif isinstance(error, commands.ExpectedClosingQuoteError):
       await ctx.send('Please close the message with a second quotation mark')
