@@ -11,9 +11,10 @@ intents.members = True
 activity = discord.Game(name = 'under the hood')
 bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
-for file in os.listdir('./cogs'):
-  if file.endswith('.py'):
-    bot.load_extension('cogs.' + file[:-3])
+for folder in os.listdir('./cogs'):
+  for file in os.listdir('./cogs/' + folder):
+    if file.endswith('.py'):
+      bot.load_extension(f'cogs.{folder}.{file[:-3]}')
 
 @bot.event
 async def on_ready():
