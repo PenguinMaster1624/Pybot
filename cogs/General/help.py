@@ -19,6 +19,7 @@ class help(commands.Cog):
     embed.add_field(name = 'join', value = 'Joins the voice call you\'re in', inline = True)
     embed.add_field(name = 'dc', value = 'Leaves the voice call it is currently in', inline = True)
     embed.add_field(name = 'help', value = 'Pulls this up', inline = True)
+    embed.add_field(name = 'repeat [Channel ID]', value = 'Repeats a message you tell it, and if you specify a channel ID it\'ll say it there' )
 
     embed.add_field(name = 'mk8m', value = 'Returns a map from any cup if no cup is specified. Otherwise, returns one from within that cup', inline = False)
     embed.add_field(name = 'mk8bm', value = 'Like mk8m, but with Battle Mode stages', inline = False)
