@@ -6,9 +6,10 @@ class RandomChoice(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def choose(self, ctx, *choices: str):
-        choice = random.choice(choices)
-        await ctx.send(choice)
+    async def choose(self, ctx, *choice: str):
+        
+        choiceSelect = random.choice(choice)
+        await ctx.send(choiceSelect)
 
     @choose.error
     async def choose_error(self, ctx, error):
