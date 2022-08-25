@@ -13,5 +13,5 @@ class FlipCoin(commands.Cog):
     Choice = random.choice(lst)
     await ctx.channel.send(Choice)
 
-def setup(bot):
-  bot.add_cog(FlipCoin(bot))
+async def setup(bot):
+  await bot.add_cog(FlipCoin(bot))

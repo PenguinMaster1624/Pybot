@@ -15,5 +15,5 @@ class Repeat(commands.Cog):
             chnl = self.bot.get_channel(int(channel))
             await chnl.send(msg)
 
-def setup(bot):
-    bot.add_cog(Repeat(bot))
+async def setup(bot):
+    await bot.add_cog(Repeat(bot))

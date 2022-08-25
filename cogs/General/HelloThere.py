@@ -8,5 +8,5 @@ class HelloReply(commands.Cog):
     async def hello(self, ctx):
         await ctx.send('Hello there, {}'.format(ctx.author.mention))
 
-def setup(bot):
-    bot.add_cog(HelloReply(bot))
+async def setup(bot):
+    await bot.add_cog(HelloReply(bot))

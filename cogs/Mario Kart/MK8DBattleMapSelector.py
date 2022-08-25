@@ -17,11 +17,11 @@ class MK8BattleMap(commands.Cog):
     embed = discord.Embed(title = 'Mario Kart 8 Deluxe Battle Mode Map Selector', 
                           description = 'Randomly selects one of the eight maps in Battle Mode', 
                           color = discord.Color.random())
-    embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+    #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
     embed.add_field(name = 'Map Selected!', value = Selection)
     embed.set_footer(text = 'If an unfavorable map, reroll')
     
-    await ctx.send(embed = embed)
+    await ctx.reply(embed = embed)
 
-def setup(bot):
-  bot.add_cog(MK8BattleMap(bot))
+async def setup(bot):
+  await bot.add_cog(MK8BattleMap(bot))

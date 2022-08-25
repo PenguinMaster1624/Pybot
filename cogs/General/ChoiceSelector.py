@@ -19,5 +19,5 @@ class RandomChoice(commands.Cog):
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('I need something to work with, I can\'t read your mind and choose from there')
 
-def setup(bot):
-    bot.add_cog(RandomChoice(bot))
+async def setup(bot):
+    await bot.add_cog(RandomChoice(bot))

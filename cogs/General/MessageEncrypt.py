@@ -159,5 +159,5 @@ class EncryptDecrypt(commands.Cog):
     elif isinstance(error, commands.MissingRequiredArgument):
       await ctx.send('I need something to translate')
 
-def setup(bot):
-  bot.add_cog(EncryptDecrypt(bot))
+async def setup(bot):
+  await bot.add_cog(EncryptDecrypt(bot))

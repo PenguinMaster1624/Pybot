@@ -44,7 +44,7 @@ class SkyblockItems(commands.Cog):
 
       # embed creation and setup
       embed = discord.Embed(title = 'Hypixel Skyblock\'s Current Mayor', color = discord.Color.random())
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.add_field(name = Name, value = 'The current mayor')
 
       # creates individual fields for the mayor's perks
@@ -52,7 +52,7 @@ class SkyblockItems(commands.Cog):
         embed.add_field(name = PerkNames[i], value = PerkBuffs[i], inline = False)
 
       embed.set_footer(text = 'The mayor is updated roughly every 5 days, 4 hours amd 48 minutes in real life')
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
       
   @commands.command()
   async def election(self, ctx):
@@ -123,14 +123,14 @@ class SkyblockItems(commands.Cog):
         embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', 
                               color = discord.Color.random())
   
-        embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+        #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
 
         # creates individual fields for each mayor and their perks
         for i in range(len(PerkNames)):
           Perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(PerkNames[i], PerkDescriptions[i]))
           embed.add_field(name = Name[i], value = f'{Perk}\nVotes: {Votes[i]}', inline = False)
             
-        await ctx.send(embed = embed)
+        await ctx.reply(embed = embed)
 
       # if there isn't an ongoing election, it skips everything above and states that there isn't one
       else:
@@ -158,10 +158,10 @@ class SkyblockItems(commands.Cog):
         price = 'No Item'
       
       embed = discord.Embed(title = 'Hypixel Skyblock Auction House', color = discord.Color.random())
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.add_field(name = item, value = f'Lowest BIN Price: {price}')
       
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
             
     elif r.status_code == 404:
       await ctx.send('Page Not Found')
@@ -225,10 +225,10 @@ class SkyblockItems(commands.Cog):
         
         #setup of embed
         embed = discord.Embed(title = 'Hypixel Skyblock Bazaar', color = discord.Color.random())
-        embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+        #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
         embed.add_field(name = item, value = f'Instant Buy Price: {prices[0]}\nInstant Sell Price: {prices[1]}\n\nTop Buy Order Price: {prices[2]}\nTop Buyer Amount Requested: {buy_offer_amount}\nNumber Of Top Buyers: {buy_offer_order_num}\n\nTop Sell Offer Price: {prices[3]}\nTop Seller Amount Offered: {sell_offer_amount}\nNumber Of Top Sellers: {sell_offer_order_num}')
         
-        await ctx.send(embed = embed)
+        await ctx.reply(embed = embed)
 
       # if the passed item doesn't exist in the bazaar, this is sent
       # this is done in case of a typo
@@ -246,5 +246,5 @@ class SkyblockItems(commands.Cog):
     elif isinstance(error, commands.MissingRequiredArgument):
       await ctx.send('You expect me to read your mind or something? I can\'t look for nothing in the bazaar')
 
-def setup(bot):
-  bot.add_cog(SkyblockItems(bot))
+async def setup(bot):
+  await bot.add_cog(SkyblockItems(bot))

@@ -20,10 +20,10 @@ class pbgm(commands.Cog):
 
     embed = discord.Embed(title = 'Splatoon 2 Game Mode Randomizer', description = 'Randomly chooses a game mode to play', color = discord.Color.random())
     embed.add_field(name = 'Game Mode Selected!', value = select)
-    embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+    #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
     embed.set_footer(text = 'if unfavorable game mode, reroll')
 
-    await ctx.channel.send(embed = embed)
+    await ctx.reply(embed = embed)
 
-def setup(bot):
-  bot.add_cog(pbgm(bot))
+async def setup(bot):
+  await bot.add_cog(pbgm(bot))

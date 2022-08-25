@@ -20,5 +20,5 @@ class VC(commands.Cog):
     await ctx.voice_client.disconnect()
     await ctx.channel.send('Disconnected!')
 
-def setup(bot):
-  bot.add_cog(VC(bot))
+async def setup(bot):
+  await bot.add_cog(VC(bot))

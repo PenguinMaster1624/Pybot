@@ -40,13 +40,13 @@ class MK8Map(commands.Cog):
 
       Split = Selection.split(': ')
       embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.add_field(name = Split[1], value = Split[0])
 
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
         
     else:
       await ctx.send('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')
 
-def setup(bot):
-  bot.add_cog(MK8Map(bot))
+async def setup(bot):
+  await bot.add_cog(MK8Map(bot))

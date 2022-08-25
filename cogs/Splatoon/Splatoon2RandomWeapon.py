@@ -33,14 +33,14 @@ class Splat2nRandomWeapon(commands.Cog):
       select = ''.join(Selection)
 
     except KeyError:
-      await ctx.send('Something went wrong. Maybe you misspelled something?')
+      await ctx.reply('Something went wrong. Maybe you misspelled something?')
     
     else:
       embed = discord.Embed(title = 'Splatoon 2 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = discord.Color.random())
       embed.add_field(name = 'Weapon Line:', value = select)
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'You can choose any weapon kit with the name above')
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
 
   @commands.command()
   async def rsp(self, ctx, special):
@@ -71,23 +71,23 @@ class Splat2nRandomWeapon(commands.Cog):
       select = ''.join(selection)
 
     except KeyError:
-      await ctx.send('Try again, maybe there was a typo somewhere')
+      await ctx.reply('Try again, maybe there was a typo somewhere')
 
     else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Special', description = f'{special} go brrr', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
       
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
 
   @rsp.error
   async def rsp_error(self, ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send('You might\'ve forgetten to add something')
+      await ctx.reply('You might\'ve forgetten to add something')
     
     elif isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.send('Close the message with a double quote buddy')
+      await ctx.reply('Close the message with a double quote buddy')
   
   @commands.command()
   async def rss(self, ctx, sub):
@@ -115,23 +115,23 @@ class Splat2nRandomWeapon(commands.Cog):
       select = ''.join(selection)
     
     except KeyError:
-      await ctx.send('Try again, I think you mispelled something. Don\'t forget to capitalize all words.')
+      await ctx.reply('Try again, I think you mispelled something. Don\'t forget to capitalize all words.')
 
     else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Sub Weapon', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
-      embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
+      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
 
-      await ctx.send(embed = embed)
+      await ctx.reply(embed = embed)
     
   @rss.error
   async def rss_error(self, ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send(f'You forgot to give me a sub weapon')
+      await ctx.reply(f'You forgot to give me a sub weapon')
 
     elif isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.send('Please close the message with a second quotation mark')
+      await ctx.reply('Please close the message with a second quotation mark')
 
-def setup(bot):
-  bot.add_cog(Splat2nRandomWeapon(bot))
+async def setup(bot):
+  await bot.add_cog(Splat2nRandomWeapon(bot))

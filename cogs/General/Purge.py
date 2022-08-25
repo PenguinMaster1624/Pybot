@@ -15,5 +15,5 @@ class purge(commands.Cog):
     if isinstance(error, MissingPermissions):
       await ctx.send('You don\'t have permission to use this command')
 
-def setup(bot):
-  bot.add_cog(purge(bot))
+async def setup(bot):
+  await bot.add_cog(purge(bot))
