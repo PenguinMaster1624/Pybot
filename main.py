@@ -4,8 +4,6 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import requests
 import logging
-import traceback
-import sys
 import os
 
 load_dotenv()
@@ -32,9 +30,7 @@ async def on_command_error(ctx, exception):
     await ctx.send('Command not recognized')
     
   else:
-            # All other Errors not returned come here. And we can just print the default TraceBack.
-          print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-          traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
+    print(exception)
 
 async def main():
   await load()
