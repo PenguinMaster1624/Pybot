@@ -30,9 +30,6 @@ async def on_ready():
 async def on_command_error(ctx, exception):
   if isinstance(exception, commands.CommandNotFound):
     await ctx.send('Command not recognized')
-  elif isinstance(exception, commands.BadArgument):
-    if ctx.command.qualified_name == 'tag list':  # Check if the command being invoked is 'tag list'
-      await ctx.send('I could not find that member. Please try again.')
     
   else:
             # All other Errors not returned come here. And we can just print the default TraceBack.
