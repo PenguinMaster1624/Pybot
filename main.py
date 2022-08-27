@@ -3,6 +3,9 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import requests
+import logging
+import traceback
+import sys
 import os
 
 load_dotenv()
@@ -27,10 +30,14 @@ async def on_ready():
 async def on_command_error(ctx, exception):
   if isinstance(exception, commands.CommandNotFound):
     await ctx.send('Command not recognized')
-  
+  elif isinstance(exception, commands.BadArgument):
+    if ctx.command.qualified_name == 'tag list':  # Check if the command being invoked is 'tag list'
+      await ctx.send('I could not find that member. Please try again.')
+    
   else:
-    await ctx.send('Something went wrong. Talk to the guy who made me.')
-    print(exception)
+            # All other Errors not returned come here. And we can just print the default TraceBack.
+          print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+          traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
 async def main():
   await load()
@@ -45,5 +52,8 @@ async def main():
   else:
     TotalTime = TimeLeft
     print(f"Rate limited for {TimeLeft/60 if TimeLeft >= 60 else TimeLeft} {'hours' if TotalTime/60 >= 60 else 'minutes'}")
+
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
 
 asyncio.run(main())
