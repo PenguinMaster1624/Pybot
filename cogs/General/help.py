@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 
 class ButtonHelp(discord.ui.View):
-  def __init__(self, author) -> None:
+  def __init__(self, author):
     super().__init__(timeout = None)
     self.author = author
 
@@ -24,8 +24,9 @@ class ButtonHelp(discord.ui.View):
 
     if interaction.user == self.author:
       await interaction.response.edit_message(embed = embed, content = None)
+
     else:
-      await interaction.response.send_message(content = 'Not your button!', ephemeral = True)
+      await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself', ephemeral = True)
 
   @discord.ui.button(label = 'Mario Kart', style = discord.ButtonStyle.green)
   async def menu1(self, interaction = discord.Interaction, button = discord.ui.Button):
@@ -37,11 +38,14 @@ class ButtonHelp(discord.ui.View):
 
     if interaction.user == self.author:
       await interaction.response.edit_message(embed = embed, content = None)
+
     else:
-      await interaction.response.send_message(content = 'Not your button!', ephemeral = True)
+      await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself', ephemeral = True)
+
   @discord.ui.button(label = 'Splatoon', style = discord.ButtonStyle.green)
   async def menu2(self, interaction = discord.Interaction, button = discord.ui.Button):
     embed = discord.Embed(title = 'Splatoon Commands', description = 'A set of available Splatoon 2 commands', color = discord.Color.orange())
+    embed.set_author(name = 'The random weapon commands are slash commands')
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required')
     
     embed.add_field(name = 'rsw [Weapon Class]', value = 'Chooses a random weapon line from Splatoon 2 if no weapon class is specified', inline = False)
@@ -51,8 +55,9 @@ class ButtonHelp(discord.ui.View):
 
     if interaction.user == self.author:
       await interaction.response.edit_message(embed = embed, content = None)
+
     else:
-      await interaction.response.send_message(content = 'Not your button!', ephemeral = True)
+      await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself!', ephemeral = True)
 
   @discord.ui.button(label = 'Hypixel Skyblock', style = discord.ButtonStyle.green)
   async def menu3(self, interaction = discord.Interaction, button = discord.ui.Button):
@@ -66,19 +71,19 @@ class ButtonHelp(discord.ui.View):
     if interaction.user == self.author:
       await interaction.response.edit_message(embed = embed, content = None)
     else:
-      await interaction.response.send_message(content = 'Not your button!', ephemeral = True)
+      await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself', ephemeral = True)
 
-  @discord.ui.button(label = 'Quit', style = discord.ButtonStyle.red, row = 2)
+  @discord.ui.button(label = 'Quit', style = discord.ButtonStyle.red)
   async def quit(self, interaction = discord.Interaction, button = discord.ui.Button):
     
     if interaction.user == self.author:
       for thing in self.children:
         thing.disabled = True
       await interaction.response.edit_message(content = 'May The Wisdom Be With You', embed = None, view = self)
+      self.stop()
 
     else:
-      await interaction.response.send_message(content = 'Not your button!', ephemeral = True)
-    self.stop()
+      await interaction.response.send_message(content = 'Please use the command yourself', ephemeral = True)
 
 class help(commands.Cog):
   def __init__(self, bot):
@@ -86,7 +91,6 @@ class help(commands.Cog):
 
   @commands.command()
   async def help(self, ctx):
-
     await ctx.reply('Which type of commands do you wish to view?', view = ButtonHelp(ctx.author))
 
 async def setup(bot):

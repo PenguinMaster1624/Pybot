@@ -1,4 +1,4 @@
-import asyncio
+import asyncio 
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -14,14 +14,9 @@ intents.message_content = True
 activity = discord.Game(name = 'please hold on using me until further notice')
 bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
-async def load():
-    for folder in os.listdir('./cogs'):
-      for file in os.listdir('./cogs/' + folder):
-        if file.endswith('.py'):
-          await bot.load_extension(f'cogs.{folder}.{file[:-3]}')
-
 @bot.event
 async def on_ready():
+  await bot.tree.sync()
   print(f'{bot.user} at your service')
 
 @bot.event
@@ -31,6 +26,12 @@ async def on_command_error(ctx, exception):
     
   else:
     print(exception)
+
+async def load():
+    for folder in os.listdir('./cogs'):
+      for file in os.listdir('./cogs/' + folder):
+        if file.endswith('.py'):
+          await bot.load_extension(f'cogs.{folder}.{file[:-3]}')
 
 async def main():
   await load()
