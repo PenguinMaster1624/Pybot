@@ -41,6 +41,11 @@ class Splat2nRandomWeapon(commands.Cog):
       embed.set_footer(text = 'You can choose any weapon kit with the name above')
       await interaction.response.send_message(embed = embed, ephemeral = True)
 
+  @rsw.autocomplete('weapon_class')
+  async def rsw_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
+    classes = ['Shooter', 'Roller', 'Charger', 'Slosher', 'Dualies', 'Brella', 'Blaster', 'Brush', 'Splatling', 'Hero']
+    return [app_commands.Choice(name = Class, value = Class) for Class in classes if current.lower() in Class.lower()]
+
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 2 weapon based on Sub Weapon')
   async def rss(self, interaction: discord.Interaction, sub: str):
     SplatBomb = ['Inkbrush', 'Sploosh-o-matic 7', 'Tri Slosher Nouveau', 'Clash Blaster', 'Luna Blaster', 'Splattershot Jr.', 'Undercover Sorella Brella', 'Kensa Splat Roller', 'Octo Shot Replica', 'Tentatek Splattershot', 'Soda Slosher', 'Custom Dualie Squelchers', 'Kensa Splattershot Pro', 'Gold Dynamo Roller', 'Foil Squeezer', 'Splat Charger', 'Hero Charger Replica', 'Splatterscope']
@@ -72,11 +77,15 @@ class Splat2nRandomWeapon(commands.Cog):
     else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Sub Weapon', color = discord.Color.random())
       embed.add_field(name = 'Weapon Selected!', value = select)
-      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.set_footer(text = 'If disliked weapon, reroll')
 
       await interaction.response.send_message(embed = embed, ephemeral = True)
-    
+
+  @rss.autocomplete('sub')
+  async def rss_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
+    subs = ['Splat Bomb', 'Burst Bomb', 'Suction Bomb', 'Curling Bomb', 'Auto Bomb', 'Ink Mine', 'Toxic Mist', 'Point Sensor', 'Splash Wall' , 'Sprinkler', 'Squid Beakon', 'Fizzy Bomb', 'Torpedo']
+    return [app_commands.Choice(name = sub, value = sub) for sub in subs if current.lower() in sub.lower()]
+
   @rss.error
   async def rss_error(self, ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -122,6 +131,11 @@ class Splat2nRandomWeapon(commands.Cog):
       embed.set_footer(text = 'If disliked weapon, reroll')
       
       await interaction.response.send_message(embed = embed, ephemeral = True)
+  
+  @rsp.autocomplete('special')
+  async def rsp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
+    specials = ['Tenta Missiles', 'Sting Ray', 'Inkjet', 'Splashdown', 'Ink Armor', 'Splat Bomb Launcher', 'Suction Bomb Launcher', 'Burst Bomb Launcher', 'Curling Bomb Launcher', 'Auto Bomb Launcher', 'Ink Storm', 'Baller', 'Bubble Blower', 'Booyah Bomb', 'Ultra Stamp']
+    return [app_commands.Choice(name = special, value = special) for special in specials if current.lower() in special.lower()]
 
   @rsp.error
   async def rsp_error(self, ctx, error):

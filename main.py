@@ -11,7 +11,7 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
-activity = discord.Game(name = 'please hold on using me until further notice')
+activity = discord.Game(name = 'The Completion of the Migrations to v2.0')
 bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
 @bot.event
