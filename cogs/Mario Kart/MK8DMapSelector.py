@@ -1,13 +1,14 @@
-import discord
 from discord.ext import commands
+from discord import app_commands
+import discord
 import random
 
 class MK8Map(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.command()
-  async def mk8m(self, ctx, Cup = 'General'):
+  @app_commands.command(name = 'mk8m', description = 'Rolls a random map from the available Mario Kart 8 Deluxe maps, includes DLC')
+  async def mk8m(self, interaction: discord.Interaction, cup: str = 'General'):
 
     Mushroom = ['Mushroom Cup: Mario Kart Stadium', 'Mushroom Cup: Water Park', 'Mushroom Cup: Sweet Sweet Canyon', 'Mushroom Cup: Thwomp Ruins']
     Flower = ['Flower Cup: Mario Circuit', 'Flower Cup: Toad Harbor', 'Flower Cup: Twisted Mansion', ' Flower Cup: Shy Guy Falls']
@@ -23,30 +24,34 @@ class MK8Map(commands.Cog):
     Bell = ['Bell Cup: Neo Bowser City', 'Bell Cup: Ribbon Road', 'Bell Cup: Super Bell Subway', 'Bell Cup: Big Blue']
     GoldenDash = ['Golden Dash Cup: Paris Promenade', 'Golden Dash Cup: Toad Circuit', 'Golden Dash Cup: Choco Mountain', 'Golden Dash Cup: Coconut Mall']
     LuckyCat = ['Lucky Cat Cup: Tokyo Blur', 'Lucky Cat Cup: Shroom Ridge', 'Lucky Cat Cup: Sky Garden', 'Lucky Cat Cup: Ninja Hideaway']
+    Turnip = ['Turnip Cup: New York Minute', 'Turnip Cup: Mario Circuit 3', 'Turnip Cup: Kalamari Desert', 'Turnip Cup: Waluigi Pinball']
+    Propeller = ['Propeller Cup: Sydney Sprint', 'Propeller Cup: Snow Land', 'Propeller Cup: Mushroom Gorge', 'Propeller Cup: Sky-High Sundae']
 
-    General = list(Mushroom + Flower + Star + Special + Shell + Banana + Leaf + Lightning + Egg + Crossing + Triforce + Bell + GoldenDash + LuckyCat)
+    General = list(Mushroom + Flower + Star + Special + Shell + Banana + Leaf + Lightning + Egg + Crossing + Triforce + Bell + GoldenDash + LuckyCat + Turnip + Propeller)
 
-    Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning, 'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'General' : General}
-
-    
+    Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning, 'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'Turnip' : Turnip, 'Propeller' : Propeller, 'General' : General}    
   
-    if Cup in Dictionary:
-      if Cup == 'General':
-        random.shuffle(Dictionary[Cup])
-        Selection = random.choice(Dictionary[Cup])
+    if cup in Dictionary:
+      if cup == 'General':
+        random.shuffle(Dictionary[cup])
+        Selection = random.choice(Dictionary[cup])
         
       else:
-        Selection = random.choice(Dictionary[Cup])
+        Selection = random.choice(Dictionary[cup])
 
       Split = Selection.split(': ')
       embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
-      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
       embed.add_field(name = Split[1], value = Split[0])
 
-      await ctx.reply(embed = embed)
+      await interaction.response.send_message(embed = embed)
         
     else:
-      await ctx.send('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')
+      await interaction.response.send_message('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')
+
+  @mk8m.autocomplete('cup')
+  async def mk8m_autocomplete(self, interaction: discord.Interaction, current: str)-> list[app_commands.Choice[str]]:
+    cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller']
+    return [app_commands.Choice(name = cup, value = cup) for cup in cups if current.lower() in cup.lower()]
 
 async def setup(bot):
   await bot.add_cog(MK8Map(bot))

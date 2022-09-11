@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import app_commands
 import requests
 import discord
 import re
@@ -7,8 +8,8 @@ class SkyblockItems(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.command()
-  async def mayor(self, ctx):
+  @app_commands.command(name = 'mayor', description = 'Displays information on the current Hypixel Skyblock mayor')
+  async def mayor(self, interaction: discord.Interaction):
     r = requests.get('https://api.hypixel.net/resources/skyblock/election') 
     lst = []
     
@@ -52,10 +53,10 @@ class SkyblockItems(commands.Cog):
         embed.add_field(name = PerkNames[i], value = PerkBuffs[i], inline = False)
 
       embed.set_footer(text = 'The mayor is updated roughly every 5 days, 4 hours amd 48 minutes in real life')
-      await ctx.reply(embed = embed)
+      await interaction.response.send_message(embed = embed)
       
-  @commands.command()
-  async def election(self, ctx):
+  @app_commands.command(name = 'election', description = 'Displays information on the current Hypixel Skyblock election')
+  async def election(self, interaction: discord.Interaction):
     r = requests.get('https://api.hypixel.net/resources/skyblock/election')
     lst = []
     if r.status_code == 200:
@@ -130,50 +131,14 @@ class SkyblockItems(commands.Cog):
           Perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(PerkNames[i], PerkDescriptions[i]))
           embed.add_field(name = Name[i], value = f'{Perk}\nVotes: {Votes[i]}', inline = False)
             
-        await ctx.reply(embed = embed)
+        await interaction.response.send_message(embed = embed)
 
       # if there isn't an ongoing election, it skips everything above and states that there isn't one
       else:
-        await ctx.send('There isn\'t an ongoing election')
-        
-  @commands.command()
-  async def ah(self, ctx, item):
-    r = requests.get('https://api.hypixel.net/skyblock/auctions')
+        await interaction.response.send_message('There isn\'t an ongoing election')
 
-    if r.status_code == 200:
-      auctions = r.json()['auctions']
-      prices = []
-
-      for i in range(len(auctions)):
-        if item is auctions[i]['item_name']:
-          if auctions[i]['claimed'] == False:
-            if auctions[i]['bin'] == True:
-              prices.append(auctions[i]['starting_bid'])
-
-      if prices:
-        price = min(prices)
-        price = '{:,}'.format(price)
-      
-      else:
-        price = 'No Item'
-      
-      embed = discord.Embed(title = 'Hypixel Skyblock Auction House', color = discord.Color.random())
-      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
-      embed.add_field(name = item, value = f'Lowest BIN Price: {price}')
-      
-      await ctx.reply(embed = embed)
-            
-    elif r.status_code == 404:
-      await ctx.send('Page Not Found')
-
-    elif r.status_code == 422:
-      await ctx.send('Invalid Page')
-
-    elif r.status_code == 503:
-      await ctx.send('The data is not populated yet, try again shortly')
-
-  @commands.command()
-  async def bz(self, ctx, item_id):
+  @app_commands.command(name = 'bz', description = 'Displays information of a specified item in Hypixel Skyblock\'s Bazaar')
+  async def bz(self, interaction: discord.Interaction, item_name: str):
     r = requests.get('https://api.hypixel.net/skyblock/bazaar')
 
     if r.status_code == 200:
@@ -182,7 +147,7 @@ class SkyblockItems(commands.Cog):
       lst = []
       item = ''
 
-      for letter in item_id:
+      for letter in item_name:
         lst.append(letter)
         # changes any lowercase letters to uppercase and adds an underscore in place of spaces
         # this is done so in order to match the passed item to an id
@@ -228,23 +193,15 @@ class SkyblockItems(commands.Cog):
         #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
         embed.add_field(name = item, value = f'Instant Buy Price: {prices[0]}\nInstant Sell Price: {prices[1]}\n\nTop Buy Order Price: {prices[2]}\nTop Buyer Amount Requested: {buy_offer_amount}\nNumber Of Top Buyers: {buy_offer_order_num}\n\nTop Sell Offer Price: {prices[3]}\nTop Seller Amount Offered: {sell_offer_amount}\nNumber Of Top Sellers: {sell_offer_order_num}')
         
-        await ctx.reply(embed = embed)
+        await interaction.response.send_message(embed = embed)
 
       # if the passed item doesn't exist in the bazaar, this is sent
       # this is done in case of a typo
       else:
-        await ctx.send('The bazaar doesn\'t sell that. Maybe there was a typo?')
+        await interaction.response.send_message('The bazaar doesn\'t sell that. Maybe there was a typo?')
       
     elif r.status_code == 503:
-      await ctx.send('Data hasn\'t loaded yet, try again in a bit')
-
-  @bz.error
-  async def bz_error(self, ctx, error):
-    if isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.send('You forgot to close it with a second double quote. I\'ll need that to know if you\'re finished so that I could get started with this.')
-    
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send('You expect me to read your mind or something? I can\'t look for nothing in the bazaar')
+      await interaction.response.send_message('Data hasn\'t loaded yet, try again in a bit')
 
 async def setup(bot):
   await bot.add_cog(SkyblockItems(bot))

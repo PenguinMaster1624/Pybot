@@ -1,33 +1,32 @@
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions
+from discord import app_commands
+import discord
 
 class EncryptDecrypt(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.is_owner()
-  @commands.command()
-  async def rot(self, ctx, msg, n = None):
+  @app_commands.command(name = 'rot', description = 'Rotates an inputted message by a certain amount. If no amount specified, defaults to 13')
+  async def rot(self, interaction: discord.Interaction, message: str, move: int = None):
     
     uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lowercase = 'abcdefghijklmnopqrstuvwxyz'
 
-    if n == None:
-      n = 13
+    if move == None:
+      move = 13
 
     lst = []
-    n = int(n)
 
-    for letter in msg:
+    for letter in message:
         if letter in uppercase:
             upper = uppercase.find(letter)
-            UpperPos = (upper + n) % 26
+            UpperPos = (upper + move) % 26
 
             lst.append(uppercase[UpperPos])     
 
         elif letter in lowercase:
             lower = lowercase.find(letter)
-            LowerPos = (lower + n) % 26
+            LowerPos = (lower + move) % 26
 
             lst.append(lowercase[LowerPos])
 
@@ -36,21 +35,10 @@ class EncryptDecrypt(commands.Cog):
 
     Translation = ''.join(lst)
     
-    await ctx.channel.send(Translation)
+    await interaction.response.send_message(content = Translation, ephemeral = True)
 
-  @rot.error
-  async def rot_error(self, ctx, error):
-    if isinstance(error, MissingPermissions):
-      return None
-    
-    elif isinstance(error, commands.ExpectedClosingQuoteError):
-      ctx.send('You forgot a quotation mark')
-
-    elif isinstance(error, commands.MissingRequiredArgument):
-      ctx.send('Did you forget how this command works? You\'ll need to give me something to work with.')
-
-  @commands.command()
-  async def mt(self, ctx, msg):
+  @app_commands.command(name = 'mt', description = 'Translates messages between Morse Code and English')
+  async def mt(self, interaction: discord.Interaction, message: str):
     
     Morse = {'A':'.-', 'B':'-...',
              'C':'-.-.', 'D':'-..', 'E':'.',
@@ -69,37 +57,30 @@ class EncryptDecrypt(commands.Cog):
              '(':'-.--.', ')':'-.--.-', ' ':'/',
              '\'':'.----.', '!' : '-.-.--', ':':'---...',
              ';':'-.-.-.', '"':'.-..-.', '=':'-...-'}
+    
     Reversed = dict([(v, k) for k, v in Morse.items()])
     Translation = ''
     lst = []
 
-    for letter in msg:
+    for letter in message:
         lst.append(letter)
         for lower in range(len(lst)):
             lst[lower] = lst[lower].upper()
 
-    if msg.startswith('.') or msg.startswith('-'):
-      nmsg = msg.strip()
-      msg2 = nmsg.split(' ')
-      for x in msg2:
+    if message.startswith('.') or message.startswith('-'):
+      morse = message.strip()
+      new_message = morse.split(' ')
+      for x in new_message:
           Translation += Reversed.get(x)
             
     else:
         for y in lst:
             Translation += Morse.get(y) + ' '
           
-    await ctx.channel.send(Translation.strip())
-  
-  @mt.error
-  async def mt_error(self, ctx, error):
-    if isinstance(error,  commands.ExpectedClosingQuoteError):
-      await ctx.send('Looks like you forgot a double quote')
+    await interaction.response.send_message(content = Translation.strip(), ephemeral = True)
 
-    elif isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.send('I am unable to translate nothing, silence is universally understood, even in different contexts')
-
-  @commands.command()
-  async def bt(self, ctx, msg):
+  @app_commands.command(name = 'bt', description = 'Translates messages between binary code and English')
+  async def bt(self, interaction: discord.Interaction, message: str):
     
     Binary = {
       "a" : "01100001", "b" : "01100010", "c" : "01100011",
@@ -137,27 +118,19 @@ class EncryptDecrypt(commands.Cog):
     Translation = ''
     lst = []
 
-    for letter in msg:
+    for letter in message:
         lst.append(letter)
 
-    if msg.startswith('0') or msg.startswith('1'):
-        msg = msg.split(' ')
-        for x in msg:
+    if message.startswith('0') or message.startswith('1'):
+        message = message.split(' ')
+        for x in message:
             Translation += Reversed.get(x)
             
     else:
         for y in lst:
             Translation += str(Binary.get(y)) + ' '
 
-    await ctx.channel.send(Translation.strip())
+    await interaction.response.send_message(content = Translation.strip(), ephemeral = True)
   
-  @bt.error
-  async def mt_error(self, ctx, error):
-    if isinstance(error,  commands.ExpectedClosingQuoteError):
-      await ctx.send('Looks like you forgot the closing double quote')
-    
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send('I need something to translate')
-
 async def setup(bot):
   await bot.add_cog(EncryptDecrypt(bot))

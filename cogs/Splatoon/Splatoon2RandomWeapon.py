@@ -47,7 +47,7 @@ class Splat2nRandomWeapon(commands.Cog):
     return [app_commands.Choice(name = Class, value = Class) for Class in classes if current.lower() in Class.lower()]
 
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 2 weapon based on Sub Weapon')
-  async def rss(self, interaction: discord.Interaction, sub: str):
+  async def rss(self, interaction: discord.Interaction, sub_weapon: str):
     SplatBomb = ['Inkbrush', 'Sploosh-o-matic 7', 'Tri Slosher Nouveau', 'Clash Blaster', 'Luna Blaster', 'Splattershot Jr.', 'Undercover Sorella Brella', 'Kensa Splat Roller', 'Octo Shot Replica', 'Tentatek Splattershot', 'Soda Slosher', 'Custom Dualie Squelchers', 'Kensa Splattershot Pro', 'Gold Dynamo Roller', 'Foil Squeezer', 'Splat Charger', 'Hero Charger Replica', 'Splatterscope']
     BurstBomb = ['Carbon Roller Deco', 'Tri Slosher', 'Aerospray PG', 'Neo Splash-o-matic', 'Splat Dualies', 'Hero Dualie Replicas', 'Splattershot', 'Hero Shot Replica', 'L-3 Nozzlenose D', 'Mini Splatling', 'Grim Range Blaster', 'Custom Jet Squelcher']
     SuctionBomb = ['Kensa Octobrush', 'Aerospray MG', 'Kensa Splat Dualies', 'N-ZAP \'85', 'Kensa Splattershot', 'Foil Flingza Roller', 'Slosher', 'Hero Slosher Replica', 'Rapid Blaster Deco', 'H-3 Nozzlenose D', 'Range Blaster', 'Forge Splattershot Pro', 'Nautilus 79', 'Fresh Squiffer', 'Goo Tuber']
@@ -67,8 +67,8 @@ class Splat2nRandomWeapon(commands.Cog):
 
     try:
       selection = []
-      sub = sub.strip()
-      selection.append(random.choice(SubWeapons[sub]))
+      sub_weapon = sub_weapon.strip()
+      selection.append(random.choice(SubWeapons[sub_weapon]))
       select = ''.join(selection)
     
     except KeyError:
@@ -81,18 +81,10 @@ class Splat2nRandomWeapon(commands.Cog):
 
       await interaction.response.send_message(embed = embed, ephemeral = True)
 
-  @rss.autocomplete('sub')
+  @rss.autocomplete('sub_weapon')
   async def rss_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
     subs = ['Splat Bomb', 'Burst Bomb', 'Suction Bomb', 'Curling Bomb', 'Auto Bomb', 'Ink Mine', 'Toxic Mist', 'Point Sensor', 'Splash Wall' , 'Sprinkler', 'Squid Beakon', 'Fizzy Bomb', 'Torpedo']
-    return [app_commands.Choice(name = sub, value = sub) for sub in subs if current.lower() in sub.lower()]
-
-  @rss.error
-  async def rss_error(self, ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.reply(f'You forgot to give me a sub weapon')
-
-    elif isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.reply('Please close the message with a second quotation mark')
+    return [app_commands.Choice(name = sub_weapon, value = sub_weapon) for sub_weapon in subs if current.lower() in sub_weapon.lower()]
       
   @app_commands.command(name = 'rsp', description = 'Rolls a random Splatoon 2 weapon based on Special')
   async def rsp(self, interaction: discord.Interaction, special: str):
@@ -136,14 +128,6 @@ class Splat2nRandomWeapon(commands.Cog):
   async def rsp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
     specials = ['Tenta Missiles', 'Sting Ray', 'Inkjet', 'Splashdown', 'Ink Armor', 'Splat Bomb Launcher', 'Suction Bomb Launcher', 'Burst Bomb Launcher', 'Curling Bomb Launcher', 'Auto Bomb Launcher', 'Ink Storm', 'Baller', 'Bubble Blower', 'Booyah Bomb', 'Ultra Stamp']
     return [app_commands.Choice(name = special, value = special) for special in specials if current.lower() in special.lower()]
-
-  @rsp.error
-  async def rsp_error(self, ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.reply('You might\'ve forgetten to add something')
-    
-    elif isinstance(error, commands.ExpectedClosingQuoteError):
-      await ctx.reply('Close the message with a double quote buddy')
   
 
 async def setup(bot: commands.Bot):
