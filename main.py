@@ -1,53 +1,36 @@
-import asyncio 
+from cogs.Splatoon.SplatfestTeamSelector import SplatfestButtons
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import requests
 import logging
 import os
 
-load_dotenv()
-intents = discord.Intents.default()
-intents.members = True
-intents.message_content = True
-
-activity = discord.Game(name = 'The Completion of the Migrations to v2.0')
-bot = commands.Bot(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
-
-@bot.event
-async def on_ready():
-  await bot.tree.sync()
-  print(f'{bot.user} at your service')
-
-@bot.event
-async def on_command_error(ctx, exception):
-  if isinstance(exception, commands.CommandNotFound):
-    await ctx.send('Command not recognized')
+class Pybot(commands.Bot):
+  def __init__(self):
+    intents = discord.Intents.default()
+    intents.members = True
+    intents.message_content = True
     
-  else:
-    print(exception)
+    activity = discord.Game(name = 'The Completion of the 2.0 Migration')
+    super().__init__(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
-async def load():
+  async def main():
+    handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+    discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
+
+  async def setup_hook(self) -> None:
     for folder in os.listdir('./cogs'):
       for file in os.listdir('./cogs/' + folder):
         if file.endswith('.py'):
-          await bot.load_extension(f'cogs.{folder}.{file[:-3]}')
+          await self.load_extension(f'cogs.{folder}.{file[:-3]}')
 
-async def main():
-  await load()
+    await self.tree.sync()
+    self.add_view(SplatfestButtons())
+
   
-  try:
-    r = requests.head(url="https://discord.com/api/v1")
-    TimeLeft = int(r.headers['Retry-After']) / 60
 
-  except KeyError:
-    await bot.start(os.getenv('TOKEN'))
+  async def on_ready(self): 
+    print(f'{self.user} at your service')
 
-  else:
-    TotalTime = TimeLeft
-    print(f"Rate limited for {TimeLeft/60 if TimeLeft >= 60 else TimeLeft} {'hours' if TotalTime/60 >= 60 else 'minutes'}")
-
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
-
-asyncio.run(main())
+load_dotenv()
+Pybot().run(os.getenv('TOKEN'), log_handler = None)
