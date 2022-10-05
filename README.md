@@ -7,11 +7,11 @@
 
 #### The commands include as follows:
 ###### hello                       <-- Pretty much this bot's version of the ping pong command
-###### choose <str1, str 2, etc> <-- Chooses one of the given choices randomly, you can input however many strings
+###### choose <str1, str 2>, [str 3], [str 4] <-- Chooses one of the given choices randomly, you can input however many strings
 ###### mk8bm                       <-- Chooses one of the maps from the battle mode in Mario Kart 8 Deluxe. Sure it's already got this, but it was fun to make
-###### mk8m <[Cup]>                <-- Chooses a track from an inputted cup from Mario Kart 8 Deluxe. If not cup is inputted, it will default to the General pool
+###### mk8m [Cup]                  <-- Chooses a track from an inputted cup from Mario Kart 8 Deluxe. If not cup is inputted, it will default to the General pool
 ###### pbgm                        <-- Chooses any game mode available in Splatoon 2's Private Battle randomly
-###### rsw <[Weapon Class]>        <-- Chooses a weapon line. You get to choose which one you play with that name). Will default to every class if none specified
+###### rsw [Weapon Class]          <-- Chooses a weapon line. You get to choose which one you play with that name). Will default to every class if none specified
 ###### rot <msg, number>           <-- rotates a message a specified number of letters in the alphabet forward. Only creator of this bot can use this
 ###### mt <msg>                    <-- turns a message into morse code. Only creator of this bot can use this
 ###### bt <msg>                    <-- turns a message into binary code. Only creator of this bos can use this
@@ -19,3 +19,5 @@
 ###### election                    <-- Displays info on any ongoing elections in Hypixel Skyblock <Bazaar Item>
 ###### bz                          <-- Displays price info on a specified item in Hypixel Skyblock's Bazaar
 ###### ah                          <-- Displays price info on a specified item in Hypixel Skyblock's Auction House. Might not work sometimes
+
+####### anything marked with <> is required for the command to work, anything within [] is optional
