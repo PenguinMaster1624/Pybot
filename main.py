@@ -32,5 +32,7 @@ class Pybot(commands.Bot):
   async def on_ready(self): 
     print(f'{self.user} at your service')
 
-load_dotenv()
-Pybot().run(os.getenv('TOKEN'), log_handler = None)
+load_dotenv('./.env')
+
+Bot = Pybot()
+Bot.run(token = os.getenv('TOKEN'), log_handler = None)
