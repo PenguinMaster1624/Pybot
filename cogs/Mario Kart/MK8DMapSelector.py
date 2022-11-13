@@ -3,6 +3,25 @@ from discord import app_commands
 import discord
 import random
 
+class MK8DButtons(discord.ui.View):
+  def __init__(self):
+    super().__init__(timeout = 240)
+
+  async def on_timeout(self):
+    for item in self.children:
+      item.disabled = True
+
+  @discord.ui.button(label = 'Reroll', style = discord.ButtonStyle.blurple)
+  async def reroll(self, interaction = discord.Interaction, button = discord.ui.Button):
+    await MK8Map.mk8m.callback(self, interaction)
+  
+  @discord.ui.button(label = 'Quit', style = discord.ButtonStyle.danger)
+  async def quit(self, interaction = discord.Interaction, button = discord.ui.Button):
+    for item in self.children:
+      item.disabled = True
+
+    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None)
+
 class MK8Map(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
@@ -26,24 +45,23 @@ class MK8Map(commands.Cog):
     LuckyCat = ['Lucky Cat Cup: Tokyo Blur', 'Lucky Cat Cup: Shroom Ridge', 'Lucky Cat Cup: Sky Garden', 'Lucky Cat Cup: Ninja Hideaway']
     Turnip = ['Turnip Cup: New York Minute', 'Turnip Cup: Mario Circuit 3', 'Turnip Cup: Kalamari Desert', 'Turnip Cup: Waluigi Pinball']
     Propeller = ['Propeller Cup: Sydney Sprint', 'Propeller Cup: Snow Land', 'Propeller Cup: Mushroom Gorge', 'Propeller Cup: Sky-High Sundae']
-
     General = list(Mushroom + Flower + Star + Special + Shell + Banana + Leaf + Lightning + Egg + Crossing + Triforce + Bell + GoldenDash + LuckyCat + Turnip + Propeller)
 
-    Dictionary = {'Mushroom' : Mushroom, 'Flower' : Flower, 'Star' : Star, 'Special' : Special, 'Shell' : Shell, 'Banana' : Banana, 'Leaf' : Leaf, 'Lightning' : Lightning, 'Egg' : Egg, 'Crossing' : Crossing, 'Triforce' : Triforce, 'Bell' : Bell, 'Golden Dash' : GoldenDash, 'Lucky Cat' : LuckyCat, 'Turnip' : Turnip, 'Propeller' : Propeller, 'General' : General}    
+    all_cups = {'Mushroom': Mushroom, 'Flower': Flower, 'Star': Star, 'Special': Special, 'Shell': Shell, 'Banana': Banana, 'Leaf': Leaf, 'Lightning': Lightning, 'Egg': Egg, 'Crossing': Crossing, 'Triforce': Triforce, 'Bell': Bell, 'Golden Dash': GoldenDash, 'Lucky Cat': LuckyCat, 'Turnip': Turnip, 'Propeller': Propeller, 'General': General}
   
-    if cup in Dictionary:
+    if cup in all_cups:
       if cup == 'General':
-        random.shuffle(Dictionary[cup])
-        Selection = random.choice(Dictionary[cup])
+        random.shuffle(all_cups[cup])
+        selection = random.choice(all_cups[cup])
         
       else:
-        Selection = random.choice(Dictionary[cup])
+        selection = random.choice(all_cups[cup])
 
-      Split = Selection.split(': ')
+      split = selection.split(': ')
       embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
-      embed.add_field(name = Split[1], value = Split[0])
+      embed.add_field(name = split[1], value = split[0])
 
-      await interaction.response.send_message(embed = embed)
+      await interaction.response.send_message(embed = embed, view = MK8DButtons())
         
     else:
       await interaction.response.send_message('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')

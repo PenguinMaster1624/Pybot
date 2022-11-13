@@ -5,6 +5,13 @@ from dotenv import load_dotenv
 import logging
 import os
 
+
+
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
+
+load_dotenv('./.env')
+
 class Pybot(commands.Bot):
   def __init__(self):
     intents = discord.Intents.default()
@@ -13,10 +20,6 @@ class Pybot(commands.Bot):
     
     activity = discord.Game(name = 'The Completion of the 2.0 Migration')
     super().__init__(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
-
-  async def main():
-    handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-    discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
 
   async def setup_hook(self) -> None:
     for folder in os.listdir('./cogs'):
@@ -31,8 +34,6 @@ class Pybot(commands.Bot):
 
   async def on_ready(self): 
     print(f'{self.user} at your service')
-
-load_dotenv('./.env')
 
 Bot = Pybot()
 Bot.run(token = os.getenv('TOKEN'), log_handler = None)

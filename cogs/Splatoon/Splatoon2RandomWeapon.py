@@ -7,29 +7,29 @@ class Splat2nRandomWeapon(commands.Cog):
   def __init__(self, bot: commands.Bot):
     self.bot = bot
 
+    self.Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
+    self.Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
+    self.Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber']
+    self.Slosher = ['Slosher', 'Tri Slosher', 'Sloshing Machine', 'Explosher', 'Boblobber']
+    self.Dualies = ['Splat Dualies', 'Dualie Squelchers', 'Tetra Dualies', 'Dapple Dualies', 'Glooga Dualies']
+    self.Brella = ['Splat Brella', 'Tenta Brella', 'Undercover Brella']
+    self.Blaster = ['Blaster', 'Range Blaster', 'Luna Blaster', 'Rapid Blaster', 'Clash Blaster']
+    self.Brush = ['Inkbrush', 'OctoBrush']
+    self.Splatling = ['Heavy Splatling', 'Mini Splatling', 'Hydra Splatling', 'Ballpoint Splatling', 'Nautilus']
+    self.Splatana = ['Splatana Wiper', 'Splatana Stamper']
+    self.Bow = ['Tri Stringer', 'REEFLUX 450']
+    self.General = list(self.Shooter + self.Roller + self.Charger + self.Slosher + self.Dualies + self.Brella + self.Blaster + self.Brush + self.Splatling)
+
+    self.Class = {'Shooter': self.Shooter, 'Roller': self.Roller, 'Charger': self.Charger, 'Slosher': self.Slosher, 'Dualies': self.Dualies, 'Bow': self.Bow, 
+                  'Brella': self.Brella, 'Blaster': self.Blaster, 'Brush': self.Brush, 'Splatling': self.Splatling, 'General': self.General, 'Splatana': self.Splatana}
+
+
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 2 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = 'General'):
     
-    Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
-    Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
-    Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber']
-    Slosher = ['Slosher', 'Tri Slosher', 'Sloshing Machine', 'Explosher', 'Boblobber']
-    Dualies = ['Splat Dualies', 'Dualie Squelchers', 'Tetra Dualies', 'Dapple Dualies', 'Glooga Dualies']
-    Brella = ['Splat Brella', 'Tenta Brella', 'Undercover Brella']
-    Blaster = ['Blaster', 'Range Blaster', 'Luna Blaster', 'Rapid Blaster', 'Clash Blaster']
-    Brush = ['Inkbrush', 'OctoBrush']
-    Splatling = ['Heavy Splatling', 'Mini Splatling', 'Hydra Splatling', 'Ballpoint Splatling', 'Nautilus']
-    Hero = ['Hero Shot', 'Hero Roller', 'Hero Charger', 'Hero Dualies', 'Hero Brella', 'Hero Splatling', 'Hero Blaster', 'Hero Brush']
-    General = list(Shooter + Roller + Charger + Slosher + Dualies + Brella + Blaster + Brush + Splatling)
-
-    Class = {'Shooter': Shooter, 'Roller': Roller, 'Charger': Charger, 'Slosher': Slosher, 'Dualies': Dualies,
-             'Brella': Brella, 'Blaster': Blaster, 'Brush': Brush, 'Splatling': Splatling, 'Hero': Hero, 'General': General,
-            'shooter': Shooter, 'roller': Roller, 'charger': Charger, 'slosher': Slosher, 'dualies': Dualies,
-             'brella': Brella, 'blaster': Blaster, 'brush': Brush, 'splatling': Splatling, 'hero': Hero, 'general': General}
-
     try:
       Selection = []
-      Selection.append(random.choice(Class[weapon_class]))
+      Selection.append(random.choice(self.Class[weapon_class]))
       select = ''.join(Selection)
 
     except KeyError:
@@ -43,7 +43,7 @@ class Splat2nRandomWeapon(commands.Cog):
 
   @rsw.autocomplete('weapon_class')
   async def rsw_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-    classes = ['Shooter', 'Roller', 'Charger', 'Slosher', 'Dualies', 'Brella', 'Blaster', 'Brush', 'Splatling', 'Hero']
+    classes = ['Shooter', 'Roller', 'Charger', 'Slosher', 'Dualies', 'Brella', 'Blaster', 'Brush', 'Splatling', 'Splatana', 'Bow']
     return [app_commands.Choice(name = Class, value = Class) for Class in classes if current.lower() in Class.lower()]
 
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 2 weapon based on Sub Weapon')
