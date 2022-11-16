@@ -24,20 +24,18 @@ class Splat2nRandomWeapon(commands.Cog):
                   'Brella': self.Brella, 'Blaster': self.Blaster, 'Brush': self.Brush, 'Splatling': self.Splatling, 'General': self.General, 'Splatana': self.Splatana}
 
 
-  @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 2 weapon')
+  @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = 'General'):
     
     try:
-      Selection = []
-      Selection.append(random.choice(self.Class[weapon_class]))
-      select = ''.join(Selection)
+      selection = random.choice(self.Class[weapon_class])
 
     except KeyError:
       await interaction.response.send_message('Something went wrong. Maybe you misspelled something?', ephemeral = True)
     
     else:
-      embed = discord.Embed(title = 'Splatoon 2 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = discord.Color.random())
-      embed.add_field(name = 'Weapon Line:', value = select)
+      embed = discord.Embed(title = 'Splatoon 3 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = discord.Color.random())
+      embed.add_field(name = 'Weapon Line:', value = selection)
       embed.set_footer(text = 'You can choose any weapon kit with the name above')
       await interaction.response.send_message(embed = embed, ephemeral = True)
 
@@ -66,17 +64,15 @@ class Splat2nRandomWeapon(commands.Cog):
                   'Point Sensor': PointSensor, 'Splash Wall': SplashWall, 'Sprinkler': Sprinkler, 'Squid Beakon': SquidBeakon, 'Fizzy Bomb': FizzyBomb, 'Torpedo': Torpedo}
 
     try:
-      selection = []
       sub_weapon = sub_weapon.strip()
-      selection.append(random.choice(SubWeapons[sub_weapon]))
-      select = ''.join(selection)
+      selection = random.choice(SubWeapons[sub_weapon])
     
     except KeyError:
       await interaction.response.send_message('Try again, I think you mispelled something. Don\'t forget to capitalize all words.', ephemeral = True)
 
     else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Sub Weapon', color = discord.Color.random())
-      embed.add_field(name = 'Weapon Selected!', value = select)
+      embed.add_field(name = 'Weapon Selected!', value = selection)
       embed.set_footer(text = 'If disliked weapon, reroll')
 
       await interaction.response.send_message(embed = embed, ephemeral = True)
@@ -109,17 +105,15 @@ class Splat2nRandomWeapon(commands.Cog):
                 'Ink Storm': InkStorm, 'Baller': Baller, 'Bubble Blower': BubbleBlower, 'Booyah Bomb': BooyahBomb, 'Ultra Stamp': UltraStamp}
 
     try:
-      selection = []
       special = special.strip()
-      selection.append(random.choice(Specials[special]))
-      select = ''.join(selection)
+      selection = random.choice(Specials[special])
 
     except KeyError:
       await interaction.response.send_message('Try again, maybe there was a typo somewhere', ephemeral = True)
 
     else:
       embed = discord.Embed(title = 'Splatoon 2 Weapon Randomizer Through Special', description = f'{special} go brrr', color = discord.Color.random())
-      embed.add_field(name = 'Weapon Selected!', value = select)
+      embed.add_field(name = 'Weapon Selected!', value = selection)
       embed.set_footer(text = 'If disliked weapon, reroll')
       
       await interaction.response.send_message(embed = embed, ephemeral = True)

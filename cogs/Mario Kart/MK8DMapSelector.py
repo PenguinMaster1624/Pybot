@@ -1,6 +1,6 @@
+import discord
 from discord.ext import commands
 from discord import app_commands
-import discord
 import random
 
 class MK8DButtons(discord.ui.View):
@@ -20,7 +20,7 @@ class MK8DButtons(discord.ui.View):
     for item in self.children:
       item.disabled = True
 
-    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None)
+    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None, view = self)
 
 class MK8Map(commands.Cog):
   def __init__(self, bot):
@@ -61,7 +61,7 @@ class MK8Map(commands.Cog):
       embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
       embed.add_field(name = split[1], value = split[0])
 
-      await interaction.response.send_message(embed = embed, view = MK8DButtons())
+      await interaction.response.send_message(embed = embed, view = MK8DButtons(), ephemeral = True)
         
     else:
       await interaction.response.send_message('Please specify one of the cups currently playable, the default\'s from a pool of every track to date. Maybe you misspelled something?')

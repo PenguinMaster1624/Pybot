@@ -20,7 +20,7 @@ class ButtonMK8DBattleStages(discord.ui.View):
     for item in self.children:
       item.disabled = True
 
-    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None)
+    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None, view = self)
 
 class MK8BattleMap(commands.Cog):
   def __init__(self, bot):
