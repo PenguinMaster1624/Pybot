@@ -11,46 +11,43 @@ class SkyblockItems(commands.Cog):
   @app_commands.command(name = 'mayor', description = 'Displays information on the current Hypixel Skyblock mayor')
   async def mayor(self, interaction: discord.Interaction):
     r = requests.get('https://api.hypixel.net/resources/skyblock/election') 
-    lst = []
     
     if r.status_code == 200:
       mayor = r.json()['mayor']
-      Name = mayor['name']
-      MayorStuff = mayor['perks']
+      name = mayor['name']
+      mayor_stuff = mayor['perks']
     
-      TempPerkName = []
-      TempPerkDesc = []
-      PerkNames = []
-      PerkDescriptions = []
+      temp_perk_name = []
+      temp_perk_description = []
+      perk_names = []
+      perk_descriptions = []
 
       # appends the current mayor's perk information to the corresponding lists
-      for i in range(len(MayorStuff)):
-        TempPerkName.append(MayorStuff[i]['name'])
-        TempPerkDesc.append(MayorStuff[i]['description'])
+      for i in range(len(mayor_stuff)):
+        temp_perk_name.append(mayor_stuff[i]['name'])
+        temp_perk_description.append(mayor_stuff[i]['description'])
         
-        for j in range(len(TempPerkName)):
-          PerkNames.append(TempPerkName[j])
-          PerkDescriptions.append(TempPerkDesc[j])
+        for j in range(len(temp_perk_name)):
+          perk_names.append(temp_perk_name[j])
+          perk_descriptions.append(temp_perk_description[j])
         
-        TempPerkName = []
-        TempPerkDesc = []
+        temp_perk_name = []
+        temp_perk_description = []
 
-      string = ''
-      PerkBuffs = []
+      perk_buffs = []
       
       # removes simoleon and the following character for better readability
-      for i in range(len(PerkDescriptions)): 
-        string = re.sub(r'§.', '', PerkDescriptions[i])
-        PerkBuffs.append(string)
+      for i in range(len(perk_descriptions)): 
+        string = re.sub(r'§.', '', perk_descriptions[i])
+        perk_buffs.append(string)
 
       # embed creation and setup
       embed = discord.Embed(title = 'Hypixel Skyblock\'s Current Mayor', color = discord.Color.random())
-      #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
-      embed.add_field(name = Name, value = 'The current mayor')
+      embed.add_field(name = name, value = 'The current mayor')
 
       # creates individual fields for the mayor's perks
-      for i in range(len(PerkNames)):
-        embed.add_field(name = PerkNames[i], value = PerkBuffs[i], inline = False)
+      for i in range(len(perk_names)):
+        embed.add_field(name = perk_names[i], value = perk_buffs[i], inline = False)
 
       embed.set_footer(text = 'The mayor is updated roughly every 5 days, 4 hours amd 48 minutes in real life')
       await interaction.response.send_message(embed = embed)
@@ -77,45 +74,45 @@ class SkyblockItems(commands.Cog):
         Votes = [lst[3], lst[7], lst[11], lst[15], lst[19]]
 
         # creates lists for respective mayors and their perks, for use in the following for loop
-        PerkNameOne = []
-        PerkNameTwo = []
-        PerkNameThree = []
-        PerkNameFour = []
-        PerkNameFive = []
+        perk_name_one = []
+        perk_name_two = []
+        perk_name_three = []
+        perk_name_four = []
+        perk_name_five = []
         
-        PerkDescriptionOne = []
-        PerkDescriptionTwo = []
-        PerkDescriptionThree = []
-        PerkDescriptionFour = []
-        PerkDescriptionFive = []
+        perk_description_one = []
+        perk_description_two = []
+        perk_description_three = []
+        perk_description_four = []
+        perk_description_five = []
   
-        PerkNames = [PerkNameOne, PerkNameTwo, PerkNameThree, PerkNameFour, PerkNameFive]
-        PerkDescriptions = [PerkDescriptionOne, PerkDescriptionTwo, PerkDescriptionThree, PerkDescriptionFour, PerkDescriptionFive]
+        perk_names = [perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five]
+        perk_descriptions = [perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five]
   
-        TempNames = []
-        TempDescs = []
+        temp_names = []
+        temp_descriptions = []
 
         # appends the candidates' perks to their respective mayors
         for i in range(len(Slot)):
           for j in Slot[i]:
-            TempNames.append(j['name'])
-            TempDescs.append(j['description'])
+            temp_names.append(j['name'])
+            temp_descriptions.append(j['description'])
   
-          for k in range(len(TempNames)):
-            PerkNames[i].append(TempNames[k])
-            PerkDescriptions[i].append(TempDescs[k])
+          for k in range(len(temp_names)):
+            perk_names[i].append(temp_names[k])
+            perk_descriptions[i].append(temp_descriptions[k])
   
-          TempNames = []
-          TempDescs = []
+          temp_names = []
+          temp_descriptions = []
 
-        del TempNames
-        del TempDescs
+        del temp_names
+        del temp_descriptions
 
         # removes the simoleon and the character following it, for better readability
-        for i in range(len(PerkDescriptions)):
-          for j in range(len(PerkDescriptions[i])):
-            string = re.sub(r'§.', '', PerkDescriptions[i][j])
-            PerkDescriptions[i][j] = string
+        for i in range(len(perk_descriptions)):
+          for j in range(len(perk_descriptions[i])):
+            string = re.sub(r'§.', '', perk_descriptions[i][j])
+            perk_descriptions[i][j] = string
 
         for i in range(len(Votes)):
           Votes[i] = '{:,}'.format(Votes[i])
@@ -127,8 +124,8 @@ class SkyblockItems(commands.Cog):
         #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
 
         # creates individual fields for each mayor and their perks
-        for i in range(len(PerkNames)):
-          Perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(PerkNames[i], PerkDescriptions[i]))
+        for i in range(len(perk_names)):
+          Perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(perk_names[i], perk_descriptions[i]))
           embed.add_field(name = Name[i], value = f'{Perk}\nVotes: {Votes[i]}', inline = False)
             
         await interaction.response.send_message(embed = embed)
@@ -187,11 +184,12 @@ class SkyblockItems(commands.Cog):
 
         buy_offer_order_num = '{:,}'.format(buy_offer_order_num)
         sell_offer_order_num = '{:,}'.format(sell_offer_order_num)
+
+        bazaar_info = f'Instant Buy Price: {prices[0]}\nInstant Sell Price: {prices[1]}\n\nTop Buy Order Price: {prices[2]}\nTop Buyer Amount Requested: {buy_offer_amount}\nNumber Of Top Buyers: {buy_offer_order_num}\n\nTop Sell Offer Price: {prices[3]}\nTop Seller Amount Offered: {sell_offer_amount}\nNumber Of Top Sellers: {sell_offer_order_num}'
         
         #setup of embed
         embed = discord.Embed(title = 'Hypixel Skyblock Bazaar', color = discord.Color.random())
-        #embed.set_author(name = ctx.author.display_name, icon_url = ctx.author.avatar_url)
-        embed.add_field(name = item, value = f'Instant Buy Price: {prices[0]}\nInstant Sell Price: {prices[1]}\n\nTop Buy Order Price: {prices[2]}\nTop Buyer Amount Requested: {buy_offer_amount}\nNumber Of Top Buyers: {buy_offer_order_num}\n\nTop Sell Offer Price: {prices[3]}\nTop Seller Amount Offered: {sell_offer_amount}\nNumber Of Top Sellers: {sell_offer_order_num}')
+        embed.add_field(name = item, value = bazaar_info)
         
         await interaction.response.send_message(embed = embed)
 
