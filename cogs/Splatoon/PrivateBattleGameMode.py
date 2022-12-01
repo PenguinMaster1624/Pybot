@@ -31,12 +31,12 @@ class pbgm(commands.Cog):
     
     PrivateBattleModes = ['Turf War', 'Splat Zones', 'Rainmaker', 'Tower Control', 'Clam Blitz']
 
-    Selection = []
+    selection = []
 
     random.shuffle(PrivateBattleModes)
-    Selection.append(random.choice(PrivateBattleModes))
+    selection.append(random.choice(PrivateBattleModes))
 
-    select = ''.join(Selection)
+    select = ''.join(selection)
 
     embed = discord.Embed(title = 'Splatoon 3 Game Mode Randomizer', description = 'Randomly chooses a game mode to play', color = discord.Color.random())
     embed.add_field(name = 'Game Mode Selected!', value = select)

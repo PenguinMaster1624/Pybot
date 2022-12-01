@@ -6,7 +6,6 @@ import logging
 import os
 
 
-
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
 
@@ -29,8 +28,6 @@ class Pybot(commands.Bot):
 
     await self.tree.sync()
     self.add_view(SplatfestButtons())
-
-  
 
   async def on_ready(self): 
     print(f'{self.user} at your service')

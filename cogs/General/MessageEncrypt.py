@@ -7,35 +7,35 @@ class EncryptDecrypt(commands.Cog):
     self.bot = bot
 
   @app_commands.command(name = 'rot', description = 'Rotates an inputted message by a certain amount. If no amount specified, defaults to 13')
-  async def rot(self, interaction: discord.Interaction, message: str, move: int = None):
+  async def rot(self, interaction: discord.Interaction, message: str, move_by: int = None):
     
     uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lowercase = 'abcdefghijklmnopqrstuvwxyz'
 
-    if move == None:
-      move = 13
+    if move_by == None:
+      move_by = 13
 
     lst = []
 
     for letter in message:
         if letter in uppercase:
             upper = uppercase.find(letter)
-            UpperPos = (upper + move) % 26
+            UpperPos = (upper + move_by) % 26
 
             lst.append(uppercase[UpperPos])     
 
         elif letter in lowercase:
             lower = lowercase.find(letter)
-            LowerPos = (lower + move) % 26
+            LowerPos = (lower + move_by) % 26
 
             lst.append(lowercase[LowerPos])
 
         else:
             lst.append(letter)
 
-    Translation = ''.join(lst)
+    translation = ''.join(lst)
     
-    await interaction.response.send_message(content = Translation, ephemeral = True)
+    await interaction.response.send_message(content = translation, ephemeral = True)
 
   @app_commands.command(name = 'mt', description = 'Translates messages between Morse Code and English')
   async def mt(self, interaction: discord.Interaction, message: str):
@@ -58,8 +58,8 @@ class EncryptDecrypt(commands.Cog):
              '\'':'.----.', '!' : '-.-.--', ':':'---...',
              ';':'-.-.-.', '"':'.-..-.', '=':'-...-'}
     
-    Reversed = dict([(v, k) for k, v in Morse.items()])
-    Translation = ''
+    reversed = dict([(v, k) for k, v in Morse.items()])
+    translation = ''
     lst = []
 
     for letter in message:
@@ -71,13 +71,13 @@ class EncryptDecrypt(commands.Cog):
       morse = message.strip()
       new_message = morse.split(' ')
       for x in new_message:
-          Translation += Reversed.get(x)
+          translation += reversed.get(x)
             
     else:
         for y in lst:
-            Translation += Morse.get(y) + ' '
+            translation += Morse.get(y) + ' '
           
-    await interaction.response.send_message(content = Translation.strip(), ephemeral = True)
+    await interaction.response.send_message(content = translation.strip(), ephemeral = True)
 
   @app_commands.command(name = 'bt', description = 'Translates messages between binary code and English')
   async def bt(self, interaction: discord.Interaction, message: str):
@@ -114,8 +114,8 @@ class EncryptDecrypt(commands.Cog):
       "9" : "00111001" 
     }
 
-    Reversed = dict([(v, k) for k, v in Binary.items()])
-    Translation = ''
+    reversed = dict([(v, k) for k, v in Binary.items()])
+    translation = ''
     lst = []
 
     for letter in message:
@@ -124,13 +124,12 @@ class EncryptDecrypt(commands.Cog):
     if message.startswith('0') or message.startswith('1'):
         message = message.split(' ')
         for x in message:
-            Translation += Reversed.get(x)
-            
+            translation += reversed.get(x)
     else:
         for y in lst:
-            Translation += str(Binary.get(y)) + ' '
+            translation += str(Binary.get(y)) + ' '
 
-    await interaction.response.send_message(content = Translation.strip(), ephemeral = True)
+    await interaction.response.send_message(content = translation.strip(), ephemeral = True)
   
 async def setup(bot):
   await bot.add_cog(EncryptDecrypt(bot))

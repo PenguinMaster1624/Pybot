@@ -15,8 +15,9 @@ class ButtonHelp(discord.ui.View):
     await self.message.edit(content = 'You took too long without pressing any buttons', embed = None, view = self)
 
   @discord.ui.button(label = 'General Use', style = discord.ButtonStyle.green)
-  async def menu(self, interaction = discord.Interaction, button = discord.ui.Button):
+  async def general(self, interaction = discord.Interaction, button = discord.ui.Button):
     embed = discord.Embed(title = 'General Commands', description = 'A set of available general use commands', color = discord.Color.orange())
+    
     embed.set_author(name = 'All but one are Slash Commands')
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required')
 
@@ -33,8 +34,9 @@ class ButtonHelp(discord.ui.View):
       await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself', ephemeral = True)
 
   @discord.ui.button(label = 'Mario Kart', style = discord.ButtonStyle.green)
-  async def menu1(self, interaction = discord.Interaction, button = discord.ui.Button):
+  async def mario_kart(self, interaction = discord.Interaction, button = discord.ui.Button):
     embed = discord.Embed(title = 'Mario Kart Commands', description = 'A set of available Mario Kart commands', color = discord.Color.orange())
+    
     embed.set_author(name = 'All commands here are slash commands')
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required')
 
@@ -48,15 +50,16 @@ class ButtonHelp(discord.ui.View):
       await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself', ephemeral = True)
 
   @discord.ui.button(label = 'Splatoon', style = discord.ButtonStyle.green)
-  async def menu2(self, interaction = discord.Interaction, button = discord.ui.Button):
+  async def splatoon(self, interaction = discord.Interaction, button = discord.ui.Button):
     embed = discord.Embed(title = 'Splatoon Commands', description = 'A set of available Splatoon 2 commands', color = discord.Color.orange())
+    
     embed.set_author(name = 'All commands here are slash commands')
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required')
     
-    embed.add_field(name = 'rsw [Weapon Class]', value = 'Chooses a random weapon line from Splatoon 2 if no weapon class is specified', inline = False)
-    embed.add_field(name = 'rss <Sub Weapon>', value = 'Chooses a random weapon with a specified Sub Weapon in Splatoon 2', inline = False)
-    embed.add_field(name = 'rsp <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2', inline = False)
-    embed.add_field(name = 'pbgm', value = 'Randomly selects a game mode from those available in private battles', inline = False)
+    embed.add_field(name = 'rsw [Weapon Class]', value = 'Chooses a random weapon line from Splatoon 3 if no weapon class is specified', inline = False)
+    embed.add_field(name = 'rss <Sub Weapon>', value = 'Chooses a random weapon with a specified Sub Weapon in Splatoon 2. Will be updated for Splatoon 3.', inline = False)
+    embed.add_field(name = 'rsp <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2. Will be updated for Splatoon 3.', inline = False)
+    embed.add_field(name = 'pbgm', value = 'Randomly selects a game mode from those available in private battles in Splatoon 3', inline = False)
 
     if interaction.user == self.author:
       await interaction.response.edit_message(embed = embed, content = None)
@@ -65,7 +68,7 @@ class ButtonHelp(discord.ui.View):
       await interaction.response.send_message(content = 'This is someone else\'s, use the command yourself!', ephemeral = True)
 
   @discord.ui.button(label = 'Hypixel Skyblock', style = discord.ButtonStyle.green)
-  async def menu3(self, interaction = discord.Interaction, button = discord.ui.Button):
+  async def hypixel_skyblock(self, interaction = discord.Interaction, button = discord.ui.Button):
     embed = discord.Embed(title = 'Hypixel Skyblock Commands', description = 'A set of available Hypixel Skyblock commands', color = discord.Color.orange())
     embed.set_author(name = 'All commands here are slash commands')
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required')

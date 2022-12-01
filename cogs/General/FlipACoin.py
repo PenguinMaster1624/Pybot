@@ -15,14 +15,7 @@ class CoinButtons(discord.ui.View):
   @discord.ui.button(label = 'Reroll', style = discord.ButtonStyle.blurple)
   async def reroll(self, interaction = discord.Interaction, button = discord.ui.Button):
     await FlipCoin.fac.callback(self, interaction)
-  
-  @discord.ui.button(label = 'Quit', style = discord.ButtonStyle.danger)
-  async def quit(self, interaction = discord.Interaction, button = discord.ui.Button):
-    for item in self.children:
-      item.disabled = True
-
-    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None)
-
+    
 class FlipCoin(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
@@ -32,8 +25,8 @@ class FlipCoin(commands.Cog):
     
     lst = ['Heads', 'Tails']
 
-    Choice = random.choice(lst)
-    await interaction.response.send_message(Choice, ephemeral = True, view = CoinButtons())
+    choice = random.choice(lst)
+    await interaction.response.send_message(choice, ephemeral = True, view = CoinButtons())
 
 async def setup(bot):
   await bot.add_cog(FlipCoin(bot))

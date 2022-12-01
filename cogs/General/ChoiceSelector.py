@@ -17,8 +17,9 @@ class RandomChoice(commands.Cog):
         elif option_four is not None:
             choice.append(option_four)
 
-        choiceSelect = random.choice(choice)
-        await interaction.response.send_message(choiceSelect)
+        choice_select = random.choice(choice)
+        await interaction.response.send_message(choice_select)
+
 
 async def setup(bot):
     await bot.add_cog(RandomChoice(bot))

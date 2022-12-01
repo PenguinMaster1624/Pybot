@@ -14,13 +14,6 @@ class ButtonMK8DBattleStages(discord.ui.View):
   @discord.ui.button(label = 'Reroll', style = discord.ButtonStyle.blurple)
   async def reroll(self, interaction = discord.Interaction, button = discord.ui.Button):
     await MK8BattleMap.mk8bm.callback(self, interaction)
-  
-  @discord.ui.button(label = 'Quit', style = discord.ButtonStyle.danger)
-  async def quit(self, interaction = discord.Interaction, button = discord.ui.Button):
-    for item in self.children:
-      item.disabled = True
-
-    await interaction.response.edit_message(content = 'Happy Gaming!', embed = None, view = self)
 
 class MK8BattleMap(commands.Cog):
   def __init__(self, bot):
