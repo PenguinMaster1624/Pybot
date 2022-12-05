@@ -1,7 +1,6 @@
-import discord
 from discord.ext import commands
 from discord import app_commands
-import random
+import random, discord
 
 class ButtonMK8DBattleStages(discord.ui.View):
   def __init__(self):

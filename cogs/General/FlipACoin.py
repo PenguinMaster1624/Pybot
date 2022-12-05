@@ -1,7 +1,6 @@
-import random
 from discord.ext import commands
 from discord import app_commands
-import discord
+import random, discord
 
 
 class CoinButtons(discord.ui.View):

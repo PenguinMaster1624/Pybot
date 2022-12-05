@@ -1,7 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-import discord
-import random
+import discord, random
 
 class RandomChoice(commands.Cog):
     def __init__(self, bot):

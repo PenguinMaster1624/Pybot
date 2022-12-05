@@ -62,22 +62,31 @@ class EncryptDecrypt(commands.Cog):
     translation = ''
     lst = []
 
+    message = message.strip()
     for letter in message:
         lst.append(letter)
         for lower in range(len(lst)):
             lst[lower] = lst[lower].upper()
 
     if message.startswith('.') or message.startswith('-'):
-      morse = message.strip()
-      new_message = morse.split(' ')
-      for x in new_message:
+      new_message = message.split(' ')
+      
+      try:
+        for x in new_message:
           translation += reversed.get(x)
-            
+
+      except TypeError:
+        return await interaction.response.send_message(content = 'An inputted sequence does not exist in my library', ephemeral = True)
+
+      else:
+        await interaction.response.send_message(content = translation.strip(), ephemeral = True)
+
     else:
-        for y in lst:
-            translation += Morse.get(y) + ' '
-          
-    await interaction.response.send_message(content = translation.strip(), ephemeral = True)
+      for y in lst:
+        translation += Morse.get(y) + ' '
+  
+      await interaction.response.send_message(content = translation.strip(), ephemeral = True)
+        
 
   @app_commands.command(name = 'bt', description = 'Translates messages between binary code and English')
   async def bt(self, interaction: discord.Interaction, message: str):

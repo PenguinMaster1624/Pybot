@@ -1,7 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-import discord
-import random
+import random, discord
 
 class pbgm_buttons(discord.ui.View):
   def __init__(self):

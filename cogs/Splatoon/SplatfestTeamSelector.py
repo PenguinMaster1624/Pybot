@@ -124,7 +124,6 @@ class SplatfestTeamChoices(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.default_permissions(administrator = True)
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
 

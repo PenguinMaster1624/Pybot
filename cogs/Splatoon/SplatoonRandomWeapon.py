@@ -1,20 +1,19 @@
 from discord.ext import commands
 from discord import app_commands
-import discord
-import random
+import random, discord
 
 class Splat2nRandomWeapon(commands.Cog):
   def __init__(self, bot: commands.Bot):
     self.bot = bot
 
-    self.Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
+    self.Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Nova', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
     self.Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
     self.Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber']
     self.Slosher = ['Slosher', 'Tri Slosher', 'Sloshing Machine', 'Explosher', 'Boblobber']
     self.Dualies = ['Splat Dualies', 'Dualie Squelchers', 'Tetra Dualies', 'Dapple Dualies', 'Glooga Dualies']
     self.Brella = ['Splat Brella', 'Tenta Brella', 'Undercover Brella']
     self.Blaster = ['Blaster', 'Range Blaster', 'Luna Blaster', 'Rapid Blaster', 'Clash Blaster']
-    self.Brush = ['Inkbrush', 'OctoBrush']
+    self.Brush = ['Inkbrush', 'Octobrush']
     self.Splatling = ['Heavy Splatling', 'Mini Splatling', 'Hydra Splatling', 'Ballpoint Splatling', 'Nautilus']
     self.Splatana = ['Splatana Wiper', 'Splatana Stamper']
     self.Bow = ['Tri Stringer', 'REEFLUX 450']

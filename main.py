@@ -1,10 +1,7 @@
 from cogs.Splatoon.SplatfestTeamSelector import SplatfestButtons
-import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import logging
-import os
-
+import logging, discord, os
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)

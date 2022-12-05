@@ -1,8 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-import requests
-import discord
-import re
+import requests, discord, re
 
 class SkyblockItems(commands.Cog):
   def __init__(self, bot):
@@ -71,17 +69,8 @@ class SkyblockItems(commands.Cog):
         Votes = [lst[3], lst[7], lst[11], lst[15], lst[19]]
 
         # creates lists for respective mayors and their perks, for use in the following for loop
-        perk_name_one = set()
-        perk_name_two = set()
-        perk_name_three = set()
-        perk_name_four = set()
-        perk_name_five = set()
-        
-        perk_description_one = set()
-        perk_description_two = set()
-        perk_description_three = set()
-        perk_description_four = set()
-        perk_description_five = set()
+        perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five = [set() for i in range(5)]
+        perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five = [set() for i in range(5)]
   
         perk_names = [perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five]
         perk_descriptions = [perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five]
