@@ -22,7 +22,7 @@ class SkyblockItems(commands.Cog):
       perk_names = set()
       perk_descriptions = set()
 
-      # appends the current mayor's perk information to the corresponding lists
+      # adds the current mayor's perk information to the corresponding sets
       for i in range(len(mayor_stuff)):
         perk_names.add(mayor_stuff[i]['name'])
         perk_descriptions.add(mayor_stuff[i]['description'])
@@ -50,7 +50,6 @@ class SkyblockItems(commands.Cog):
   @app_commands.command(name = 'election', description = 'Displays information on the current Hypixel Skyblock election')
   async def election(self, interaction: discord.Interaction):
     r = requests.get('https://api.hypixel.net/resources/skyblock/election')
-    lst = []
     if r.status_code == 200:
       js = r.json()
 
@@ -58,15 +57,11 @@ class SkyblockItems(commands.Cog):
       if 'current' in js:
         election = js['current']['candidates']  
 
-        # gets candidate information and pretty much puts it all in one list
-        for candidate in election:
-          for i in candidate.values():
-            lst.append(i)
-
-        # individual lists that grab their respective values for each candidate
-        Name = [lst[1], lst[5], lst[9], lst[13], lst[17]]
-        slot = [lst[2], lst[6], lst[10], lst[14], lst[18]]
-        Votes = [lst[3], lst[7], lst[11], lst[15], lst[19]]
+        # individual lists that grab their respective values for each candidate from the API
+        name = [i['name'] for i in election]
+        slot = [i['perks'] for i in election]
+        votes = [i['votes'] for i in election]
+        mayor_type = [i['key'].title() for i in election]
 
         # creates lists for respective mayors and their perks, for use in the following for loop
         perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five = [set() for i in range(5)]
@@ -75,7 +70,7 @@ class SkyblockItems(commands.Cog):
         perk_names = [perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five]
         perk_descriptions = [perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five]
   
-        # appends the candidates' perks to their respective mayors
+        # adds the candidates' perks to their respective mayors
         for i in range(len(slot)):
           for j in slot[i]:
             perk_names[i].add(j['name'])
@@ -91,19 +86,16 @@ class SkyblockItems(commands.Cog):
             string = re.sub(r'§.', '', perk_descriptions[i][j])
             perk_descriptions[i][j] = string
 
-        for i in range(len(Votes)):
-          Votes[i] = '{:,}'.format(Votes[i])
+        for i in range(len(votes)):
+          votes[i] = '{:,}'.format(votes[i])
 
         # creation and setup of the embed
         embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', color = discord.Color.random())
         
         # creates individual fields for each mayor and their perks
-        for i in range(len(perk_names)):
-          mayor_type = election[i]['key']
-          mayor_type = mayor_type.title()
-
+        for i in range(5):
           perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(perk_names[i], perk_descriptions[i]))
-          embed.add_field(name = Name[i], value = f'Specialization: {mayor_type}\n\n{perk}\nVotes: {Votes[i]}', inline = False)
+          embed.add_field(name = name[i], value = f'Specialization: {mayor_type[i]}\n\n{perk}\nVotes: {votes[i]}', inline = False)
             
         await interaction.response.send_message(embed = embed)
 
