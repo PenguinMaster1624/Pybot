@@ -39,9 +39,13 @@ class MK8Map(commands.Cog):
     lucky_cat = ['Lucky Cat Cup: Tokyo Blur', 'Lucky Cat Cup: Shroom Ridge', 'Lucky Cat Cup: Sky Garden', 'Lucky Cat Cup: Ninja Hideaway']
     turnip = ['Turnip Cup: New York Minute', 'Turnip Cup: Mario Circuit 3', 'Turnip Cup: Kalamari Desert', 'Turnip Cup: Waluigi Pinball']
     propeller = ['Propeller Cup: Sydney Sprint', 'Propeller Cup: Snow Land', 'Propeller Cup: Mushroom Gorge', 'Propeller Cup: Sky-High Sundae']
-    general = list(mushroom + flower + star + special + shell + banana + leaf + lightning + egg + crossing + triforce + bell + golden_dash + lucky_cat + turnip + propeller)
+    rock = ['Rock Cup: London Loop', 'Rock Cup: Boo Lake', 'Rock Cup: Rock Rock Mountain', 'Rock Cup: Maple Treeway']
+    moon = ['Moon Cup: Berlin Byways', 'Moon Cup: Peach Gardens', 'Moon Cup: Merry Mountain', 'Moon Cup: 3DS Rainbow Road']
+    general = list(mushroom + flower + star + special + shell + banana + leaf + lightning + egg + crossing + triforce + bell + golden_dash + lucky_cat + turnip + propeller + rock + moon)
 
-    all_cups = {'Mushroom': mushroom, 'Flower': flower, 'Star': star, 'Special': special, 'Shell': shell, 'Banana': banana, 'Leaf': leaf, 'Lightning': lightning, 'Egg': egg, 'Crossing': crossing, 'Triforce': triforce, 'Bell': bell, 'Golden Dash': golden_dash, 'Lucky Cat': lucky_cat, 'Turnip': turnip, 'Propeller': propeller, 'General': general}
+    all_cups = {'Mushroom': mushroom, 'Flower': flower, 'Star': star, 'Special': special, 
+                'Shell': shell, 'Banana': banana, 'Leaf': leaf, 'Lightning': lightning, 'Egg': egg, 'Crossing': crossing, 'Triforce': triforce, 'Bell': bell, 
+                'Golden Dash': golden_dash, 'Lucky Cat': lucky_cat, 'Turnip': turnip, 'Propeller': propeller, 'Rock': rock, 'Moon': moon,'General': general}
   
     if cup in all_cups:
       if cup == 'General':
@@ -62,7 +66,7 @@ class MK8Map(commands.Cog):
 
   @mk8m.autocomplete('cup')
   async def mk8m_autocomplete(self, interaction: discord.Interaction, current: str)-> list[app_commands.Choice[str]]:
-    cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller']
+    cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller', 'Rock', 'Moon']
     return [app_commands.Choice(name = cup, value = cup) for cup in cups if current.lower() in cup.lower()]
 
 async def setup(bot):

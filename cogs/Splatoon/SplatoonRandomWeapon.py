@@ -7,8 +7,8 @@ class Splat2nRandomWeapon(commands.Cog):
     self.bot = bot
 
     self.Shooter = ['Splattershot Jr.', 'Splattershot', 'Splattershot Nova', 'Splattershot Pro', 'Aerospray', 'N-ZAP', '.52 Gal', '.96 Gal' 'Jet Squelcher', 'L-3 Nozzlenose', ' H-3 Nozzlenose','Sploosh-O-Matic', 'Splash-O-Matic', 'Squeezer']
-    self.Roller = ['Splat Roller', 'Carbon Roller', 'Flinza Roller', 'Dynamo Roller']
-    self.Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber']
+    self.Roller = ['Splat Roller', 'Carbon Roller', 'Big Swig Roller', 'Flinza Roller', 'Dynamo Roller']
+    self.Charger = ['Splat Charger', 'Squiffer', 'E-Liter', 'Bamboozler', 'Goo Tuber', 'Snipewriter 5H']
     self.Slosher = ['Slosher', 'Tri Slosher', 'Sloshing Machine', 'Explosher', 'Boblobber']
     self.Dualies = ['Splat Dualies', 'Dualie Squelchers', 'Tetra Dualies', 'Dapple Dualies', 'Glooga Dualies']
     self.Brella = ['Splat Brella', 'Tenta Brella', 'Undercover Brella']

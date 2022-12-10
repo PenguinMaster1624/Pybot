@@ -50,13 +50,19 @@ class SkyblockItems(commands.Cog):
   @app_commands.command(name = 'election', description = 'Displays information on the current Hypixel Skyblock election')
   async def election(self, interaction: discord.Interaction):
     r = requests.get('https://api.hypixel.net/resources/skyblock/election')
+    
     if r.status_code == 200:
       js = r.json()
 
       # checks if there is an ongoing election
-      if 'current' in js:
+      try:
         election = js['current']['candidates']  
+      
+      # if there isn't an ongoing election, it skips everything and states that there isn't one
+      except KeyError:
+        await interaction.response.send_message('There isn\'t an ongoing election')
 
+      else:
         # individual lists that grab their respective values for each candidate from the API
         name = [i['name'] for i in election]
         slot = [i['perks'] for i in election]
@@ -85,12 +91,14 @@ class SkyblockItems(commands.Cog):
           for j in range(len(perk_descriptions[i])):
             string = re.sub(r'§.', '', perk_descriptions[i][j])
             perk_descriptions[i][j] = string
+        
+        all_votes = f'{sum([int(votes[i]) for i in range(len(votes))]):,}'
 
         for i in range(len(votes)):
-          votes[i] = '{:,}'.format(votes[i])
+          votes[i] = f'{votes[i]:,}'
 
         # creation and setup of the embed
-        embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', color = discord.Color.random())
+        embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', description = f'Total amount of votes: {all_votes}', color = discord.Color.random())
         
         # creates individual fields for each mayor and their perks
         for i in range(5):
@@ -98,10 +106,6 @@ class SkyblockItems(commands.Cog):
           embed.add_field(name = name[i], value = f'Specialization: {mayor_type[i]}\n\n{perk}\nVotes: {votes[i]}', inline = False)
             
         await interaction.response.send_message(embed = embed)
-
-      # if there isn't an ongoing election, it skips everything above and states that there isn't one
-      else:
-        await interaction.response.send_message('There isn\'t an ongoing election')
 
   @app_commands.command(name = 'bz', description = 'Displays information of a specified item in Hypixel Skyblock\'s Bazaar')
   async def bz(self, interaction: discord.Interaction, item_name: str):
