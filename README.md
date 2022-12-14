@@ -1,6 +1,6 @@
-# Python Bot 3.0
+# Pybot
 
-## A basic bot with some commands coming from other, more sophisticated bots while also having some unique commands
+## A basic Discord Bot with some commands coming from other, more sophisticated bots while also having some unique commands
 
 ### The prefix for the bot is "Pybot.", and be sure to include the period
 #### All but the first command are now Slash Commands, and therefore the first command is the only one that uses the prefix stated above
