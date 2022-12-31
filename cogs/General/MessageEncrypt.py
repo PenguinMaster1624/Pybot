@@ -58,22 +58,21 @@ class EncryptDecrypt(commands.Cog):
              '\'':'.----.', '!' : '-.-.--', ':':'---...',
              ';':'-.-.-.', '"':'.-..-.', '=':'-...-'}
     
-    reversed = dict([(v, k) for k, v in Morse.items()])
+    reversed = dict([(value, key) for key, value in Morse.items()])
     translation = ''
-    lst = []
 
     message = message.strip()
-    for letter in message:
-        lst.append(letter)
-        for lower in range(len(lst)):
-            lst[lower] = lst[lower].upper()
+    chars = [letter for letter in message]
+
+    for lower in range(len(chars)):
+      chars[lower] = chars[lower].upper()
 
     if message.startswith('.') or message.startswith('-'):
       new_message = message.split(' ')
       
       try:
-        for x in new_message:
-          translation += reversed.get(x)
+        for character in new_message:
+          translation += reversed.get(character)
 
       except TypeError:
         return await interaction.response.send_message(content = 'An inputted sequence does not exist in my library', ephemeral = True)
@@ -82,8 +81,8 @@ class EncryptDecrypt(commands.Cog):
         await interaction.response.send_message(content = translation.strip(), ephemeral = True)
 
     else:
-      for y in lst:
-        translation += Morse.get(y) + ' '
+      for character in chars:
+        translation += Morse.get(character) + ' '
   
       await interaction.response.send_message(content = translation.strip(), ephemeral = True)
         
@@ -123,22 +122,29 @@ class EncryptDecrypt(commands.Cog):
       "9" : "00111001" 
     }
 
-    reversed = dict([(v, k) for k, v in Binary.items()])
+    reversed = dict([(value, key) for key, value in Binary.items()])
     translation = ''
-    lst = []
 
-    for letter in message:
-        lst.append(letter)
+    chars = [letter for letter in message]
 
     if message.startswith('0') or message.startswith('1'):
         message = message.split(' ')
-        for x in message:
-            translation += reversed.get(x)
-    else:
-        for y in lst:
-            translation += str(Binary.get(y)) + ' '
 
-    await interaction.response.send_message(content = translation.strip(), ephemeral = True)
+        try:
+          for character in message:
+            translation += reversed.get(character)
+          
+        except TypeError:
+          await interaction.response.send_message(content = 'I\'m sorry, something you entered does not exist in my library')
+        
+        else:
+          await interaction.response.send_message(content = translation.strip(), ephemeral = True)
+
+    else:
+        for character in chars:
+            translation += str(Binary.get(character)) + ' '
+
+        await interaction.response.send_message(content = translation.strip(), ephemeral = True)
   
 async def setup(bot):
   await bot.add_cog(EncryptDecrypt(bot))
