@@ -18,9 +18,6 @@ class Splat2nRandomWeapon(commands.Cog):
     self.bow = ['Tri Stringer', 'REEF-LUX 450']
     self.splatana = ['Splatana Wiper', 'Splatana Stamper']
     self.general = list(self.shooter + self.roller + self.charger + self.slosher + self.splatling + self.dualies + self.brella + self.blaster + self.brush + self.bow + self.splatana)
-    
-    self.weapon_type = {'Shooter': self.shooter, 'Roller': self.roller, 'Charger': self.charger, 'Slosher': self.slosher, 'Splatling': self.splatling, 'Dualies': self.dualies, 
-                  'Brella': self.brella, 'Blaster': self.blaster, 'Brush': self.brush, 'Bow': self.bow, 'Splatana': self.splatana, 'General': self.general}
 
     self.splat_bomb = ['Splattershot Jr.', 'Tentatek Splattershot', 'Luna Blaster', 'Clash Blaster', 'Inkbrush', 'Splat Charger', 'Splatterscope', 'Slosher', 'Dualie Squelchers']
     self.suction_bomb = ['Splattershot', 'Hero Shot Replica' , 'N-ZAP \'85', 'Forge Splattershot Pro', 'Range Blaster', 'Octobrush', 'Splat Dualies']
@@ -53,17 +50,57 @@ class Splat2nRandomWeapon(commands.Cog):
     self.tristrike = ['Tentatek Splattershot', 'Rapid Blaster', 'Slosher', 'Slosher', 'Splat Brella']
     self.tacticooler = ['N-ZAP \'85', 'H-3 Nozzlenose', 'Dynamo Roller', 'Snipewriter 5H', 'Dapple Dualies']
 
+  async def color(self, selection: str):
+    if selection in self.shooter:
+      return await discord.Color.blue()
+    
+    elif selection in self.roller:
+      return await discord.Color.gold()
+
+    elif selection in self.charger:
+      return await discord.Color.dark_magenta()
+    
+    elif selection in self.slosher:
+      return await discord.Color.darker_grey()
+
+    elif selection in self.splatling:
+      return discord.Color.purple()
+    
+    elif selection in self.dualies:
+      return await discord.Color.green()
+
+    elif selection in self.brella:
+      return await discord.Color.lighter_grey()
+
+    elif selection in self.blaster:
+      return await discord.Color.red()
+    
+    elif selection in self.brush:
+      return await discord.Color.teal()
+    
+    elif selection in self.bow:
+      return await discord.Color.dark_grey()
+    
+    elif selection in self.splatana:
+      return await discord.Color.orange()
+
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = 'General'):
+
+    weapon_type = {'Shooter': self.shooter, 'Roller': self.roller, 'Charger': self.charger, 'Slosher': self.slosher, 'Splatling': self.splatling, 'Dualies': self.dualies, 
+                  'Brella': self.brella, 'Blaster': self.blaster, 'Brush': self.brush, 'Bow': self.bow, 'Splatana': self.splatana, 'General': self.general}
     
     try:
-      selection = random.choice(self.weapon_type[weapon_class])
+      selection = random.choice(weapon_type[weapon_class])
 
     except KeyError:
       await interaction.response.send_message('Something went wrong. Maybe you misspelled something?', ephemeral = True)
     
     else:
-      embed = discord.Embed(title = 'Splatoon 3 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = discord.Color.random())
+      color = await self.color(selection)
+
+      embed = discord.Embed(title = 'Splatoon 3 Random Weapon Line Selector', description = 'Scopes go with their respective charger kits', color = color)
+      embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
       embed.add_field(name = 'Weapon Line:', value = selection)
       embed.set_footer(text = 'You can choose any weapon kit with the name above')
       await interaction.response.send_message(embed = embed, ephemeral = True)
@@ -76,18 +113,21 @@ class Splat2nRandomWeapon(commands.Cog):
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 3 weapon based on Sub Weapon')
   async def rss(self, interaction: discord.Interaction, sub_weapon: str):
 
-    SubWeapons = {'Splat Bomb': self.splat_bomb, 'Suction Bomb': self.suction_bomb, 'Burst Bomb': self.burst_bomb, 'Sprinkler': self.sprinkler, 'Splash Wall': self.splash_wall, 'Fizzy Bomb': self.fizzy_bomb, 'Curling Bomb': self.curling_bomb, 
+    sub_weapons = {'Splat Bomb': self.splat_bomb, 'Suction Bomb': self.suction_bomb, 'Burst Bomb': self.burst_bomb, 'Sprinkler': self.sprinkler, 'Splash Wall': self.splash_wall, 'Fizzy Bomb': self.fizzy_bomb, 'Curling Bomb': self.curling_bomb, 
                   'Auto Bomb': self.auto_bomb, 'Squid Beakon': self.squid_beakon, 'Point Sensor': self.point_sensor, 'Ink Mine': self.ink_mine, 'Toxic Mist': self.toxic_mist, 'Angle Shooter': self.angle_shooter, 'Torpedo': self.torpedo}
 
     try:
       sub_weapon = sub_weapon.strip()
-      selection = random.choice(SubWeapons[sub_weapon])
+      selection = random.choice(sub_weapons[sub_weapon])
     
     except KeyError:
       await interaction.response.send_message('Try again, I think you mispelled something. Don\'t forget to capitalize all words.', ephemeral = True)
 
     else:
-      embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Sub Weapon', color = discord.Color.random())
+      color = await self.color(selection)
+
+      embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Sub Weapon', color = color)
+      embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
       embed.add_field(name = 'Weapon Selected!', value = selection)
       embed.set_footer(text = 'If disliked weapon, reroll')
 
@@ -112,7 +152,10 @@ class Splat2nRandomWeapon(commands.Cog):
       await interaction.response.send_message('Try again, maybe there was a typo somewhere', ephemeral = True)
 
     else:
-      embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Special', description = f'{special} go brrr', color = discord.Color.random())
+      color = await self.color(selection)
+
+      embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Special', description = f'{special} go brrr', color = color)
+      embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
       embed.add_field(name = 'Weapon Selected!', value = selection)
       embed.set_footer(text = 'If disliked weapon, reroll')
       

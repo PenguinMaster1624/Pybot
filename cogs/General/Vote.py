@@ -53,6 +53,7 @@ class Poll(commands.Cog):
     async def vote(self, interaction: discord.Interaction, want: str):
 
         embed = discord.Embed(title = 'Vote In Progress!', description = f'{interaction.user.name} wants to know who wants this/these')
+        embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
         embed.add_field(name = 'The Request', value = f'{interaction.user.name} wants: {want}')
         embed.set_footer(text = 'May the community decide')
 

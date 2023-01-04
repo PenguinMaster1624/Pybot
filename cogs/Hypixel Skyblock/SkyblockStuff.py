@@ -1,6 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-import requests, discord, re
+import requests, discord, re, time
 
 class SkyblockItems(commands.Cog):
   def __init__(self, bot):
@@ -56,7 +56,7 @@ class SkyblockItems(commands.Cog):
 
       # checks if there is an ongoing election
       try:
-        election = js['current']['candidates']  
+        election = js['current']['candidates']
       
       # if there isn't an ongoing election, it skips everything and states that there isn't one
       except KeyError:
@@ -68,6 +68,7 @@ class SkyblockItems(commands.Cog):
         slot = [i['perks'] for i in election]
         votes = [i['votes'] for i in election]
         mayor_type = [i['key'].title() for i in election]
+        last_updated = js['lastUpdated']
 
         # creates lists for respective mayors and their perks, for use in the following for loop
         perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five = [set() for i in range(5)]
@@ -98,13 +99,14 @@ class SkyblockItems(commands.Cog):
           votes[i] = f'{votes[i]:,}'
 
         # creation and setup of the embed
-        embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', description = f'Total amount of votes: {all_votes}', color = discord.Color.random())
+        embed = discord.Embed(title = 'Current Hypixel Skyblock Mayor Candidates', description = f'Last Updated: <t:{last_updated//1000}>, <t:{last_updated//1000}:R>', color = discord.Color.random())
         
         # creates individual fields for each mayor and their perks
         for i in range(5):
           perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(perk_names[i], perk_descriptions[i]))
           embed.add_field(name = name[i], value = f'Specialization: {mayor_type[i]}\n\n{perk}\nVotes: {votes[i]}', inline = False)
-            
+        
+        embed.set_footer(text = f'Total amount of votes: {all_votes}')
         await interaction.response.send_message(embed = embed)
 
   @app_commands.command(name = 'bz', description = 'Displays information of a specified item in Hypixel Skyblock\'s Bazaar')
