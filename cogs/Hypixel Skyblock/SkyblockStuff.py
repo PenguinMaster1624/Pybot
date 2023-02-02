@@ -71,11 +71,8 @@ class SkyblockItems(commands.Cog):
         last_updated = js['lastUpdated']
 
         # creates lists for respective mayors and their perks, for use in the following for loop
-        perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five = [set() for i in range(5)]
-        perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five = [set() for i in range(5)]
-  
-        perk_names = [perk_name_one, perk_name_two, perk_name_three, perk_name_four, perk_name_five]
-        perk_descriptions = [perk_description_one, perk_description_two, perk_description_three, perk_description_four, perk_description_five]
+        perk_names = [set() for i in range(5)]
+        perk_descriptions = [set() for i in range(5)]
   
         # adds the candidates' perks to their respective mayors
         for i in range(len(slot)):
@@ -90,8 +87,7 @@ class SkyblockItems(commands.Cog):
         # removes the simoleon and the character following it, for better readability
         for i in range(len(perk_descriptions)):
           for j in range(len(perk_descriptions[i])):
-            string = re.sub(r'§.', '', perk_descriptions[i][j])
-            perk_descriptions[i][j] = string
+            perk_descriptions[i][j] = re.sub(r'§.', '', perk_descriptions[i][j])
         
         all_votes = f'{sum([int(votes[i]) for i in range(len(votes))]):,}'
 

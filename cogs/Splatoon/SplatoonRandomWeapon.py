@@ -52,37 +52,37 @@ class Splat2nRandomWeapon(commands.Cog):
 
   async def color(self, selection: str):
     if selection in self.shooter:
-      return await discord.Color.blue()
+      return discord.Color.blue()
     
     elif selection in self.roller:
-      return await discord.Color.gold()
+      return discord.Color.gold()
 
     elif selection in self.charger:
-      return await discord.Color.dark_magenta()
+      return discord.Color.dark_magenta()
     
     elif selection in self.slosher:
-      return await discord.Color.darker_grey()
+      return discord.Color.darker_grey()
 
     elif selection in self.splatling:
       return discord.Color.purple()
     
     elif selection in self.dualies:
-      return await discord.Color.green()
+      return discord.Color.green()
 
     elif selection in self.brella:
-      return await discord.Color.lighter_grey()
+      return discord.Color.lighter_grey()
 
     elif selection in self.blaster:
-      return await discord.Color.red()
+      return discord.Color.red()
     
     elif selection in self.brush:
-      return await discord.Color.teal()
+      return discord.Color.teal()
     
     elif selection in self.bow:
-      return await discord.Color.dark_grey()
+      return discord.Color.dark_grey()
     
     elif selection in self.splatana:
-      return await discord.Color.orange()
+      return discord.Color.orange()
 
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = 'General'):
