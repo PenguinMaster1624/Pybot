@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord import app_commands
-import requests, discord, re, time
+import aiohttp
+import requests, discord, re
 
 class SkyblockItems(commands.Cog):
   def __init__(self, bot):
@@ -8,10 +9,12 @@ class SkyblockItems(commands.Cog):
 
   @app_commands.command(name = 'mayor', description = 'Displays information on the current Hypixel Skyblock mayor')
   async def mayor(self, interaction: discord.Interaction):
-    r = requests.get('https://api.hypixel.net/resources/skyblock/election') 
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://api.hypixel.net/resources/skyblock/election') as response:
+        r = await response.json()
     
-    if r.status_code == 200:
-      mayor = r.json()['mayor']
+    if response.status == 200:
+      mayor = r['mayor']
       name = mayor['name']
       mayor_type = mayor['key']
       mayor_stuff = mayor['perks']
@@ -19,22 +22,15 @@ class SkyblockItems(commands.Cog):
       # reformats the mayor type to have the first letter capitalized
       mayor_type = mayor_type.title()
 
-      perk_names = set()
-      perk_descriptions = set()
+      perk_names = []
+      perk_descriptions = []
 
       # adds the current mayor's perk information to the corresponding sets
       for i in range(len(mayor_stuff)):
-        perk_names.add(mayor_stuff[i]['name'])
-        perk_descriptions.add(mayor_stuff[i]['description'])
+        perk_names.append(mayor_stuff[i]['name'])
+        perk_descriptions.append(mayor_stuff[i]['description'])
 
-      perk_names = list(perk_names)
-      perk_descriptions = list(perk_descriptions)
-      perk_buffs = []
-
-      # removes simoleon and the following character for better readability
-      for i in range(len(perk_descriptions)): 
-        string = re.sub(r'§.', '', perk_descriptions[i])
-        perk_buffs.append(string)
+      perk_buffs = [re.sub(r'§.', '', perk_descriptions[i]) for i in range(len(mayor_stuff))]
 
       # embed creation and setup
       embed = discord.Embed(title = 'Hypixel Skyblock\'s Current Mayor', color = discord.Color.random())
@@ -49,14 +45,15 @@ class SkyblockItems(commands.Cog):
       
   @app_commands.command(name = 'election', description = 'Displays information on the current Hypixel Skyblock election')
   async def election(self, interaction: discord.Interaction):
-    r = requests.get('https://api.hypixel.net/resources/skyblock/election')
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://api.hypixel.net/resources/skyblock/election') as response:
+        r = await response.json()
     
-    if r.status_code == 200:
-      js = r.json()
+    if response.status == 200:
 
       # checks if there is an ongoing election
       try:
-        election = js['current']['candidates']
+        election = r['current']['candidates']
       
       # if there isn't an ongoing election, it skips everything and states that there isn't one
       except KeyError:
@@ -68,7 +65,7 @@ class SkyblockItems(commands.Cog):
         slot = [i['perks'] for i in election]
         votes = [i['votes'] for i in election]
         mayor_type = [i['key'].title() for i in election]
-        last_updated = js['lastUpdated']
+        last_updated = r['lastUpdated']
 
         # creates lists for respective mayors and their perks, for use in the following for loop
         perk_names = [set() for i in range(5)]
