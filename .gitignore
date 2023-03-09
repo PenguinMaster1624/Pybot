@@ -1,4 +1,7 @@
 .env
 discord.log
 cogs/General/WebsiteServerStatus.py
-__pycache__/*.pyc
+cogs/General/__pycache__/*.pyc
+cogs/Hypixel Skyblock/__pycache__/*.pyc
+cogs/Mario Kart/__pycache__/*pyc
+cogs/Splatoon/__pycache__/*pyc
