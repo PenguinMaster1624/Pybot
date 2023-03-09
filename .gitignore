@@ -1,3 +1,4 @@
 .env
 discord.log
 cogs/General/WebsiteServerStatus.py
+__pycache__/*.pyc
