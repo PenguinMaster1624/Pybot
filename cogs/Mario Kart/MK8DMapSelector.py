@@ -24,16 +24,19 @@ class MK8Map(commands.Cog):
     self.propeller = ['Propeller Cup: Sydney Sprint', 'Propeller Cup: Snow Land', 'Propeller Cup: Mushroom Gorge', 'Propeller Cup: Sky-High Sundae']
     self.rock = ['Rock Cup: London Loop', 'Rock Cup: Boo Lake', 'Rock Cup: Rock Rock Mountain', 'Rock Cup: Maple Treeway']
     self.moon = ['Moon Cup: Berlin Byways', 'Moon Cup: Peach Gardens', 'Moon Cup: Merry Mountain', 'Moon Cup: 3DS Rainbow Road']
-    self.general = list(self.mushroom + self.flower + self.star + self.special + self.shell + self.banana + self.leaf + self.lightning + self.egg + self.crossing + self.triforce + self.bell + self.golden_dash + self.lucky_cat + self.turnip + self.propeller + self.rock + self.moon)
+    self.fruit = ['Fruit Cup: Amsterdam Drift', 'Fruit Cup: Riverside Park', 'Fruit Cup: DK Summit', 'Fruit Cup: Yoshi\'s Island']
+    self.boomerang = ['Bomerang Cup: Bangkok Rush', 'Boomerang Cup: DS Mario Cirtuit', 'Boomerang Cup: Waluigi Stadium', 'Boomerang Cup: Singapore Speedway']
+    self.general = list(self.mushroom + self.flower + self.star + self.special + self.shell + self.banana + self.leaf + self.lightning + self.egg + self.crossing + self.triforce + self.bell + self.golden_dash + self.lucky_cat + self.turnip + self.propeller + self.rock + self.moon + self.fruit + self.boomerang)
 
   @app_commands.command(name = 'mk8m', description = 'Rolls a random map from the available Mario Kart 8 Deluxe maps, includes DLC')
   async def mk8m(self, interaction: discord.Interaction, cup: str = 'General'):
 
     all_cups = {'Mushroom': self.mushroom, 'Flower': self.flower, 'Star': self.star, 'Special': self.special, 
                 'Shell': self.shell, 'Banana': self.banana, 'Leaf': self.leaf, 'Lightning': self.lightning, 'Egg': self.egg, 'Crossing': self.crossing, 'Triforce': self.triforce, 'Bell': self.bell, 
-                'Golden Dash': self.golden_dash, 'Lucky Cat': self.lucky_cat, 'Turnip': self.turnip, 'Propeller': self.propeller, 'Rock': self.rock, 'Moon': self.moon,'General': self.general}
+                'Golden Dash': self.golden_dash, 'Lucky Cat': self.lucky_cat, 'Turnip': self.turnip, 'Propeller': self.propeller, 'Rock': self.rock, 'Moon': self.moon,'General': self.general,
+                'Fruit': self.fruit, 'Boomerang': self.boomerang}
   
-    if cup in all_cups:
+    if cup.title() in all_cups:
       if cup == 'General':
         random.shuffle(all_cups[cup])
         selection = random.choice(all_cups[cup])
@@ -52,7 +55,7 @@ class MK8Map(commands.Cog):
 
   @mk8m.autocomplete('cup')
   async def mk8m_autocomplete(self, interaction: discord.Interaction, current: str)-> list[app_commands.Choice[str]]:
-    cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller', 'Rock', 'Moon']
+    cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller', 'Rock', 'Moon', 'Fruit', 'Boomerang']
     return [app_commands.Choice(name = cup, value = cup) for cup in cups if current.lower() in cup.lower()]
 
 async def setup(bot):

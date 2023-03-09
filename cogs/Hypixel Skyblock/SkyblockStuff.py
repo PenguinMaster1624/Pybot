@@ -2,7 +2,6 @@ from discord.ext import commands
 from discord import app_commands
 import aiohttp
 import requests, discord, re
-import math
 
 class SkyblockItems(commands.Cog):
   def __init__(self, bot):
