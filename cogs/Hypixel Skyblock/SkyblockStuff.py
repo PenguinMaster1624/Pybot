@@ -2,6 +2,7 @@ from discord.ext import commands
 from discord import app_commands
 import aiohttp
 import requests, discord, re
+import math
 
 class SkyblockItems(commands.Cog):
   def __init__(self, bot):
@@ -85,6 +86,10 @@ class SkyblockItems(commands.Cog):
         for i in range(len(perk_descriptions)):
           for j in range(len(perk_descriptions[i])):
             perk_descriptions[i][j] = re.sub(r'§.', '', perk_descriptions[i][j])
+
+        percentages = []
+        for i in range(len(votes)):
+          percentages.append(round((int(votes[i])/sum(map(int, votes)))*100, 2))
         
         all_votes = f'{sum([int(votes[i]) for i in range(len(votes))]):,}'
 
@@ -96,8 +101,8 @@ class SkyblockItems(commands.Cog):
         
         # creates individual fields for each mayor and their perks
         for i in range(5):
-          perk = '\n'.join(f'{name}\n{description}\n' for (name, description) in zip(perk_names[i], perk_descriptions[i]))
-          embed.add_field(name = name[i], value = f'Specialization: {mayor_type[i]}\n\n{perk}\nVotes: {votes[i]}', inline = False)
+          perk = '\n'.join(f'__{name}__\n*{description}*\n' for (name, description) in zip(perk_names[i], perk_descriptions[i]))
+          embed.add_field(name = name[i], value = f'Specialization: {mayor_type[i]}\n\n{perk}\nVotes: {votes[i]} (**{percentages[i]}%**)', inline = False)
         
         embed.set_footer(text = f'Total amount of votes: {all_votes}')
         await interaction.response.send_message(embed = embed)

@@ -20,35 +20,37 @@ class Splat2nRandomWeapon(commands.Cog):
     self.general = list(self.shooter + self.roller + self.charger + self.slosher + self.splatling + self.dualies + self.brella + self.blaster + self.brush + self.bow + self.splatana)
 
     self.splat_bomb = ['Splattershot Jr.', 'Tentatek Splattershot', 'Luna Blaster', 'Clash Blaster', 'Inkbrush', 'Splat Charger', 'Splatterscope', 'Slosher', 'Dualie Squelchers']
-    self.suction_bomb = ['Splattershot', 'Hero Shot Replica' , 'N-ZAP \'85', 'Forge Splattershot Pro', 'Range Blaster', 'Octobrush', 'Splat Dualies']
-    self.burst_bomb = ['Splash-o-matic', 'Carbon Roller Deco', 'Mini Splatling', 'Splatana Stamper']
+    self.suction_bomb = ['Splattershot', 'Hero Shot Replica' , 'N-ZAP \'85', 'Forge Splattershot Pro', 'Range Blaster', 'Octobrush', 'Splat Dualies', 'Neo Splash-o-matic']
+    self.burst_bomb = ['Splash-o-matic', 'Carbon Roller Deco', 'Mini Splatling', 'Splatana Stamper', 'L-3 Nozzlenose D']
     self.sprinkler = ['Aerospray RG', '.96 Gal', 'Dynamo Roller', 'Snipewriter 5H', 'Bloblobber', 'Heavy Splatling', 'Splat Brella']
-    self.splash_wall = ['.52 Gal', 'Squeezer', 'Big Swig Roller', 'Glooga Dualies']
-    self.fizzy_bomb = ['Aerospray MG', 'Luna Blaster Neo', 'Sloshing Machine', 'Ballpoint Splatling']
-    self.curling_bomb = ['Sploosh-o-matic', 'L-3 Nozzlenose', 'Splat Roller', 'REEF-LUX 450']
-    self.auto_bomb = ['Blaster', 'Carbon Roller', 'Bamboozler 14 Mk I', 'Hydra Splatling', 'Dark Tetra Dualies']
-    self.squid_beakon = ['Dapple Dualies', 'Tenta Brella']
+    self.splash_wall = ['.52 Gal', 'Squeezer', 'Big Swig Roller', 'Glooga Dualies', '.96 Gal Deco', 'Z+F Splat Charger', 'Z+F Splatterscope']
+    self.fizzy_bomb = ['Aerospray MG', 'Luna Blaster Neo', 'Sloshing Machine', 'Ballpoint Splatling', 'Tri Slosher Nouveau']
+    self.curling_bomb = ['Sploosh-o-matic', 'L-3 Nozzlenose', 'Splat Roller', 'REEF-LUX 450', 'Clash Blaster Neo']
+    self.auto_bomb = ['Blaster', 'Carbon Roller', 'Bamboozler 14 Mk I', 'Hydra Splatling', 'Dark Tetra Dualies', 'N-ZAP \'89']
+    self.squid_beakon = ['Dapple Dualies', 'Tenta Brella', 'Neo Sploosh-o-matic', 'Krak-On Splat Roller']
     self.point_sensor = ['Splattershot Nova', 'H-3 Nozzlenose', 'Classic Squiffer', 'Explosher', 'Nautilus 47']
     self.ink_mine = ['Rapid Blaster', 'Flingza Roller', 'Inkbrush Nouveau', 'E-Liter 4K', 'E-Liter 4K Scope', 'Undercover Brella']
-    self.toxic_mist = ['Rapid Blaster Pro', 'Tri-Slosher', 'Zink Mini Splatling', 'Tri-Stringer']
+    self.toxic_mist = ['Rapid Blaster Pro', 'Tri-Slosher', 'Zink Mini Splatling', 'Tri-Stringer', 'Custom Jet Squelcher']
     self.angle_shooter = ['Splattershot Pro', 'Jet Squelcher', 'Slosher Deco']
-    self.torpedo = ['Custom Splattershot Jr.', 'Goo Tuber', 'Dapple Dualies Nouveau', 'Splatana Wiper']
+    self.torpedo = ['Custom Splattershot Jr.', 'Goo Tuber', 'Dapple Dualies Nouveau', 'Splatana Wiper', 'Rapidd Blaster Deco']
 
     self.trizooka = ['Splattershot', 'Hero Shot Replica', 'Clash Blaster', 'Squeezer', 'Carbon Roller Deco']
     self.big_bubbler = ['Splattershot Jr.', 'Blaster', 'Splat Roller', 'Classic Squiffer', 'Zink Mini Splatling']
     self.zipcaster = ['Luna Blaster', 'Carbon Roller', 'Octobrush', 'Slosher Deco', 'Splatana Stamper']
     self.tenta_missiles = ['Flingza Roller', 'Goo Tuber', 'REEF-LUX 450']
-    self.ink_storm = ['Bloblobber', 'Explosher', 'Nautilus 47']
+    self.ink_storm = ['Bloblobber', 'Explosher', 'Nautilus 47', 'Custom Jet Squelcher']
     self.booyah_bomb = ['Aerospray RG', 'Forge Splattershot Pro', 'Sloshing Machine', 'Hydra Splatling', 'Glooga']
     self.wave_breaker = ['Custom Splattershot Jr.', 'Range Blaster', 'E-Liter 4K', 'E-Liter 4K Scope', 'Heavy Splatling', 'Dualie Squelchers']
     self.ink_vac = ['.96 Gal', 'Jet Squelcher', 'Rapid Blaster Pro', 'Big Swig Roller', 'Splat Charger', 'Splatterscope', 'Tenta Brella']
-    self.killer_wail = ['.52 Gal', 'Splattershot Nova', 'Inkbrush', 'Bamboozler 14 Mk I', ' Tri-Stringer']
-    self.inkjet = ['Tri-Slosher', 'Ballpoint Splatling']
-    self.ultra_stamp = ['Sploosh-o-matic', 'Luna Blaster Neo', 'Inkbrush Nouveau', 'Mini Splatling', 'Mini Splatling', 'Splatana Wiper']
+    self.killer_wail = ['.52 Gal', 'Splattershot Nova', 'Inkbrush', 'Bamboozler 14 Mk I', ' Tri-Stringer', 'Neo Sploosh-o-matic']
+    self.inkjet = ['Tri-Slosher', 'Ballpoint Splatling', 'Rapid Blaster Deco']
+    self.ultra_stamp = ['Sploosh-o-matic', 'Luna Blaster Neo', 'Inkbrush Nouveau', 'Mini Splatling', 'Mini Splatling', 'Splatana Wiper', 'L-3 Nozzlenose D']
     self.crab_tank = ['Splash-o-matic', 'Splattershot Pro', 'L-3 Nozzlenose', 'Splat Dualies']
     self.reefslider = ['Aerospray MG', 'Dapple Dualies Nouveau', 'Dark Tetra Dualies', 'Undercover Brella']
-    self.tristrike = ['Tentatek Splattershot', 'Rapid Blaster', 'Slosher', 'Slosher', 'Splat Brella']
-    self.tacticooler = ['N-ZAP \'85', 'H-3 Nozzlenose', 'Dynamo Roller', 'Snipewriter 5H', 'Dapple Dualies']
+    self.tristrike = ['Tentatek Splattershot', 'Rapid Blaster', 'Slosher', 'Slosher', 'Splat Brella', 'Neo Splash-o-matic', 'Z+F Splat Charger', 'Z+F Splatterscope']
+    self.tacticooler = ['N-ZAP \'85', 'H-3 Nozzlenose', 'Dynamo Roller', 'Snipewriter 5H', 'Dapple Dualies', 'Tri Slosher Nouveau']
+    self.super_chump = ['N-ZAP \'89', 'Clash Blaster Neo']
+    self.kraken_royale = ['.96 Gal Deco', 'Krak-On Splat Roller']
 
   async def color(self, selection: str):
     if selection in self.shooter:
@@ -86,6 +88,7 @@ class Splat2nRandomWeapon(commands.Cog):
 
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = 'General'):
+    weapon_class = weapon_class.title().strip()
 
     weapon_type = {'Shooter': self.shooter, 'Roller': self.roller, 'Charger': self.charger, 'Slosher': self.slosher, 'Splatling': self.splatling, 'Dualies': self.dualies, 
                   'Brella': self.brella, 'Blaster': self.blaster, 'Brush': self.brush, 'Bow': self.bow, 'Splatana': self.splatana, 'General': self.general}
@@ -112,18 +115,18 @@ class Splat2nRandomWeapon(commands.Cog):
 
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 3 weapon based on Sub Weapon')
   async def rss(self, interaction: discord.Interaction, sub_weapon: str):
+    sub_weapon = sub_weapon.title().strip()
 
     sub_weapons = {'Splat Bomb': self.splat_bomb, 'Suction Bomb': self.suction_bomb, 'Burst Bomb': self.burst_bomb, 'Sprinkler': self.sprinkler, 'Splash Wall': self.splash_wall, 'Fizzy Bomb': self.fizzy_bomb, 'Curling Bomb': self.curling_bomb, 
                   'Auto Bomb': self.auto_bomb, 'Squid Beakon': self.squid_beakon, 'Point Sensor': self.point_sensor, 'Ink Mine': self.ink_mine, 'Toxic Mist': self.toxic_mist, 'Angle Shooter': self.angle_shooter, 'Torpedo': self.torpedo}
 
     try:
-      sub_weapon = sub_weapon.strip()
       selection = random.choice(sub_weapons[sub_weapon])
     
     except KeyError:
       await interaction.response.send_message('Try again, I think you mispelled something. Don\'t forget to capitalize all words.', ephemeral = True)
 
-    else:
+    else: 
       color = await self.color(selection)
 
       embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Sub Weapon', color = color)
@@ -140,12 +143,12 @@ class Splat2nRandomWeapon(commands.Cog):
       
   @app_commands.command(name = 'rsp', description = 'Rolls a random Splatoon 3 weapon based on Special')
   async def rsp(self, interaction: discord.Interaction, special: str):
+    special = special.title().strip()
 
     specials = {'Trizooka': self.trizooka, 'Big Bubbler': self.big_bubbler, 'Zipcaster': self.zipcaster, 'Tenta Missiles': self.tenta_missiles, 'Ink Storm': self.ink_storm, 'Booyah Bomb': self.booyah_bomb, 'Wave Breaker': self.wave_breaker, 
-                'Ink Vac': self.ink_vac, 'Killer Wail 5.1': self.killer_wail, 'Inkjet': self.inkjet, 'Ultra Stamp': self.ultra_stamp, 'Crab Tank': self.crab_tank, 'Triple Inkstrike': self.tristrike, 'Tacticooler': self.tacticooler}
+                'Ink Vac': self.ink_vac, 'Killer Wail 5.1': self.killer_wail, 'Inkjet': self.inkjet, 'Ultra Stamp': self.ultra_stamp, 'Crab Tank': self.crab_tank, 'Triple Inkstrike': self.tristrike, 'Tacticooler': self.tacticooler, 'Super Chump': self.super_chump, 'Kraken Royale': self.kraken_royale}
 
     try:
-      special = special.strip()
       selection = random.choice(specials[special])
 
     except KeyError:
@@ -163,7 +166,7 @@ class Splat2nRandomWeapon(commands.Cog):
   
   @rsp.autocomplete('special')
   async def rsp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-    specials = ['Trizooka', 'Big Bubbler', 'Zipcaster', 'Tenta Missiles, Ink Storm', 'Booyah Bomb', 'Wave Breaker', 'Ink Vac', 'Killer Wail 5.1', 'Inkjet', 'Ultra Stamp', 'Crab Tank', 'Triple Inkstrike', 'Tacticooler']
+    specials = ['Trizooka', 'Big Bubbler', 'Zipcaster', 'Tenta Missiles, Ink Storm', 'Booyah Bomb', 'Wave Breaker', 'Ink Vac', 'Killer Wail 5.1', 'Inkjet', 'Ultra Stamp', 'Crab Tank', 'Triple Inkstrike', 'Tacticooler', 'Super Chump', 'Kraken Royale']
     return [app_commands.Choice(name = special, value = special) for special in specials if current.lower() in special.lower()]
   
 

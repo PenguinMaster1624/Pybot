@@ -88,7 +88,7 @@ class ButtonHelp(discord.ui.View):
       for thing in self.children:
         thing.disabled = True
 
-      await interaction.response.edit_message(content = 'May The Wisdom Be With You', embed = None, view = self)
+      await interaction.response.edit_message(content = 'Live With Honor, Die With Glory!', embed = None, view = self)
       self.stop()
 
     else:
