@@ -93,5 +93,5 @@ class Poll(commands.Cog):
 
         await interaction.response.send_message(embed = embed, view = PollButtons())
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     await bot.add_cog(Poll(bot))

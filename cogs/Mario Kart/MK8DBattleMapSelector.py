@@ -23,5 +23,5 @@ class MK8BattleMap(commands.Cog):
     
     await interaction.response.send_message(embed = embed, ephemeral = True)
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(MK8BattleMap(bot))

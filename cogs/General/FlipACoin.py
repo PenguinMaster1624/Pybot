@@ -13,5 +13,5 @@ class FlipCoin(commands.Cog):
     choice = random.choice(self.sides)
     await interaction.response.send_message(choice, ephemeral = True)
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(FlipCoin(bot))

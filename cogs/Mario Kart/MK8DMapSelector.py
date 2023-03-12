@@ -58,5 +58,5 @@ class MK8Map(commands.Cog):
     cups = ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller', 'Rock', 'Moon', 'Fruit', 'Boomerang']
     return [app_commands.Choice(name = cup, value = cup) for cup in cups if current.lower() in cup.lower()]
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(MK8Map(bot))

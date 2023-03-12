@@ -168,5 +168,5 @@ class SkyblockItems(commands.Cog):
     elif r.status_code == 503:
       await interaction.response.send_message('Data hasn\'t loaded yet, try again in a bit')
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(SkyblockItems(bot))

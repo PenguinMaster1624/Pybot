@@ -8,5 +8,5 @@ class TwitterStuff(commands.Cog):
         self.bot = bot
         self.bearer = os.getenv("TWITTER_BEARER_TOKEN")
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     await bot.add_cog(TwitterStuff(bot))

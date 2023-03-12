@@ -35,5 +35,5 @@ class pbgm(commands.Cog):
 
     await interaction.response.send_message(embed = embed, ephemeral = True, view = pbgm_buttons())
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(pbgm(bot))

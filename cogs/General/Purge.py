@@ -23,5 +23,5 @@ class message_clear(commands.Cog):
         
             await interaction.followup.send(f'Deleted {num_of_messages} messages!')
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
   await bot.add_cog(message_clear(bot))
