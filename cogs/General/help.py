@@ -57,9 +57,10 @@ class ButtonHelp(discord.ui.View):
     embed.set_footer(text = 'anything in [] are optional, anything in <> are required. These are all slash commands.')
     
     embed.add_field(name = 'rsw [Weapon Class]', value = 'Chooses a random weapon line from Splatoon 3 if no weapon class is specified', inline = False)
-    embed.add_field(name = 'rss <Sub Weapon>', value = 'Chooses a random weapon with a specified Sub Weapon in Splatoon 2. Will be updated for Splatoon 3.', inline = False)
-    embed.add_field(name = 'rsp <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 2. Will be updated for Splatoon 3.', inline = False)
+    embed.add_field(name = 'rss <Sub Weapon>', value = 'Chooses a random weapon with a specified Sub Weapon in Splatoon 3.', inline = False)
+    embed.add_field(name = 'rsp <Special>', value = 'Randomly chooses a weapon with a specified special in Splatoon 3.', inline = False)
     embed.add_field(name = 'pbgm', value = 'Randomly selects a game mode from those available in private battles in Splatoon 3', inline = False)
+    embed.add_field(name = 's3_maps', value = 'Displays maps/modes rotations for Turf War, Anarchy Series/Open and Salmon Run in Splatoon 3', inline = False)
 
     await self.interaction_owner_check(interaction = interaction, embed = embed)
 

@@ -25,9 +25,9 @@ class OverwatchRandomHero(commands.Cog):
         
     async def embed_setup(self, interaction: discord.Interaction, selection: str):
         color = await self.color(selection)
-        embed = discord.Embed(title = 'Overwatch 2 Character Randomizer', description = 'Enjoy playing a game with the following character! :)', color= color)
+        embed = discord.Embed(title = 'Overwatch 2 Character Randomizer', description = 'Enjoy playing a game with the following character! :)', color = color)
         embed.set_author(name = interaction.user.display_name, icon_url = interaction.user.display_avatar)
-        embed.add_field(name = 'You got...', value = f'{selection}! Hope you enjoy!')
+        embed.add_field(name = 'You got...', value = f'**{selection}**! Hope you enjoy!')
         embed.set_footer(text = 'If you don\'t wanna play this character, reroll by using the command again')
 
         return embed
