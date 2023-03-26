@@ -16,7 +16,7 @@ def time_calc():
       turf_war = js['regularSchedules']['nodes'][0]
 
       end = datetime.datetime.fromisoformat(turf_war['endTime'][:-1])
-      end -= datetime.timedelta(hours = 4)
+      end -= datetime.timedelta(hours = 3, minutes = 59, seconds = 30)
 
       time = str(datetime.datetime.time(end))
       time = time.split(':')
@@ -30,7 +30,7 @@ class maps_modes(commands.Cog):
         self.bot = bot
         self.embed_send.start()
 
-    async def s3_rotation_update(self):
+    async def s3_rotation_update(self, node: int):
         images = {}
 
         async with aiohttp.ClientSession() as session:
@@ -39,15 +39,15 @@ class maps_modes(commands.Cog):
 
         if response.status == 200:
           js = js['data']
-          turf_war = js['regularSchedules']['nodes'][0]
+          turf_war = js['regularSchedules']['nodes'][node]
 
-          anarchy_series = js['bankaraSchedules']['nodes'][0]['bankaraMatchSettings'][0]
-          anarchy_open = js['bankaraSchedules']['nodes'][0]['bankaraMatchSettings'][1]
+          anarchy_series = js['bankaraSchedules']['nodes'][node]['bankaraMatchSettings'][0]
+          anarchy_open = js['bankaraSchedules']['nodes'][node]['bankaraMatchSettings'][1]
 
           anarchy_series_mode = anarchy_series['vsRule']['name']
           anarchy_open_mode = anarchy_open['vsRule']['name']
 
-          salmon = js['coopGroupingSchedule']['regularSchedules']['nodes'][0]
+          salmon = js['coopGroupingSchedule']['regularSchedules']['nodes'][node]
 
           start = datetime.datetime.fromisoformat(turf_war['startTime'][:-1])
           start -= datetime.timedelta(hours = 4)
@@ -76,7 +76,7 @@ class maps_modes(commands.Cog):
         
         images[salmon['setting']['coopStage']['name']] = salmon['setting']['coopStage']['image']['url']
 
-        rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'Current maps as of <t:{start}:t>, <t:{start}:R>\nUpdates in <t:{end}:R>', color = discord.Color.blue())
+        rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'Current maps as of <t:{start}:t>, <t:{start}:R>\nUpdates <t:{end}:R>', color = discord.Color.blue())
         
         turf_one = discord.Embed(color = discord.Color.green())
         turf_one.add_field(name = 'Turf War', value = list(images.keys())[0])
@@ -106,86 +106,11 @@ class maps_modes(commands.Cog):
 
         return rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run
     
-    async def s3_next_rotation(self):
-        images = {}
-
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://splatoon3.ink/data/schedules.json') as response:
-                js = await response.json()
-
-        if response.status == 200:
-          js = js['data']
-          future_turf_war = js['regularSchedules']['nodes'][1]
-
-          future_anarchy_series = js['bankaraSchedules']['nodes'][1]['bankaraMatchSettings'][0]
-          future_anarchy_open = js['bankaraSchedules']['nodes'][1]['bankaraMatchSettings'][1]
-
-          future_anarchy_series_mode = future_anarchy_series['vsRule']['name']
-          future_anarchy_open_mode = future_anarchy_open['vsRule']['name']
-
-          future_salmon = js['coopGroupingSchedule']['regularSchedules']['nodes'][1]
-
-          start = datetime.datetime.fromisoformat(future_turf_war['startTime'][:-1])
-          start -= datetime.timedelta(hours = 4)
-          start = str(start.timestamp())[:-2]
-    
-          end = datetime.datetime.fromisoformat(future_turf_war['endTime'][:-1])
-          end -= datetime.timedelta(hours = 4)
-          end = str(end.timestamp())[:-2]
-
-          salmon_start = datetime.datetime.fromisoformat(future_salmon['startTime'][:-1])
-          salmon_start -= datetime.timedelta(hours = 4)
-          salmon_start = str(salmon_start.timestamp())[:-2]
-    
-          salmon_end = datetime.datetime.fromisoformat(future_salmon['endTime'][:-1])
-          salmon_end -= datetime.timedelta(hours = 4)
-          salmon_end = str(salmon_end.timestamp())[:-2]
-
-          for i in range(0, 2):
-              turf_maps = future_turf_war['regularMatchSetting']['vsStages'][i]
-              anarchy_series_maps = future_anarchy_series['vsStages'][i]
-              anarchy_open_maps = future_anarchy_open['vsStages'][i]
-              
-              images[turf_maps['name']] = turf_maps['image']['url']
-              images[anarchy_series_maps['name']] = anarchy_series_maps['image']['url']
-              images[anarchy_open_maps['name']] = anarchy_open_maps['image']['url']
-        
-        images[future_salmon['setting']['coopStage']['name']] = future_salmon['setting']['coopStage']['image']['url']
-
-        future_rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'The next rotation starts at <t:{start}:t>, <t:{start}:R>\nEnds <t:{end}:R>', color = discord.Color.blue())
-        
-        future_turf_one = discord.Embed(color = discord.Color.green())
-        future_turf_one.add_field(name = 'Turf War', value = list(images.keys())[0])
-        future_turf_one.set_image(url = list(images.values())[0])
-
-        future_turf_two = discord.Embed(description = list(images.keys())[3], color = discord.Color.green())
-        future_turf_two.set_image(url = list(images.values())[3])
-
-        future_anarchy_series_one = discord.Embed(color = discord.Color.orange())
-        future_anarchy_series_one.add_field(name = f'Anarchy Series - {future_anarchy_series_mode}', value = list(images.keys())[1])
-        future_anarchy_series_one.set_image(url = list(images.values())[1])
-
-        future_anarchy_series_two = discord.Embed(description = list(images.keys())[4], color = discord.Color.orange())
-        future_anarchy_series_two.set_image(url = list(images.values())[4])
-
-        future_anarchy_open_one = discord.Embed(color = discord.Color.dark_orange())
-        future_anarchy_open_one.add_field(name = f'Anarchy Open - {future_anarchy_open_mode}', value = list(images.keys())[2])
-        future_anarchy_open_one.set_image(url = list(images.values())[2])
-
-        future_anarchy_open_two = discord.Embed(description = list(images.keys())[5], color = discord.Color.dark_orange())
-        future_anarchy_open_two.set_image(url = list(images.values())[5])
-
-        future_salmon_run = discord.Embed(title = 'Salmon Run', description = f'Starts <t:{salmon_start}:f>, <t:{salmon_start}:R>\nEnds <t:{salmon_end}:f>, <t:{salmon_end}:R>', color = discord.Color.purple())
-        future_salmon_run.add_field(name = list(images.keys())[-1], value = '\n'.join(future_salmon['setting']['weapons'][i]['name'] for i in range(0, 4)))
-        future_salmon_run.set_image(url = list(images.values())[-1])
-        future_salmon_run.set_thumbnail(url = 'https://cdn.wikimg.net/en/splatoonwiki/images/6/66/S3_Badge_Grizzco_10K.png')
-
-        return future_rotation_update, future_turf_one, future_turf_two, future_anarchy_series_one, future_anarchy_series_two, future_anarchy_open_one, future_anarchy_open_two, future_salmon_run
 
     @app_commands.command(name = 's3_maps', description = 'Displays the current rotations for Splatoon 3')
     async def s3_maps_modes(self, interaction: discord.Interaction, mode: str = 'All'):
         mode = mode.title().strip()
-        rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run = await self.s3_rotation_update()
+        rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run = await self.s3_rotation_update(0)
 
         if mode == 'Turf War':
             await interaction.response.send_message(embeds = [rotation_update, turf_one, turf_two])
@@ -210,18 +135,25 @@ class maps_modes(commands.Cog):
         modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Salmon Run']
         return [app_commands.Choice(name = mode, value = mode) for mode in modes if current.lower() in mode.lower()]
 
-    @tasks.loop(time = time_calc())
-    async def embed_send(self):
-        rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run = await self.s3_rotation_update()
-        future_rotation_update, future_turf_one, future_turf_two, future_anarchy_series_one, future_anarchy_series_two, future_anarchy_open_one, future_anarchy_open_two, future_salmon_run = await self.s3_next_rotation()
+    async def channel_setup(self, channel_id: int):
+        rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run = await self.s3_rotation_update(0)
+        future_rotation_update, future_turf_one, future_turf_two, future_anarchy_series_one, future_anarchy_series_two, future_anarchy_open_one, future_anarchy_open_two, future_salmon_run = await self.s3_rotation_update(1)
 
-        channel = self.bot.get_channel(1088459539147411497)
+        channel = self.bot.get_channel(channel_id)
         await channel.purge()
         await asyncio.sleep(1)
 
         await channel.send(embeds = [rotation_update, turf_one, turf_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, salmon_run])
+        await channel.send(content = '--------------------------------------------')
         await channel.send(embeds = [future_rotation_update, future_turf_one, future_turf_two, future_anarchy_series_one, future_anarchy_series_two, future_anarchy_open_one, future_anarchy_open_two, future_salmon_run])
-            
+    
+    @tasks.loop(seconds = 10)
+    async def embed_send(self):
+        await self.channel_setup(1088459539147411497)
+        await self.channel_setup(1089292971033235466)
+        
+        self.embed_send.change_interval(time = time_calc())
+
 
     @embed_send.before_loop
     async def before_embed_send_loop(self):
