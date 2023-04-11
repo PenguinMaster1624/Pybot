@@ -2,6 +2,8 @@ from discord import app_commands
 from discord.ext import commands
 import discord
 
+
+teams = ['Nessie', 'Aliens', 'Big Foot', 'Undecided']
 class SplatfestButtons(discord.ui.View):
     def __init__(self):
         super().__init__(timeout = None)
@@ -13,8 +15,6 @@ class SplatfestButtons(discord.ui.View):
             'Undecided': []
         }
         
-        self.teams = ['Dark Chocolate', 'Milk Chocolate', 'White Chocolate', 'Undecided']
-
     async def player_check(self, user_name: str, team: str):
         for i in list(self.total.keys()):
             if i != team:
@@ -31,16 +31,16 @@ class SplatfestButtons(discord.ui.View):
     async def embed_setup(self) -> discord.Embed:
         players = list(self.total.values())
         for i in range(len(self.children)):
-            self.children[i].label = f'{self.teams[i]}: {len(players[i])}'
+            self.children[i].label = f'{teams[i]}: {len(players[i])}'
 
         embed = discord.Embed(title = 'Splatfest Teams', colour =  discord.Color.orange())
         for j in range(len(players)):
             player_list = '\n'.join(players[j])
-            embed.add_field(name = self.teams[j], value = player_list if player_list else None)
+            embed.add_field(name = teams[j], value = player_list if player_list else None)
 
         return embed
     
-    @discord.ui.button(label = 'Dark Chocolate', style = discord.ButtonStyle.blurple, custom_id = 'Shiver')
+    @discord.ui.button(label = teams[0], style = discord.ButtonStyle.blurple, custom_id = 'Shiver')
     async def Shiver(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.name
         helper = await self.player_check(user_name = user_name, team = 'Shiver')
@@ -51,7 +51,7 @@ class SplatfestButtons(discord.ui.View):
         embed = await self.embed_setup()
         await interaction.response.edit_message(embed = embed, view = self)
 
-    @discord.ui.button(label = 'Milk Chocolate', style = discord.ButtonStyle.red, custom_id = 'Frye')
+    @discord.ui.button(label = teams[1], style = discord.ButtonStyle.red, custom_id = 'Frye')
     async def Frye(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.name
         helper = await self.player_check(user_name = user_name, team = 'Frye')
@@ -62,7 +62,7 @@ class SplatfestButtons(discord.ui.View):
         embed = await self.embed_setup()
         await interaction.response.edit_message(embed = embed, view = self)
 
-    @discord.ui.button(label = 'White Chocolate', style = discord.ButtonStyle.green, custom_id = 'Big_Man')
+    @discord.ui.button(label = teams[2], style = discord.ButtonStyle.green, custom_id = 'Big_Man')
     async def Beeg_Man(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.name
         helper = await self.player_check(user_name = user_name, team = 'Big Man')
@@ -93,9 +93,9 @@ class SplatfestTeamChoices(commands.Cog):
     async def SplatfestTeams(self, interaction: discord.Interaction):
 
         embed = discord.Embed(title = 'Splatfest Teams', description = 'The current Splatfest teams')
-        embed.add_field(name = 'Dark Chocolate', value = 'Shiver', inline = True)
-        embed.add_field(name = 'Milk Chocolate', value = 'Frye', inline = True)
-        embed.add_field(name = 'White Chocolate', value = 'Big Man', inline = True)
+        embed.add_field(name = teams[0], value = 'Shiver', inline = True)
+        embed.add_field(name = teams[1], value = 'Frye', inline = True)
+        embed.add_field(name = teams[2], value = 'Big Man', inline = True)
         embed.add_field(name = 'Undecided', value = 'Dunno yet')
         embed.set_footer(text = 'If undecided or not participating, choose the gray button')
         
