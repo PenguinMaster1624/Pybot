@@ -2,3 +2,4 @@
 discord.log
 cogs/General/WebsiteServerStatus.py
 cogs/*/__pycache__/*.pyc
+venv/**

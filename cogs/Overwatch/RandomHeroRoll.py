@@ -8,7 +8,7 @@ class OverwatchRandomHero(commands.Cog):
 
         self.tank = ['D.va', 'Doomfist', 'Junker Queen', 'Orisa', 'Ramattra', 'Reinhardt', 'Roadhog', 'Sigma', 'Winston', 'Wrecking Ball', 'Zarya']
         self.dps = ['Ashe', 'Bastion', 'Cassidy', 'Echo', 'Genji', 'Hanzo', 'Junkrat', 'Mei', 'Pharah', 'Reaper', 'Sojourn', 'Soldier: 76', 'Sombra', 'Symmetra', 'Torbjörn', 'Tracer', 'Widowmaker']
-        self.support = ['Ana', 'Baptiste', 'Brigitte', 'Kiriko', 'Lúcio', 'Mercy', 'Moira', 'Zenyatta']
+        self.support = ['Ana', 'Baptiste', 'Brigitte', 'Kiriko', 'Lúcio', 'Lifeweaver', 'Mercy', 'Moira', 'Zenyatta']
         self.all = list(self.tank + self.dps + self.support)
 
         self.role_names = ['Tank', 'DPS', 'Support']

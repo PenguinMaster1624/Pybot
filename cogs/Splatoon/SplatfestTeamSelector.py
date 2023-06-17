@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 
-teams = ['Nessie', 'Aliens', 'Big Foot', 'Undecided']
+teams = ['Power', 'Wisdom', 'Courage', 'Undecided']
 class SplatfestButtons(discord.ui.View):
     def __init__(self):
         super().__init__(timeout = None)
@@ -96,7 +96,7 @@ class SplatfestTeamChoices(commands.Cog):
         embed.add_field(name = teams[0], value = 'Shiver', inline = True)
         embed.add_field(name = teams[1], value = 'Frye', inline = True)
         embed.add_field(name = teams[2], value = 'Big Man', inline = True)
-        embed.add_field(name = 'Undecided', value = 'Dunno yet')
+        embed.add_field(name = teams[3], value = 'Dunno yet')
         embed.set_footer(text = 'If undecided or not participating, choose the gray button')
         
         await interaction.response.send_message(embed = embed, view = SplatfestButtons())
