@@ -14,7 +14,7 @@ class Pybot(commands.Bot):
     intents.members = True
     intents.message_content = True
     
-    activity = discord.Game(name = 'with and combating bugs')
+    activity = discord.Activity(name = "/help",type = discord.ActivityType.listening)
     super().__init__(command_prefix = 'Pybot.', help_command = None, intents = intents, activity = activity)
 
   async def setup_hook(self) -> None:

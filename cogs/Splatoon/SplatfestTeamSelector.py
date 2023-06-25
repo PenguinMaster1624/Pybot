@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 
-teams = ['Power', 'Wisdom', 'Courage', 'Undecided']
+teams = ['Vanilla', 'Strawberry', 'Mint Chip', 'Undecided']
 class SplatfestButtons(discord.ui.View):
     def __init__(self):
         super().__init__(timeout = None)
@@ -15,18 +15,17 @@ class SplatfestButtons(discord.ui.View):
             'Undecided': []
         }
         
-    async def player_check(self, user_name: str, team: str):
-        for i in list(self.total.keys()):
-            if i != team:
-                if user_name in self.total[i]:
-                    self.total[i].remove(user_name)
+    async def player_check(self, user_name: str, team: str) -> str | None:
+        for person, players in self.total.items():
+            if person != team:
+                if user_name in players:
+                    players.remove(user_name)
             
-            elif i == team:
-                if user_name in self.total[i]:
-                    return 'You\'re already on that team, you can\'t vote for the same team you\'re repping!'
+            elif person == team and user_name in players:
+                return 'You\'re already on that team, you can\'t vote for the same team you\'re repping!'
                 
-                else:
-                    self.total[i].append(user_name)
+            else:
+                players.append(user_name)
 
     async def embed_setup(self) -> discord.Embed:
         players = list(self.total.values())
@@ -42,47 +41,51 @@ class SplatfestButtons(discord.ui.View):
     
     @discord.ui.button(label = teams[0], style = discord.ButtonStyle.blurple, custom_id = 'Shiver')
     async def Shiver(self, interaction: discord.Interaction, button: discord.ui.Button):
-        user_name = interaction.user.name
+        user_name = interaction.user.display_name
         helper = await self.player_check(user_name = user_name, team = 'Shiver')
 
-        if helper != None:
+        if interaction.response.is_done() == False and helper != None:
             await interaction.response.send_message(content = helper, ephemeral = True)
-
-        embed = await self.embed_setup()
-        await interaction.response.edit_message(embed = embed, view = self)
+        
+        else:
+            embed = await self.embed_setup()
+            await interaction.response.edit_message(embed = embed, view = self)
 
     @discord.ui.button(label = teams[1], style = discord.ButtonStyle.red, custom_id = 'Frye')
     async def Frye(self, interaction: discord.Interaction, button: discord.ui.Button):
-        user_name = interaction.user.name
+        user_name = interaction.user.display_name
         helper = await self.player_check(user_name = user_name, team = 'Frye')
 
-        if helper != None:
+        if interaction.response.is_done() == False and helper != None:
             await interaction.response.send_message(content = helper, ephemeral = True)
-
-        embed = await self.embed_setup()
-        await interaction.response.edit_message(embed = embed, view = self)
+        
+        else:
+            embed = await self.embed_setup()
+            await interaction.response.edit_message(embed = embed, view = self)
 
     @discord.ui.button(label = teams[2], style = discord.ButtonStyle.green, custom_id = 'Big_Man')
     async def Beeg_Man(self, interaction: discord.Interaction, button: discord.ui.Button):
-        user_name = interaction.user.name
+        user_name = interaction.user.display_name
         helper = await self.player_check(user_name = user_name, team = 'Big Man')
 
-        if helper != None:
+        if interaction.response.is_done() == False and helper != None:
             await interaction.response.send_message(content = helper, ephemeral = True)
-
-        embed = await self.embed_setup()
-        await interaction.response.edit_message(embed = embed, view = self)        
+        
+        else:
+            embed = await self.embed_setup()
+            await interaction.response.edit_message(embed = embed, view = self) 
 
     @discord.ui.button(label = 'Undecided', style = discord.ButtonStyle.grey, custom_id = 'Undecided')
     async def Undeclared(self, interaction: discord.Interaction, button: discord.ui.Button):
-        user_name = interaction.user.name
+        user_name = interaction.user.display_name
         helper = await self.player_check(user_name = user_name, team = 'Undecided')
 
-        if helper != None:
+        if interaction.response.is_done() == False and helper != None:
             await interaction.response.send_message(content = helper, ephemeral = True)
-
-        embed = await self.embed_setup()
-        await interaction.response.edit_message(embed = embed, view = self)
+        
+        else:
+            embed = await self.embed_setup()
+            await interaction.response.edit_message(embed = embed, view = self)
 
 
 class SplatfestTeamChoices(commands.Cog):
