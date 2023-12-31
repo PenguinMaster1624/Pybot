@@ -5,7 +5,7 @@ import discord
 
 teams = ['Vanilla', 'Strawberry', 'Mint Chip', 'Undecided']
 class SplatfestButtons(discord.ui.View):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(timeout = None)
 
         self.total = {
@@ -91,18 +91,21 @@ class SplatfestButtons(discord.ui.View):
 class SplatfestTeamChoices(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+    
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
+        if interaction.user.id != 347553488697294848:
+            await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
+    
+        else:
+            embed = discord.Embed(title = 'Splatfest Teams', description = 'The current Splatfest teams')
+            embed.add_field(name = teams[0], value = 'Shiver', inline = True)
+            embed.add_field(name = teams[1], value = 'Frye', inline = True)
+            embed.add_field(name = teams[2], value = 'Big Man', inline = True)
+            embed.add_field(name = teams[3], value = 'Dunno yet')
+            embed.set_footer(text = 'If undecided or not participating, choose the gray button')
 
-        embed = discord.Embed(title = 'Splatfest Teams', description = 'The current Splatfest teams')
-        embed.add_field(name = teams[0], value = 'Shiver', inline = True)
-        embed.add_field(name = teams[1], value = 'Frye', inline = True)
-        embed.add_field(name = teams[2], value = 'Big Man', inline = True)
-        embed.add_field(name = teams[3], value = 'Dunno yet')
-        embed.set_footer(text = 'If undecided or not participating, choose the gray button')
-        
-        await interaction.response.send_message(embed = embed, view = SplatfestButtons())
+            await interaction.response.send_message(embed = embed, view = SplatfestButtons())
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(SplatfestTeamChoices(bot))
