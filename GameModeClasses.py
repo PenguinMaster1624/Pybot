@@ -56,16 +56,6 @@ class Splatfest(BaseModel):
     times: TimeSlots
     maps: list[Stage]
 
-class GameModes(BaseModel):
-    turf_war: TurfWar | None
-    anarchy_series: Ranked | None
-    anarchy_open: Ranked | None
-    x_battles: Ranked | None
-    salmon_run: SalmonRun | None
-    challenge: Challenge | None
-    big_run: BigRun | None
-    eggstra_work: EggstraWork | None
-
 class ModeEmbeds(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed = True)
 
