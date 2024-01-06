@@ -36,6 +36,7 @@ class SalmonRun(BaseModel):
 class Challenge(BaseModel):
     title: str
     description: str
+    extended_description: str
     times: list[TimeSlots]
     maps: list[Stage]
     gamemode: str

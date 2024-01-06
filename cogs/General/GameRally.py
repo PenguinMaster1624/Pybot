@@ -84,12 +84,14 @@ class GamersRallyUp(commands.Cog):
     async def rally_players(self, interaction: discord.Interaction, game: str, day: str = None, time: str = None, role: discord.Role = None) -> None:
         username = interaction.user.display_name
         game = game.title()
-        formatted_time = list(re.search(r'(\d+:)?(\d+)?([A|a|P|p])', time).groups())
 
-        if formatted_time[0] == None:
-            formatted_time[1] = f'{formatted_time[1]}:'
-            formatted_time = list(filter(lambda x: x != None, formatted_time))
-            formatted_time.insert(1, '0')
+        if time is not None:
+            formatted_time = list(re.search(r'(\d+:)?(\d+)?([A|a|P|p])', time).groups())
+
+            if formatted_time[0] is None:
+                formatted_time[1] = f'{formatted_time[1]}:'
+                formatted_time = list(filter(lambda x: x is not None, formatted_time))
+                formatted_time.insert(1, '0')
 
         embed = discord.Embed(title = 'Game Time?',
                               color = discord.Color.orange(),
@@ -101,7 +103,7 @@ class GamersRallyUp(commands.Cog):
         embed.add_field(name = 'Not Joining', value = 'For those who don\'t want to join', inline = True)
         embed.add_field(name = 'Maybe', value = 'For those who unsure if they will join', inline = True)
         
-        if day != None and time != None:
+        if day is not None and time is not None:
             parsed_date = datetime.strptime(day, '%m/%d').replace(tzinfo = ZoneInfo('US/Eastern'))
             parsed_time = datetime.strptime(f'{formatted_time[0]}{formatted_time[1]}{formatted_time[2]}M'.upper(), '%H:%M%p').replace(tzinfo = ZoneInfo('US/Eastern'))
             parsed_time_info = datetime.combine(parsed_date.date(), 

@@ -224,6 +224,7 @@ class maps_modes(commands.Cog):
 
         challenges = Challenge(title = challenges_info['leagueMatchEvent']['name'],
                                description = desc,
+                               extended_description = regulation,
                                times = [TimeSlots(start = await self.generate_timestamp(challenges_timeslots[slot]['startTime']),
                                                   end = await self.generate_timestamp(challenges_timeslots[slot]['endTime'])) for slot, data in enumerate(challenges_timeslots)],
                                 maps = [Stage(name = challenge_maps[i]['name'], image = challenge_maps[i]['image']['url']) for i in range(2)],
@@ -234,11 +235,17 @@ class maps_modes(commands.Cog):
                                   color = discord.Color.from_rgb(244, 79, 148))
         
         challenge_one.add_field(name = f"{challenges.gamemode} - {challenges.maps[0].name} | {challenges.maps[1].name}", 
-                                value = regulation,
+                                value = challenges.extended_description,
                                 inline = False)
         
         challenge_one.add_field(name = 'Time Slots For This Challenge', 
-                                value = f'Starts <t:{challenges.times[0].start}:F>\nEnds <t:{challenges.times[0].end}:F>\n\nStarts <t:{challenges.times[1].start}:F>\nEnds <t:{challenges.times[1].end}:F>\n\nStarts <t:{challenges.times[2].start}:F>\nEnds <t:{challenges.times[2].end}:F>\n\nStarts <t:{challenges.times[3].start}:F>\nEnds <t:{challenges.times[3].end}:F>\n\nStarts <t:{challenges.times[4].start}:F>\nEnds <t:{challenges.times[4].end}:F>\n\nStarts <t:{challenges.times[5].start}:F>\nEnds <t:{challenges.times[5].end}:F>', 
+                                value = f'''
+                                Starts <t:{challenges.times[0].start}:F> <t:{challenges.times[0].start}:R>\nEnds <t:{challenges.times[0].end}:F> <t:{challenges.times[0].end}:R>\n
+                                Starts <t:{challenges.times[1].start}:F> <t:{challenges.times[1].start}:R>\nEnds <t:{challenges.times[1].end}:F> <t:{challenges.times[1].end}:R>\n
+                                Starts <t:{challenges.times[2].start}:F> <t:{challenges.times[2].start}:R>\nEnds <t:{challenges.times[2].end}:F> <t:{challenges.times[2].end}:R>\n
+                                Starts <t:{challenges.times[3].start}:F> <t:{challenges.times[3].start}:R>\nEnds <t:{challenges.times[3].end}:F> <t:{challenges.times[3].end}:R>\n
+                                Starts <t:{challenges.times[4].start}:F> <t:{challenges.times[4].start}:R>\nEnds <t:{challenges.times[4].end}:F> <t:{challenges.times[4].end}:R>\n
+                                Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds <t:{challenges.times[5].end}:F> <t:{challenges.times[5].end}:R>''', 
                                 inline = False)
         
         challenge_one.set_image(url = challenges.maps[0].image)
@@ -356,20 +363,12 @@ class maps_modes(commands.Cog):
                 salmon_run = await self.salmon_run(0)
                 await interaction.response.send_message(embed = salmon_run)
 
-            case 'Big Run':
-                big_run = await self.big_run()
-                if big_run:
-                    await interaction.response.send_message(embed = big_run)
-                
-                else:
-                    await interaction.response.send_message('No Big Run soon :(', ephemeral = True)
-            
             case _:
                 await interaction.response.send_message(content = 'That is not a valid game mode', ephemeral = True)
 
     @s3_maps_modes.autocomplete('mode')
     async def s3_maps_modes_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run', 'Big Run']
+        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run']
         return [app_commands.Choice(name = mode, value = mode) for mode in modes if current.lower() in mode.lower()]
 
     async def channel_setup(self, channel_id: int) -> None:
@@ -403,11 +402,11 @@ class maps_modes(commands.Cog):
             eggstra_work = None
         )
 
-        current_modes = [j for i in [current.turf_war, current.anarchy_series, current.anarchy_open, current.x_battle, current.challenge] if i is not None for j in i]
-        future_modes = [j for i in [future.turf_war, future.anarchy_series, future.anarchy_open, future.x_battle, future.challenge] if i is not None for j in i]
+        current_modes = [mode for modes in [current.turf_war, current.anarchy_series, current.anarchy_open, current.x_battle, current.challenge] if modes is not None for mode in modes]
+        future_modes = [mode for modes in [future.turf_war, future.anarchy_series, future.anarchy_open, future.x_battle, future.challenge] if modes is not None for mode in modes]
         
         gamemodes = list(filter(lambda mode: mode is not None, current_modes))
-        salmon_run_stuff = list(filter(lambda mode: mode is not None, [future.salmon_run, future.big_run, future.eggstra_work]))
+        salmon_run_stuff = list(filter(lambda mode: mode is not None, [current.salmon_run, current.big_run, current.eggstra_work]))
         future_gamemodes = list(filter(lambda mode: mode is not None, future_modes))
         future_salmon_stuff = list(filter(lambda mode: mode is not None, [future.salmon_run, future.big_run, future.eggstra_work]))
 
