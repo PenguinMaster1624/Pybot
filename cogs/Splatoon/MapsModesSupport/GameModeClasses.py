@@ -2,13 +2,14 @@ from pydantic import BaseModel, ConfigDict
 from discord import Embed
 
 class ApiResponse(BaseModel):
-    TurfWar: list | None
-    Anarchy: list | None
-    SalmonRun: list[dict] | None
-    Challenge: list | None
-    XBattles: list | None
-    BigRun: dict | None
-    EggstraWork: dict | None
+    TurfWar: list[dict]
+    Anarchy: list[dict]
+    SalmonRun: list[dict]
+    Challenge: list[dict]
+    XBattles: list[dict]
+    BigRun: list[dict]
+    EggstraWork: list[dict]
+    Splatfest: list[dict]
 
 class Stage(BaseModel):
     name: str
@@ -56,6 +57,17 @@ class EggstraWork(BaseModel):
 class Splatfest(BaseModel):
     times: TimeSlots
     maps: list[Stage]
+
+class GameModes(BaseModel):
+    turf_war: TurfWar | None
+    anarchy_series: Ranked | None
+    anarchy_open: Ranked | None
+    x_battles: Ranked | None
+    salmon_run: SalmonRun | None
+    challenge: Challenge | None
+    big_run: BigRun | None
+    eggstra_work: EggstraWork | None
+    splatfest: Splatfest | None
 
 class ModeEmbeds(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed = True)

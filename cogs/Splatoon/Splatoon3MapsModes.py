@@ -1,9 +1,9 @@
+from .MapsModesSupport.GameModeClasses import ModeEmbeds
+from .MapsModesSupport.ModesSetup import MapsModesSetup
 from discord.ext import commands, tasks
 from discord import app_commands
 from zoneinfo import ZoneInfo
-from GameModeClasses import *
 import requests
-import aiohttp
 import asyncio
 import datetime
 import discord
@@ -15,9 +15,14 @@ def time_calc() -> datetime.time:
     if response.status_code == 200:
       js = response.json()
       js = js['data']
+      
+      try:
+          time = js['regularSchedules']['nodes'][0]
+      
+      except KeyError:
+          time = js['festSchedules']['nodes'][0]
 
-      turf_war = js['regularSchedules']['nodes'][0]
-      end = datetime.datetime.fromisoformat(turf_war['endTime'][:-1]).replace(tzinfo = ZoneInfo('UTC'))
+      end = datetime.datetime.fromisoformat(time['endTime'][:-1]).replace(tzinfo = ZoneInfo('UTC'))
       
       return datetime.time(hour = end.hour, minute = end.minute, second = 30, tzinfo = ZoneInfo('UTC'))
 
@@ -25,66 +30,35 @@ class maps_modes(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.embed_send.start()
-        self.schedules = None
+        self.modes = None
 
     async def api_call(self) -> None:
         '''
-        Makes an API call
+        Gathers the necessary information for the embeds
         ''' 
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://splatoon3.ink/data/schedules.json') as response:
-                js: dict = await response.json()
 
-            js = js['data']
-            modes = ApiResponse(TurfWar = js['regularSchedules']['nodes'], 
-                                Anarchy = js['bankaraSchedules']['nodes'], 
-                                SalmonRun = js['coopGroupingSchedule']['regularSchedules']['nodes'],
-                                Challenge = js['eventSchedules']['nodes'], 
-                                XBattles = js['xSchedules']['nodes'],
-                                BigRun = js['coopGroupingSchedule']['bigRunSchedules'],
-                                EggstraWork = js['coopGroupingSchedule']['teamContestSchedules']
-            )
-            self.schedules = modes
-            
-    async def generate_timestamp(self, time: str) -> str:
-        '''
-        Generates a timestamp as a string for use in Discord Embeds
-        '''
-        new_time = str(datetime.datetime.fromisoformat(time[:-1]).replace(tzinfo = ZoneInfo('UTC')).timestamp())[:-2]
-        return new_time
-                
+        modes = MapsModesSetup()
+        await modes.gather([0, 1])
+        self.modes = modes.gamemodes
+
+
     async def s3_rotation_update(self, node: int) -> discord.Embed:
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://splatoon3.ink/data/schedules.json') as response:
-                turf_war = await response.json()
-                turf_war = turf_war['data']
-            
-        turf_war = turf_war['regularSchedules']['nodes'][node]
-        start = await self.generate_timestamp(turf_war['startTime'])
-        end = await self.generate_timestamp(turf_war['endTime'])
+        
+        try: 
+            time = self.modes[node].turf_war
+        
+        except IndexError:
+            time = self.modes[node].splatfest
 
-        rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'Start Time: <t:{start}:t>, <t:{start}:R>\nEnd Time: <t:{end}:t>, <t:{end}:R>', color = discord.Color.blue())
+        rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'Start Time: <t:{time.times.start}:t>, <t:{time.times.start}:R>\nEnd Time: <t:{time.times.end}:t>, <t:{time.times.end}:R>', color = discord.Color.blue())
         return rotation_update
     
     async def turf_war(self, node: int) -> discord.Embed | None:
         '''
         Returns Splatoon 3 Turf War information
         '''
-        modes = self.schedules
 
-        try:
-            turf_war = modes.TurfWar[node]
-            stage_one = Stage(name = turf_war['regularMatchSetting']['vsStages'][0]['name'], 
-                              image = turf_war['regularMatchSetting']['vsStages'][0]['image']['url'])
-            
-            stage_two = Stage(name = turf_war['regularMatchSetting']['vsStages'][1]['name'], 
-                              image = turf_war['regularMatchSetting']['vsStages'][1]['image']['url'])
-            
-        except IndexError:
-            return None, None
-        
-        turf_info = TurfWar(times = TimeSlots(start = await self.generate_timestamp(turf_war['startTime']), end = await self.generate_timestamp(turf_war['endTime'])),
-                            maps = [stage_one, stage_two])
+        turf_info = self.modes[node].turf_war
 
         turf_war_stage_one = discord.Embed(color = discord.Color.green())
         turf_war_stage_one.add_field(name = 'Turf War', value = '')
@@ -101,23 +75,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 Anarchy Series information
         '''
-        nodes = self.schedules
-
-        try:
-            anarchy_series = nodes.Anarchy[node]['bankaraMatchSettings'][0]
-            stage_one = Stage(name = anarchy_series['vsStages'][0]['name'], 
-                              image = anarchy_series['vsStages'][0]['image']['url'])
-            
-            stage_two = Stage(name = anarchy_series['vsStages'][1]['name'],
-                              image = anarchy_series['vsStages'][1]['image']['url'])
-        
-        except IndexError:
-            return None, None
-        
-        series_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(nodes.Anarchy[node]['startTime']), 
-                                                      end = await self.generate_timestamp(nodes.Anarchy[node]['endTime'])), 
-                                    maps = [stage_one, stage_two],
-                                    gamemode = anarchy_series['vsRule']['name'])
+        series_info = self.modes[node].anarchy_series
 
         anarchy_series_one = discord.Embed(color = discord.Color.orange())
         anarchy_series_one.add_field(name = f'Anarchy Series - {series_info.gamemode}', value = '')
@@ -134,24 +92,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 Anarchy Open information
         '''
-        nodes = self.schedules
-        
-        try:
-            anarchy_open = nodes.Anarchy[node]['bankaraMatchSettings'][1]
-
-            stage_one = Stage(name = anarchy_open['vsStages'][0]['name'], 
-                              image = anarchy_open['vsStages'][0]['image']['url'])
-            
-            stage_two = Stage(name = anarchy_open['vsStages'][1]['name'],
-                              image = anarchy_open['vsStages'][1]['image']['url'])
-
-        except IndexError:
-            return None, None
-        
-        open_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(nodes.Anarchy[node]['startTime']), 
-                                                      end = await self.generate_timestamp(nodes.Anarchy[node]['endTime'])), 
-                                    maps = [stage_one, stage_two],
-                                    gamemode = anarchy_open['vsRule']['name'])
+        open_info = self.modes[node].anarchy_open
 
         anarchy_open_one = discord.Embed(color = discord.Color.dark_orange())
         anarchy_open_one.add_field(name = f'Anarchy Open - {open_info.gamemode}', value = '')
@@ -168,25 +109,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 X Battle information
         '''
-
-        nodes = self.schedules
-
-        try:
-            x_battles = nodes.XBattles[node]['xMatchSetting']
-
-            stage_one = Stage(name = x_battles['vsStages'][0]['name'], 
-                              image = x_battles['vsStages'][0]['image']['url'])
-            
-            stage_two = Stage(name = x_battles['vsStages'][1]['name'],
-                              image = x_battles['vsStages'][1]['image']['url'])
-        
-        except IndexError:
-            return None, None
-        
-        x_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(nodes.Anarchy[node]['startTime']), 
-                                          end = await self.generate_timestamp(nodes.Anarchy[node]['endTime'])), 
-                        maps = [stage_one, stage_two],
-                        gamemode = x_battles['vsRule']['name'])
+        x_info = self.modes[node].x_battles
 
         x_one = discord.Embed(color = discord.Color.dark_green())
         x_one.add_field(name = f'X Battle - {x_info.gamemode}', value = '')
@@ -203,32 +126,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Challenge information
         '''
-
-        challenge_stuff = self.schedules.Challenge
-
-        try:
-            challenges_info = challenge_stuff[node]
-            challenges_timeslots = challenges_info['timePeriods']
-            challenges_info = challenges_info['leagueMatchSetting']
-            challenge_maps = challenges_info['vsStages']
-
-
-        except IndexError:
-            return None, None
-        
-        regulation = str(challenges_info['leagueMatchEvent']['regulation']).split('<br />')
-        regulation = '\n'.join(i.strip('・ ') for i in regulation)
-
-        desc = str(challenges_info['leagueMatchEvent']['desc']).split('<br />')
-        desc = '\n'.join(i.strip('・ ') for i in desc)
-
-        challenges = Challenge(title = challenges_info['leagueMatchEvent']['name'],
-                               description = desc,
-                               extended_description = regulation,
-                               times = [TimeSlots(start = await self.generate_timestamp(challenges_timeslots[slot]['startTime']),
-                                                  end = await self.generate_timestamp(challenges_timeslots[slot]['endTime'])) for slot, data in enumerate(challenges_timeslots)],
-                                maps = [Stage(name = challenge_maps[i]['name'], image = challenge_maps[i]['image']['url']) for i in range(2)],
-                                gamemode = challenges_info['vsRule']['name'])
+        challenges = self.modes[node].challenge
 
         challenge_one = discord.Embed(title = f'Challenge: {challenges.title}', 
                                   description = challenges.description,
@@ -240,12 +138,12 @@ class maps_modes(commands.Cog):
         
         challenge_one.add_field(name = 'Time Slots For This Challenge', 
                                 value = f'''
-                                Starts <t:{challenges.times[0].start}:F> <t:{challenges.times[0].start}:R>\nEnds <t:{challenges.times[0].end}:F> <t:{challenges.times[0].end}:R>\n
-                                Starts <t:{challenges.times[1].start}:F> <t:{challenges.times[1].start}:R>\nEnds <t:{challenges.times[1].end}:F> <t:{challenges.times[1].end}:R>\n
-                                Starts <t:{challenges.times[2].start}:F> <t:{challenges.times[2].start}:R>\nEnds <t:{challenges.times[2].end}:F> <t:{challenges.times[2].end}:R>\n
-                                Starts <t:{challenges.times[3].start}:F> <t:{challenges.times[3].start}:R>\nEnds <t:{challenges.times[3].end}:F> <t:{challenges.times[3].end}:R>\n
-                                Starts <t:{challenges.times[4].start}:F> <t:{challenges.times[4].start}:R>\nEnds <t:{challenges.times[4].end}:F> <t:{challenges.times[4].end}:R>\n
-                                Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds <t:{challenges.times[5].end}:F> <t:{challenges.times[5].end}:R>''', 
+Starts <t:{challenges.times[0].start}:F> <t:{challenges.times[0].start}:R>\nEnds <t:{challenges.times[0].end}:F> <t:{challenges.times[0].end}:R>\n
+Starts <t:{challenges.times[1].start}:F> <t:{challenges.times[1].start}:R>\nEnds <t:{challenges.times[1].end}:F> <t:{challenges.times[1].end}:R>\n
+Starts <t:{challenges.times[2].start}:F> <t:{challenges.times[2].start}:R>\nEnds <t:{challenges.times[2].end}:F> <t:{challenges.times[2].end}:R>\n
+Starts <t:{challenges.times[3].start}:F> <t:{challenges.times[3].start}:R>\nEnds <t:{challenges.times[3].end}:F> <t:{challenges.times[3].end}:R>\n
+Starts <t:{challenges.times[4].start}:F> <t:{challenges.times[4].start}:R>\nEnds <t:{challenges.times[4].end}:F> <t:{challenges.times[4].end}:R>\n
+Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds <t:{challenges.times[5].end}:F> <t:{challenges.times[5].end}:R>''', 
                                 inline = False)
         
         challenge_one.set_image(url = challenges.maps[0].image)
@@ -261,23 +159,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Salmon Run information in an embed
         '''
-        nodes = self.schedules
-        try:
-            salmon_run_info = nodes.SalmonRun[node]
-
-        except IndexError:
-            return None
-        
-        salmon_info = SalmonRun(times = TimeSlots(
-            start = await self.generate_timestamp(salmon_run_info['startTime']),
-            end = await self.generate_timestamp(salmon_run_info['endTime'])
-            ),
-            stage = Stage(
-                name = salmon_run_info['setting']['coopStage']['name'],
-                image = salmon_run_info['setting']['coopStage']['image']['url']
-                ),
-                weapons = [salmon_run_info['setting']['weapons'][i]['name'] for i in range(4)],
-                boss = salmon_run_info['setting']['boss']['name'])
+        salmon_info = self.modes[node].salmon_run
 
 
         salmon_run = discord.Embed(title = 'Salmon Run', description = f'Start time: <t:{salmon_info.times.start}:f>, <t:{salmon_info.times.start}:R>\nEnd Time: <t:{salmon_info.times.end}:f>, <t:{salmon_info.times.end}:R>', color = discord.Color.purple())
@@ -292,21 +174,8 @@ class maps_modes(commands.Cog):
         '''
         Returns Big Run information
         '''
-
-        schedule = self.schedules
-
-        try:
-            big_run_info = schedule['coopGroupingSchedule']['bigRunSchedule']['nodes'][0]
-        
-        except IndexError:
-            return None
-        
-        start, end = await self.generate_timestamp(big_run_info['startTime'], big_run_info['endTime'])
-
-        maps = big_run_info['setting']['coopStage']
-        weapons = big_run_info['setting']['weapons']
-        king_salmonid = big_run_info['__splatoon3ink_king_salmonid_guess']
-
+        return
+    
         big_run = discord.Embed(title = 'Big Run', description = f'Start time: <t:{start}:f>, <t:{start}:R>\nEnd Time: <t:{end}:f>, <t:{end}:R>', color = discord.Color.purple())
         big_run.add_field(name = f"{maps['name']} - {king_salmonid}", value = '\n'.join(node['name'] for node in weapons))
         big_run.set_image(url = maps['image']['url'])
