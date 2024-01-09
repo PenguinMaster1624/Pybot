@@ -57,6 +57,7 @@ class EggstraWork(BaseModel):
 class Splatfest(BaseModel):
     times: TimeSlots
     maps: list[Stage]
+    fest_active: bool
 
 class GameModes(BaseModel):
     turf_war: TurfWar | None

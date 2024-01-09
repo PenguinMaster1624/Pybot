@@ -60,6 +60,9 @@ class maps_modes(commands.Cog):
 
         turf_info = self.modes[node].turf_war
 
+        if turf_info is None:
+            return None 
+        
         turf_war_stage_one = discord.Embed(color = discord.Color.green())
         turf_war_stage_one.add_field(name = 'Turf War', value = '')
         turf_war_stage_one.set_image(url = turf_info.maps[0].image)
@@ -77,6 +80,9 @@ class maps_modes(commands.Cog):
         '''
         series_info = self.modes[node].anarchy_series
 
+        if series_info is None:
+            return None
+        
         anarchy_series_one = discord.Embed(color = discord.Color.orange())
         anarchy_series_one.add_field(name = f'Anarchy Series - {series_info.gamemode}', value = '')
         anarchy_series_one.set_image(url = series_info.maps[0].image)
@@ -111,6 +117,9 @@ class maps_modes(commands.Cog):
         '''
         x_info = self.modes[node].x_battles
 
+        if x_info is None:
+            return None
+
         x_one = discord.Embed(color = discord.Color.dark_green())
         x_one.add_field(name = f'X Battle - {x_info.gamemode}', value = '')
         x_one.set_image(url = x_info.maps[0].image)
@@ -127,6 +136,9 @@ class maps_modes(commands.Cog):
         Returns Challenge information
         '''
         challenges = self.modes[node].challenge
+
+        if challenges is None:
+            return None
 
         challenge_one = discord.Embed(title = f'Challenge: {challenges.title}', 
                                   description = challenges.description,
@@ -161,6 +173,8 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         salmon_info = self.modes[node].salmon_run
 
+        if salmon_info is None:
+            return None
 
         salmon_run = discord.Embed(title = 'Salmon Run', description = f'Start time: <t:{salmon_info.times.start}:f>, <t:{salmon_info.times.start}:R>\nEnd Time: <t:{salmon_info.times.end}:f>, <t:{salmon_info.times.end}:R>', color = discord.Color.purple())
         salmon_run.add_field(name = f"{salmon_info.stage.name} - {salmon_info.boss}", value = '\n'.join(weapon for weapon in salmon_info.weapons))

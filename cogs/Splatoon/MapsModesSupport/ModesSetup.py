@@ -168,7 +168,19 @@ class MapsModesSetup:
     
 
     async def splatfest(self, node: int) -> Splatfest | None:
-        return
+        mode = self.response.Splatfest
+
+        try:
+            splatfest = mode[node]
+            
+        except IndexError:
+            return None
+        
+        splatfest_info = Splatfest(times = TimeSlots(start = await self.generate_timestamp(splatfest['startTime']), end = await self.generate_timestamp(splatfest['endTime'])),
+                            maps = [Stage(name = splatfest['regularMatchSetting']['vsStages'][stage]['name'], image = splatfest['regularMatchSetting']['vsStages'][stage]['image']['url']) for stage in range(2)],
+                            fest_active = splatfest['festMatchSettings'])
+        
+        return splatfest_info
 
     
     async def gather(self, nodes: list[int]) -> None:
@@ -183,6 +195,6 @@ class MapsModesSetup:
                 challenge = await self.challenges(node), 
                 big_run = None, 
                 eggstra_work = None,
-                splatfest = None
+                splatfest = await self.splatfest(node)
                 ) for node in nodes]
         
