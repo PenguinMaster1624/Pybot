@@ -1,9 +1,6 @@
 .env
 discord.log
-cogs/General/WebsiteServerStatus.py
 cogs/*/__pycache__/*.pyc
 venv/**
-BirthdayPing.py
 __pycache__
 Pybot.bat
-birthdays.json
