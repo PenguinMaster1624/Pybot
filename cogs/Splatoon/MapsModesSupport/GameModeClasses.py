@@ -21,12 +21,14 @@ class TimeSlots(BaseModel):
 
 class TurfWar(BaseModel):
     times: TimeSlots
-    maps: list[Stage]
+    maps: list[Stage] | None
+    fest_active: bool
 
 class Ranked(BaseModel):
     times: TimeSlots
-    maps: list[Stage]
-    gamemode: str
+    maps: list[Stage] | None
+    gamemode: str | None
+    fest_active: bool
 
 class SalmonRun(BaseModel):
     times: TimeSlots
@@ -52,11 +54,11 @@ class EggstraWork(BaseModel):
     time: TimeSlots
     stage: Stage
     weapons: list[str]
-    boss: str
 
-class Splatfest(BaseModel):
+class Splatfest(BaseModel): 
     times: TimeSlots
-    maps: list[Stage]
+    maps: list[Stage] | None
+    mode: str | None
     fest_active: bool
 
 class GameModes(BaseModel):
@@ -68,7 +70,8 @@ class GameModes(BaseModel):
     challenge: Challenge | None
     big_run: BigRun | None
     eggstra_work: EggstraWork | None
-    splatfest: Splatfest | None
+    splatfest_open: Splatfest | None
+    splatfest_pro: Splatfest | None
 
 class ModeEmbeds(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed = True)
@@ -81,3 +84,5 @@ class ModeEmbeds(BaseModel):
     challenge: list[Embed] | None
     big_run: Embed | None
     eggstra_work: Embed | None
+    splatfest_open: list[Embed] | None
+    splatfest_pro: list[Embed] | None

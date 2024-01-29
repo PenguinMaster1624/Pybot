@@ -61,6 +61,9 @@ class maps_modes(commands.Cog):
         turf_info = self.modes[node].turf_war
 
         if turf_info is None:
+            return None
+
+        elif turf_info.fest_active is True:
             return None 
         
         turf_war_stage_one = discord.Embed(color = discord.Color.green())
@@ -100,6 +103,9 @@ class maps_modes(commands.Cog):
         '''
         open_info = self.modes[node].anarchy_open
 
+        if open_info is None:
+            return None
+
         anarchy_open_one = discord.Embed(color = discord.Color.dark_orange())
         anarchy_open_one.add_field(name = f'Anarchy Open - {open_info.gamemode}', value = '')
         anarchy_open_one.set_image(url = open_info.maps[0].image)
@@ -118,6 +124,9 @@ class maps_modes(commands.Cog):
         x_info = self.modes[node].x_battles
 
         if x_info is None:
+            return None
+        
+        elif x_info.fest_active is True:
             return None
 
         x_one = discord.Embed(color = discord.Color.dark_green())
@@ -199,11 +208,68 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         return big_run
     
     async def eggstra_work(self) -> discord.Embed | None:
-        ...
-    
-    async def splatfest(self, node: int) -> discord.Embed | None:
-        ...
+        '''
+        Returns Eggstra Work information when available
+        '''
 
+        eggstra_work_info = self.modes[0].eggstra_work
+
+        if eggstra_work_info is None:
+            return None
+        
+        eggstra_work = discord.Embed(title = 'EGGSTRA WORK', description = f'Start time: <t:{eggstra_work_info.time.start}:f>, <t:{eggstra_work_info.time.start}:R>\nEnd Time: <t:{eggstra_work_info.time.end}:f>, <t:{eggstra_work_info.time.end}:R>', color = discord.Color.gold())
+        eggstra_work.add_field(name = f"{eggstra_work_info.stage.name}", value = '\n'.join(weapon for weapon in eggstra_work_info.weapons))
+        eggstra_work.set_image(url = eggstra_work_info.stage.image)
+        eggstra_work.set_thumbnail(url = 'https://cdn.wikimg.net/en/splatoonwiki/images/thumb/7/77/S3_Icon_Eggstra_Work.svg/120px-S3_Icon_Eggstra_Work.svg.png?20230220215341')
+        eggstra_work.set_footer(text = 'Enjoy the event!')
+
+        return eggstra_work
+    
+    async def splatfest_open(self, node: int) -> discord.Embed | None:
+        '''
+        Returns Splatfest Open information in an embed when a Splatfest is active
+        '''
+        splatfest_info = self.modes[node].splatfest_open
+
+        if splatfest_info is None:
+            return None
+        
+        elif splatfest_info.fest_active is False:
+            return None
+        
+        splatfest_one = discord.Embed(title = f'Splatfest Battle - {splatfest_info.mode}', color = discord.Color.dark_blue())
+        splatfest_one.set_image(url = splatfest_info.maps[0].image)
+        splatfest_one.set_footer(text = splatfest_info.maps[0].name)
+
+        splatfest_two = discord.Embed(color = discord.Color.dark_blue())
+        splatfest_two.set_image(url = splatfest_info.maps[1].image)
+        splatfest_two.set_footer(text = splatfest_info.maps[1].name)
+
+        return splatfest_one, splatfest_two
+    
+
+    async def splatfest_pro(self, node: int) -> discord.Embed | None:
+        '''
+        Returns Splatfest information in an embed when a Splatfest is active
+        '''
+        splatfest_info = self.modes[node].splatfest_pro
+
+        if splatfest_info is None:
+            return None
+        
+        elif splatfest_info.fest_active is False:
+            return None
+        
+        splatfest_one = discord.Embed(title = f'Splatfest Battle - {splatfest_info.mode}', color = discord.Color.dark_blue())
+        splatfest_one.set_image(url = splatfest_info.maps[0].image)
+        splatfest_one.set_footer(text = splatfest_info.maps[0].name)
+
+        splatfest_two = discord.Embed(color = discord.Color.dark_blue())
+        splatfest_two.set_image(url = splatfest_info.maps[1].image)
+        splatfest_two.set_footer(text = splatfest_info.maps[1].name)
+
+        return splatfest_one, splatfest_two
+    
             
     @app_commands.command(name = 's3_maps', description = 'Displays the current rotations for Splatoon 3')
     async def s3_maps_modes(self, interaction: discord.Interaction, mode: str = 'All'):
@@ -271,7 +337,9 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
             salmon_run = await self.salmon_run(0),
             challenge = await self.challenges(0),
             big_run = None,
-            eggstra_work = None
+            eggstra_work = await self.eggstra_work(),
+            splatfest_open = await self.splatfest_open(0),
+            splatfest_pro = await self.splatfest_pro(0)
         )
 
         future = ModeEmbeds(
@@ -282,14 +350,16 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
             salmon_run = await self.salmon_run(1),
             challenge = await self.challenges(1),
             big_run = None,
-            eggstra_work = None
+            eggstra_work = await self.eggstra_work(),
+            splatfest_open = await self.splatfest_open(1),
+            splatfest_pro = await self.splatfest_pro(1)
         )
 
-        current_modes = [mode for modes in [current.turf_war, current.anarchy_series, current.anarchy_open, current.x_battle, current.challenge] if modes is not None for mode in modes]
-        future_modes = [mode for modes in [future.turf_war, future.anarchy_series, future.anarchy_open, future.x_battle, future.challenge] if modes is not None for mode in modes]
+        current_modes = [mode for modes in [current.splatfest_open, current.splatfest_pro, current.turf_war, current.anarchy_series, current.anarchy_open, current.x_battle, current.challenge] if modes is not None for mode in modes]
+        future_modes = [mode for modes in [future.splatfest_open, future.splatfest_pro, future.turf_war, future.anarchy_series, future.anarchy_open, future.x_battle, future.challenge] if modes is not None for mode in modes]
         
         gamemodes = list(filter(lambda mode: mode is not None, current_modes))
-        salmon_run_stuff = list(filter(lambda mode: mode is not None, [current.salmon_run, current.big_run, current.eggstra_work]))
+        salmon_run_stuff = list(filter(lambda mode: mode is not None, [current.salmon_run, current.big_run]))
         future_gamemodes = list(filter(lambda mode: mode is not None, future_modes))
         future_salmon_stuff = list(filter(lambda mode: mode is not None, [future.salmon_run, future.big_run, future.eggstra_work]))
 
@@ -314,6 +384,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
     @embed_send.before_loop
     async def before_embed_send_loop(self):
         await self.bot.wait_until_ready()
+        
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(maps_modes(bot))
