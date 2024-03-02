@@ -68,18 +68,14 @@ class SkyblockItems(commands.Cog):
         last_updated = r['lastUpdated']
 
         # creates lists for respective mayors and their perks, for use in the following for loop
-        perk_names = [set() for i in range(5)]
-        perk_descriptions = [set() for i in range(5)]
+        perk_names = [[] for i in range(5)]
+        perk_descriptions = [[] for i in range(5)]
   
         # adds the candidates' perks to their respective mayors
         for i in range(len(slot)):
           for j in slot[i]:
-            perk_names[i].add(j['name'])
-            perk_descriptions[i].add(j['description'])
-
-        for i in range(len(perk_names)):
-          perk_names[i] = list(perk_names[i])
-          perk_descriptions[i] = list(perk_descriptions[i])
+            perk_names[i].append(j['name'])
+            perk_descriptions[i].append(j['description'])
 
         # removes the simoleon and the character following it, for better readability
         for i in range(len(perk_descriptions)):
