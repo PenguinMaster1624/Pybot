@@ -6,11 +6,11 @@ import aiohttp
 
 class MapsModesSetup:
     def __init__(self) -> None:
-         '''Used to set up game mode
-       classes for Splatoon 3 Maps and Modes
-       '''
-         self.response = None
-         self.gamemodes: list[GameModes] | None = None
+        '''Used to set up game mode
+        classes for Splatoon 3 Maps and Modes
+        '''
+        self.response = None
+        self.gamemodes: list[GameModes] | None = None
 
 
     async def generate_timestamp(self, time: str) -> str:
@@ -62,7 +62,7 @@ class MapsModesSetup:
         try:
             anarchy_series = mode[node]['bankaraMatchSettings'][0]
         
-        except IndexError:
+        except TypeError:
             return None
 
         series_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(mode[node]['startTime']),  end = await self.generate_timestamp(mode[node]['endTime'])), 
@@ -80,7 +80,7 @@ class MapsModesSetup:
         try:
             anarchy_open = mode[node]['bankaraMatchSettings'][1]
 
-        except IndexError:
+        except TypeError:
             return None
         
         series_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(mode[node]['startTime']), end = await self.generate_timestamp(mode[node]['endTime'])), 
@@ -118,7 +118,7 @@ class MapsModesSetup:
             challenge_maps = challenges_info['vsStages']
 
 
-        except IndexError:
+        except TypeError:
             return None
         
         regulation = str(challenges_info['leagueMatchEvent']['regulation']).split('<br />')
