@@ -11,14 +11,14 @@ class Splat2nRandomWeapon(commands.Cog):
 
     if weapon_class is not None:
       weapon_class = weapon_class.title().strip()
-      command = f'SELECT weapon FROM weapons WHERE class = "{weapon_class}"'
+      command = f'SELECT Main, Introduced FROM Weapons WHERE Class = "{weapon_class}"'
     
     else:
-      command = 'SELECT weapon FROM weapons'
+      command = 'SELECT Main, Introduced FROM Weapons'
 
     with sqlite3.connect('Splatoon 3.db') as db:
       cursor = db.cursor()
-      weapons = [weapon[0] for weapon in cursor.execute(command)]
+      weapons = [weapon for weapon in cursor.execute(command)]
 
     try:
       selection = random.choice(weapons)
@@ -28,8 +28,8 @@ class Splat2nRandomWeapon(commands.Cog):
 
     embed = discord.Embed(title = 'Splatoon 3 Random Weapon Selector', color = discord.Color.blue())
     embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection)
-    embed.set_footer(text = f'Weapon Time Baby!')
+    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
+    embed.set_footer(text = f'Introduced In {selection[1]}')
     
     await interaction.response.send_message(embed = embed, ephemeral = True)
 
@@ -44,7 +44,7 @@ class Splat2nRandomWeapon(commands.Cog):
 
     with sqlite3.connect('Splatoon 3.db') as db:
       cursor = db.cursor()
-      weapons = [weapon[0] for weapon in cursor.execute(f'SELECT weapon FROM weapons WHERE sub = "{sub_weapon}"')]
+      weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Sub = "{sub_weapon}"')]
 
     try:
       selection = random.choice(weapons)
@@ -54,8 +54,8 @@ class Splat2nRandomWeapon(commands.Cog):
 
     embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Sub Weapon', color = discord.Color.blurple())
     embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection)
-    embed.set_footer(text = 'Weapon Time Baby!')
+    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
+    embed.set_footer(text = f'Introduced In {selection[1]}')
 
     await interaction.response.send_message(embed = embed, ephemeral = True)
 
@@ -70,7 +70,7 @@ class Splat2nRandomWeapon(commands.Cog):
 
     with sqlite3.connect('Splatoon 3.db') as db:
       cursor = db.cursor()
-      weapons = [weapon[0] for weapon in cursor.execute(f'SELECT weapon FROM weapons WHERE special = "{special}"')]
+      weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Special = "{special}"')]
 
     try:
       selection = random.choice(weapons)
@@ -80,8 +80,8 @@ class Splat2nRandomWeapon(commands.Cog):
 
     embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Special', description = f'{special} go brrr', color = discord.Color.purple())
     embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection)
-    embed.set_footer(text = 'Weapon Time Baby!')
+    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
+    embed.set_footer(text = f'Introduced In {selection[1]}')
 
     await interaction.response.send_message(embed = embed, ephemeral = True)
   
