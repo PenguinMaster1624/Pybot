@@ -14,7 +14,9 @@
 ###### /help                        <-- A help command that pulls up all available commands
 ###### /mk8m [Cup]                  <-- Chooses a track from an inputted cup from Mario Kart 8 Deluxe. If not cup is inputted, it will default to the General pool
 ###### /pbgm                        <-- Chooses any game mode available in Splatoon 3's Private Battle randomly
-###### /rsw [Weapon Class]          <-- Chooses a weapon line from Splatoon 3. You get to choose which one you play with that name). Will default to every class if none specified
+###### /rsw [Weapon Class]          <-- Chooses a weapon line from Splatoon 3. Will default to every class if none specified
+##### /rss <Sub Weapon>             <-- Similar to /rsw, but instead passing in a sub weapon and returning a weapon with that sub weapon
+##### /rsp <Special Weapon>         <-- Similar to /rss, except with special weapons
 ###### /rot <msg, number>           <-- rotates a message a specified number of letters in the alphabet forward. Only creator of this bot can use this
 ###### /mt <msg>                    <-- turns a message into morse code. Only creator of this bot can use this
 ###### /bt <msg>                    <-- turns a message into binary code. Only creator of this bos can use this
