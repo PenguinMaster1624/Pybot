@@ -1,5 +1,5 @@
 import requests
-
+import asyncio
 
 async def api_call(package_name: str) -> str:
     with requests.get(url = f'https://pypi.org/pypi/{package_name}/json') as response:
@@ -30,4 +30,6 @@ async def package_check() -> None:
         
     else:
         print('All packages up to date')
-        
+
+if __name__ == '__main__':
+    asyncio.run(package_check())
