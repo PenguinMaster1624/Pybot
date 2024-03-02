@@ -43,13 +43,7 @@ class maps_modes(commands.Cog):
 
 
     async def s3_rotation_update(self, node: int) -> discord.Embed:
-        
-        try: 
-            time = self.modes[node].turf_war
-        
-        except IndexError:
-            time = self.modes[node].splatfest
-
+        time = self.modes[node].turf_war
         rotation_update = discord.Embed(title = 'Splatoon 3 Rotations', description = f'Start Time: <t:{time.times.start}:t>, <t:{time.times.start}:R>\nEnd Time: <t:{time.times.end}:t>, <t:{time.times.end}:R>', color = discord.Color.blue())
         return rotation_update
     
@@ -278,12 +272,21 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         match mode:
             case 'All':
                 rotation_update = await self.s3_rotation_update(0)
-                turf_war_one, turf_war_two = await self.turf_war(0)
-                anarchy_series_one, anarchy_series_two = await self.anarchy_series(0)
-                anarchy_open_one, anarchy_open_two = await self.anarchy_open(0)
-                challenge_one, challenge_two = await self.challenges(0)
-
-                await interaction.response.send_message(embeds = [rotation_update, turf_war_one, turf_war_two, anarchy_series_one, anarchy_series_two, anarchy_open_one, anarchy_open_two, challenge_one, challenge_two])
+                current = ModeEmbeds(
+                    turf_war = await self.turf_war(0),
+                    anarchy_series = await self.anarchy_series(0),
+                    anarchy_open = await self.anarchy_open(0),
+                    x_battle = await self.x_battles(0),
+                    salmon_run = await self.salmon_run(0),
+                    challenge = await self.challenges(0),
+                    big_run = None,
+                    eggstra_work = await self.eggstra_work(),
+                    splatfest_open = await self.splatfest_open(0),
+                    splatfest_pro = await self.splatfest_pro(0)
+                    )
+                
+                current_modes = [mode for modes in [current.splatfest_open, current.splatfest_pro, current.turf_war, current.anarchy_series, current.anarchy_open, current.x_battle, current.challenge] if modes is not None for mode in modes]
+                await interaction.response.send_message(embeds = current_modes)
             
             case 'Turf War':
                 rotation_update = await self.s3_rotation_update(0)
@@ -300,6 +303,11 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
                 anarchy_open_one, anarchy_open_two = await self.anarchy_open(0)
                 await interaction.response.send_message(embeds = [rotation_update, anarchy_open_one, anarchy_open_two])
             
+            case 'X Battles': 
+                rotation_update = await self.s3_rotation_update(0)
+                x_one, x_two = await self.x_battles(0)
+                await interaction.response.send_message(embeds = [rotation_update, x_one, x_two])
+            
             case 'Challenge':
                 challenge_one, challenge_two = await self.challenges(0)
                 if challenge_one:
@@ -312,12 +320,22 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
                 salmon_run = await self.salmon_run(0)
                 await interaction.response.send_message(embed = salmon_run)
 
+            case 'Eggstra Work':
+                eggstra_work = await self.eggstra_work()
+
+                if eggstra_work:
+                    await interaction.response.send_message(embed = eggstra_work)
+
+
+                else:
+                    await interaction.response.send_message(content = 'No Eggstra Work soon', ephemeral = True)
+
             case _:
                 await interaction.response.send_message(content = 'That is not a valid game mode', ephemeral = True)
 
     @s3_maps_modes.autocomplete('mode')
     async def s3_maps_modes_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run']
+        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run', 'Eggstra Work']
         return [app_commands.Choice(name = mode, value = mode) for mode in modes if current.lower() in mode.lower()]
 
     async def channel_setup(self, channel_id: int) -> None:
