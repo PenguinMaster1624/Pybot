@@ -1,5 +1,5 @@
-from .MapsModesSupport.GameModeClasses import ModeEmbeds
-from .MapsModesSupport.ModesSetup import MapsModesSetup
+from .SplatoonUtils.GameModeClasses import ModeEmbeds
+from .SplatoonUtils.ModesSetup import MapsModesSetup
 from discord.ext import commands, tasks
 from discord import app_commands
 from zoneinfo import ZoneInfo

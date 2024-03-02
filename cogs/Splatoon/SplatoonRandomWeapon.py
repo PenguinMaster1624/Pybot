@@ -5,6 +5,7 @@ import random, discord, sqlite3
 class Splat2nRandomWeapon(commands.Cog):
   def __init__(self, bot: commands.Bot):
     self.bot = bot
+    self.db_path = 'cogs/Splatoon/SplatoonUtils/Splatoon 3.db'
 
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = None):
@@ -16,7 +17,7 @@ class Splat2nRandomWeapon(commands.Cog):
     else:
       command = 'SELECT Main, Introduced FROM Weapons'
 
-    with sqlite3.connect('Splatoon 3.db') as db:
+    with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
       weapons = [weapon for weapon in cursor.execute(command)]
 
@@ -42,7 +43,7 @@ class Splat2nRandomWeapon(commands.Cog):
   async def rss(self, interaction: discord.Interaction, sub_weapon: str):
     sub_weapon = sub_weapon.title().strip()
 
-    with sqlite3.connect('Splatoon 3.db') as db:
+    with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
       weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Sub = "{sub_weapon}"')]
 
@@ -68,7 +69,7 @@ class Splat2nRandomWeapon(commands.Cog):
   async def rsp(self, interaction: discord.Interaction, special: str):
     special = special.title().strip()
 
-    with sqlite3.connect('Splatoon 3.db') as db:
+    with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
       weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Special = "{special}"')]
 
