@@ -166,7 +166,7 @@ class MapsModesSetup:
         except IndexError:
             return None
         
-        big_run_info = BigRun(time = TimeSlots(start = await self.generate_timestamp(big_run['startTime']), end = await self.generate_timestamp(big_run(big_run['endTime']))),
+        big_run_info = BigRun(time = TimeSlots(start = await self.generate_timestamp(big_run['startTime']), end = await self.generate_timestamp(big_run['endTime'])),
                               stage = Stage(name = big_run['setting']['coopStage']['name'], image = big_run['setting']['coopStage']['image']['url']),
                               weapons =  [big_run['setting']['weapons'][i]['name'] for i in range(4)],
                               boss = big_run['setting']['boss']['name'])
