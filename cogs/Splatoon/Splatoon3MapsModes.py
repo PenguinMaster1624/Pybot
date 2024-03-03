@@ -342,7 +342,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
 
     @s3_maps_modes.autocomplete('mode')
     async def s3_maps_modes_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run', 'Eggstra Work']
+        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run', 'Eggstra Work', 'Big Run']
         return [app_commands.Choice(name = mode, value = mode) for mode in modes if current.lower() in mode.lower()]
 
     async def channel_setup(self, channel_id: int) -> None:
