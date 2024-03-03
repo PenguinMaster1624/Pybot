@@ -191,11 +191,11 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         Returns Big Run information
         '''
-        return
+        big_run_info = self.modes[0].big_run
     
-        big_run = discord.Embed(title = 'Big Run', description = f'Start time: <t:{start}:f>, <t:{start}:R>\nEnd Time: <t:{end}:f>, <t:{end}:R>', color = discord.Color.purple())
-        big_run.add_field(name = f"{maps['name']} - {king_salmonid}", value = '\n'.join(node['name'] for node in weapons))
-        big_run.set_image(url = maps['image']['url'])
+        big_run = discord.Embed(title = 'Big Run', description = f'Start time: <t:{big_run_info.time.start}:f>, <t:{big_run_info.time.start}:R>\nEnd Time: <t:{big_run_info.time.end}:f>, <t:{big_run_info.time.end}:R>', color = discord.Color.purple())
+        big_run.add_field(name = f"{big_run_info.stage.name} - {big_run_info.boss}", value = '\n'.join(weapon for weapon in big_run_info.weapons))
+        big_run.set_image(url = big_run_info.stage.image)
         big_run.set_thumbnail(url = 'https://cdn.wikimg.net/en/splatoonwiki/images/thumb/9/98/S3_Icon_Big_Run.svg/1200px-S3_Icon_Big_Run.svg.png')
         big_run.set_footer(text = 'Powered by **Splatoon3.ink**')
 
@@ -205,7 +205,6 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         Returns Eggstra Work information when available
         '''
-
         eggstra_work_info = self.modes[0].eggstra_work
 
         if eggstra_work_info is None:
@@ -279,7 +278,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
                     x_battle = await self.x_battles(0),
                     salmon_run = await self.salmon_run(0),
                     challenge = await self.challenges(0),
-                    big_run = None,
+                    big_run = await self.big_run(),
                     eggstra_work = await self.eggstra_work(),
                     splatfest_open = await self.splatfest_open(0),
                     splatfest_pro = await self.splatfest_pro(0)
@@ -329,6 +328,14 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
 
                 else:
                     await interaction.response.send_message(content = 'No Eggstra Work soon', ephemeral = True)
+            
+            case 'Big Run':
+                big_run = await self.big_run()
+                
+                if big_run:
+                    await interaction.response.send_message(embed = big_run)
+
+                else: await interaction.response.send_message(content = 'No Big Run soon', ephemeral = True)
 
             case _:
                 await interaction.response.send_message(content = 'That is not a valid game mode', ephemeral = True)
@@ -354,7 +361,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
             x_battle = await self.x_battles(0),
             salmon_run = await self.salmon_run(0),
             challenge = await self.challenges(0),
-            big_run = None,
+            big_run = await self.big_run(),
             eggstra_work = await self.eggstra_work(),
             splatfest_open = await self.splatfest_open(0),
             splatfest_pro = await self.splatfest_pro(0)
@@ -367,7 +374,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
             x_battle = await self.x_battles(1),
             salmon_run = await self.salmon_run(1),
             challenge = await self.challenges(1),
-            big_run = None,
+            big_run = await self.big_run(),
             eggstra_work = await self.eggstra_work(),
             splatfest_open = await self.splatfest_open(1),
             splatfest_pro = await self.splatfest_pro(1)
@@ -377,7 +384,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         future_modes = [mode for modes in [future.splatfest_open, future.splatfest_pro, future.turf_war, future.anarchy_series, future.anarchy_open, future.x_battle, future.challenge] if modes is not None for mode in modes]
         
         gamemodes = list(filter(lambda mode: mode is not None, current_modes))
-        salmon_run_stuff = list(filter(lambda mode: mode is not None, [current.salmon_run, current.big_run]))
+        salmon_run_stuff = list(filter(lambda mode: mode is not None, [current.salmon_run]))
         future_gamemodes = list(filter(lambda mode: mode is not None, future_modes))
         future_salmon_stuff = list(filter(lambda mode: mode is not None, [future.salmon_run, future.big_run, future.eggstra_work]))
 
