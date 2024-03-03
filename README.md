@@ -21,8 +21,8 @@
 ###### /mt <msg>                    <-- turns a message into morse code. Only creator of this bot can use this
 ###### /bt <msg>                    <-- turns a message into binary code. Only creator of this bos can use this
 ###### /mayor                       <-- Displays info on Hypixel Skyblock's current mayor
-###### /election                    <-- Displays info on any ongoing elections in Hypixel Skyblock <Bazaar Item>
-###### /bz                          <-- Displays price info on a specified item in Hypixel Skyblock's Bazaar
+###### /election                    <-- Displays info on any ongoing elections in Hypixel Skyblock 
+###### /bz <Bazaar Item>            <-- Displays price info on a specified item in Hypixel Skyblock's Bazaar
 ###### /s3_maps [game_mode]         <-- Displays Splatoon 3 Rotation information for a specified game mode if one is passed in, else shows all
 
 ####### anything marked with <> is required for the command to work, anything within [] is optional
