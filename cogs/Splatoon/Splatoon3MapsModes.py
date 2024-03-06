@@ -2,12 +2,15 @@ from .SplatoonUtils.GameModeClasses import ModeEmbeds
 from .SplatoonUtils.ModesSetup import MapsModesSetup
 from discord.ext import commands, tasks
 from discord import app_commands
+from dotenv import load_dotenv
 from zoneinfo import ZoneInfo
 import requests
 import asyncio
 import datetime
 import discord
+import os
 
+load_dotenv('.env')
 
 def time_calc() -> datetime.time:
     response = requests.get('https://splatoon3.ink/data/schedules.json')
@@ -401,8 +404,8 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
     @tasks.loop(seconds = 10)
     async def embed_send(self):
         await self.api_call()
-        await self.channel_setup(1088459539147411497)
-        await self.channel_setup(1089292971033235466)
+        await self.channel_setup(os.getenv('SELF_SERVER'))
+        await self.channel_setup(os.getenv('PERIDOT_SERVER'))
         
         self.embed_send.change_interval(time = time_calc())
 
