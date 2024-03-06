@@ -13,7 +13,7 @@ class Splat2nRandomWeapon(commands.Cog):
       weapon_class = weapon_class.title().strip()
       search = re.search('^Shooter$|^Roller$|^Charger$|^Slosher$|^Splatling$|^Dualies$|^Brella$|^Blaster$|^Brush$|^Stringer$|^Splatana$', weapon_class)
       if search:
-        command = f'SELECT Main, Introduced FROM Weapons WHERE Class = "{weapon_class}"'
+        command = 'SELECT Main, Introduced FROM Weapons WHERE Class = ?'
       
       else:
         await interaction.response.send_message(f'{weapon_class} is not a valid weapon class', ephemeral = True)
@@ -23,7 +23,7 @@ class Splat2nRandomWeapon(commands.Cog):
 
     with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
-      weapons = [weapon for weapon in cursor.execute(command)]
+      weapons = [weapon for weapon in cursor.execute(command, (weapon_class,))]
 
     selection = random.choice(weapons)
 
@@ -49,7 +49,7 @@ class Splat2nRandomWeapon(commands.Cog):
       
     with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
-      weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Sub = "{sub_weapon}"')]
+      weapons = [weapon for weapon in cursor.execute('SELECT Main, Introduced FROM Weapons WHERE Sub = ?', (sub_weapon,))]
 
     selection = random.choice(weapons)
 
@@ -75,8 +75,7 @@ class Splat2nRandomWeapon(commands.Cog):
     
     with sqlite3.connect(self.db_path) as db:
       cursor = db.cursor()
-      weapons = [weapon for weapon in cursor.execute(f'SELECT Main, Introduced FROM Weapons WHERE Special = "{special}"')]
-
+      weapons = [weapon for weapon in cursor.execute('SELECT Main, Introduced FROM Weapons WHERE Special = ?', (special,))]
       selection = random.choice(weapons)
 
 
