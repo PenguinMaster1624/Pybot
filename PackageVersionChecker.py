@@ -1,3 +1,4 @@
+from Utils.errors import OutdatedPackagesError
 import requests
 import asyncio
 
@@ -26,10 +27,10 @@ async def package_check() -> None:
               outdated.append(info[0])
     
     if outdated:
-        print(f'These packages need to be updated: {outdated}')
+        raise OutdatedPackagesError(outdated)
         
     else:
-        print('All packages up to date')
+        pass
 
 if __name__ == '__main__':
     asyncio.run(package_check())
