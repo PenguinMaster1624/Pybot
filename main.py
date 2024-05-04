@@ -1,16 +1,34 @@
 from cogs.Splatoon.SplatfestTeamSelector import SplatfestButtons
 from PackageVersionChecker import package_check
+from Utils.errors import OutdatedPackagesError
 from discord.ext import commands
 from dotenv import load_dotenv
+import logging.handlers
 import logging
 import discord
 import os
 
-
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-discord.utils.setup_logging(level = logging.INFO, handler = handler, root = False)
-
 load_dotenv('./.env')
+
+with open('discord.log', 'w'):
+  pass
+
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.INFO)
+logging.getLogger('discord.http').setLevel(logging.INFO)
+
+handler = logging.handlers.RotatingFileHandler(
+    filename='discord.log',
+    encoding='utf-8',
+    maxBytes=32 * 1024 * 1024,  # 32 MiB
+    backupCount=5,  # Rotate through 5 files
+)
+dt_fmt = '%Y-%m-%d %H:%M:%S'
+formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', dt_fmt, style='{')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 
 class Pybot(commands.Bot):
@@ -32,11 +50,14 @@ class Pybot(commands.Bot):
     self.add_view(SplatfestButtons())
 
   async def on_ready(self) -> None:
-    await package_check()
-    print(f'{self.user} at your service')
+    try:
+      await package_check()
+      print('Pybot at your service')
 
+    except OutdatedPackagesError as error:
+      logger.warning(error)
 
 if __name__ == '__main__':
   Bot = Pybot()
-  Bot.run(token = os.getenv('TOKEN'), log_handler = handler)
+  Bot.run(token = os.getenv('TOKEN'), log_handler = None)
   
