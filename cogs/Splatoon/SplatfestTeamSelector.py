@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 
-teams = ['Vanilla', 'Strawberry', 'Mint Chip', 'Undecided']
+teams = ['Same Ol\'', 'Bucket List', 'Save the Day', 'Undecided']
 class SplatfestButtons(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout = None)
@@ -89,12 +89,12 @@ class SplatfestButtons(discord.ui.View):
 
 
 class SplatfestTeamChoices(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
     
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
-        if interaction.user.id != 347553488697294848:
+        if interaction.user.id != self.bot.is_owner(interaction.user):
             await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
     
         else:
