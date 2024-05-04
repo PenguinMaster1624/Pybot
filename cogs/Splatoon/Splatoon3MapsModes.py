@@ -57,12 +57,9 @@ class maps_modes(commands.Cog):
 
         turf_info = self.modes[node].turf_war
 
-        if turf_info is None:
+        if turf_info.fest_active is True:
             return None
 
-        elif turf_info.fest_active is True:
-            return None 
-        
         turf_war_stage_one = discord.Embed(color = discord.Color.green())
         turf_war_stage_one.add_field(name = 'Turf War', value = '')
         turf_war_stage_one.set_image(url = turf_info.maps[0].image)
@@ -78,9 +75,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 Anarchy Series information
         '''
-        series_info = self.modes[node].anarchy_series
-
-        if series_info is None:
+        if (series_info := self.modes[node].anarchy_series) is None:
             return None
         
         anarchy_series_one = discord.Embed(color = discord.Color.orange())
@@ -98,9 +93,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 Anarchy Open information
         '''
-        open_info = self.modes[node].anarchy_open
-
-        if open_info is None:
+        if (open_info := self.modes[node].anarchy_open) is None:
             return None
 
         anarchy_open_one = discord.Embed(color = discord.Color.dark_orange())
@@ -118,9 +111,7 @@ class maps_modes(commands.Cog):
         '''
         Returns Splatoon 3 X Battle information
         '''
-        x_info = self.modes[node].x_battles
-
-        if x_info is None:
+        if (x_info := self.modes[node].x_battles) is None:
             return None
         
         elif x_info.fest_active is True:
@@ -141,9 +132,8 @@ class maps_modes(commands.Cog):
         '''
         Returns Challenge information
         '''
-        challenges = self.modes[node].challenge
-
-        if challenges is None:
+        
+        if (challenges := self.modes[node].challenge) is None:
             return None
 
         challenge_one = discord.Embed(title = f'Challenge: {challenges.title}', 
@@ -177,9 +167,8 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         Returns Salmon Run information in an embed
         '''
-        salmon_info = self.modes[node].salmon_run
 
-        if salmon_info is None:
+        if (salmon_info := self.modes[node].salmon_run) is None:
             return None
 
         salmon_run = discord.Embed(title = 'Salmon Run', description = f'Start time: <t:{salmon_info.times.start}:f>, <t:{salmon_info.times.start}:R>\nEnd Time: <t:{salmon_info.times.end}:f>, <t:{salmon_info.times.end}:R>', color = discord.Color.purple())
@@ -194,7 +183,9 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         Returns Big Run information
         '''
-        big_run_info = self.modes[0].big_run
+
+        if (big_run_info := self.modes[0].big_run) is None:
+            return None
     
         big_run = discord.Embed(title = 'Big Run', description = f'Start time: <t:{big_run_info.time.start}:f>, <t:{big_run_info.time.start}:R>\nEnd Time: <t:{big_run_info.time.end}:f>, <t:{big_run_info.time.end}:R>', color = discord.Color.purple())
         big_run.add_field(name = f"{big_run_info.stage.name} - {big_run_info.boss}", value = '\n'.join(weapon for weapon in big_run_info.weapons))
@@ -208,9 +199,7 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         '''
         Returns Eggstra Work information when available
         '''
-        eggstra_work_info = self.modes[0].eggstra_work
-
-        if eggstra_work_info is None:
+        if (eggstra_work_info := self.modes[0].eggstra_work) is None:
             return None
         
         eggstra_work = discord.Embed(title = 'EGGSTRA WORK', description = f'Start time: <t:{eggstra_work_info.time.start}:f>, <t:{eggstra_work_info.time.start}:R>\nEnd Time: <t:{eggstra_work_info.time.end}:f>, <t:{eggstra_work_info.time.end}:R>', color = discord.Color.gold())
@@ -348,9 +337,9 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
         modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'Challenge', 'Salmon Run', 'Eggstra Work', 'Big Run']
         return [app_commands.Choice(name = mode, value = mode) for mode in modes if current.lower() in mode.lower()]
 
-    async def channel_setup(self, channel_id: int) -> None:
-
-        channel = self.bot.get_channel(channel_id)
+    async def channel_setup(self, guild_id: int, channel_id: int) -> None:
+        guild = self.bot.get_guild(guild_id)
+        channel = guild.get_channel(channel_id)
         await channel.purge()
         await asyncio.sleep(1)
 
@@ -404,8 +393,8 @@ Starts <t:{challenges.times[5].start}:F> <t:{challenges.times[5].start}:R>\nEnds
     @tasks.loop(seconds = 10)
     async def embed_send(self):
         await self.api_call()
-        await self.channel_setup(os.getenv('SELF_SERVER'))
-        await self.channel_setup(os.getenv('PERIDOT_SERVER'))
+        await self.channel_setup(int(os.getenv('SELF_SERVER')), int(os.getenv('SELF_SCHEDULE')))
+        await self.channel_setup(int(os.getenv('PERIDOT_SERVER')), int(os.getenv('PERIDOT_SCHEDULE')))
         
         self.embed_send.change_interval(time = time_calc())
 
