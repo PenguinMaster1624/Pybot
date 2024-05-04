@@ -5,7 +5,6 @@ import random, discord
 class MK8BattleMap(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-
     self.stages = ['Dragon Palace', 'Battle Stadium', 'Lunar Colony', 'Wuhu Town', 'Battle Course 1', 'Luigi\'s Mansion', 'Urchin Underpass', 'Sweet Sweet Kingdom']
 
   @app_commands.command(name = 'mk8bm', description = 'Rolls a random Mario Kart 8 Deluxe Battle Mode Map')
