@@ -9,15 +9,15 @@ class MapsModesSetup:
         '''Used to set up game mode
         classes for Splatoon 3 Maps and Modes
         '''
-        self.response = None
         self.gamemodes: list[GameModes] | None = None
 
 
-    async def generate_timestamp(self, time: str) -> str:
+    async def generate_timestamp(self, time: str) -> int:
         '''
         Generates a timestamp as a string for use in Discord Embeds
         '''
-        new_time = str(datetime.datetime.fromisoformat(time[:-1]).replace(tzinfo = ZoneInfo('UTC')).timestamp())[:-2]
+        time = str(datetime.datetime.fromisoformat(time[:-1]).replace(tzinfo = ZoneInfo('UTC')).timestamp())[:-2]
+        new_time = int(time)
         return new_time
     
 
@@ -113,23 +113,23 @@ class MapsModesSetup:
 
         try:
             challenges_info = mode[node]
-            challenges_timeslots = challenges_info['timePeriods']
-            challenges_info = challenges_info['leagueMatchSetting']
-            challenge_maps = challenges_info['vsStages']
-
-
+            
         except TypeError:
             return None
         
+        challenges_timeslots = challenges_info['timePeriods']
+        challenges_info = challenges_info['leagueMatchSetting']            
+        challenge_maps = challenges_info['vsStages']
+
         regulation = str(challenges_info['leagueMatchEvent']['regulation']).split('<br />')
-        regulation = '\n'.join(i.strip('・ ') for i in regulation)
+        processed_regulation = '\n'.join(i.strip('・ ') for i in regulation)
 
         desc = str(challenges_info['leagueMatchEvent']['desc']).split('<br />')
-        desc = '\n'.join(i.strip('・ ') for i in desc)
+        processed_desc = '\n'.join(i.strip('・ ') for i in desc)
 
         challenges = Challenge(title = challenges_info['leagueMatchEvent']['name'],
-                               description = desc,
-                               extended_description = regulation,
+                               description = processed_desc,
+                               extended_description = processed_regulation,
                                times = [TimeSlots(start = await self.generate_timestamp(challenges_timeslots[slot]['startTime']), end = await self.generate_timestamp(challenges_timeslots[slot]['endTime'])) for slot, data in enumerate(challenges_timeslots)],
                                maps = [Stage(name = challenge_maps[stage]['name'], image = challenge_maps[stage]['image']['url']) for stage in range(2)],
                                gamemode = challenges_info['vsRule']['name'])
@@ -162,10 +162,10 @@ class MapsModesSetup:
 
         try:
             big_run = mode[0]
-        
+            
         except IndexError:
             return None
-        
+                
         big_run_info = BigRun(time = TimeSlots(start = await self.generate_timestamp(big_run['startTime']), end = await self.generate_timestamp(big_run['endTime'])),
                               stage = Stage(name = big_run['setting']['coopStage']['name'], image = big_run['setting']['coopStage']['image']['url']),
                               weapons =  [big_run['setting']['weapons'][i]['name'] for i in range(4)],
