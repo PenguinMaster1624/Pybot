@@ -1,61 +1,64 @@
 from discord import app_commands
 from discord.ext import commands
-import discord, random
+import discord, random, sqlite3
 
 class OverwatchRandomHero(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.tank = ['D.va', 'Doomfist', 'Junker Queen', 'Orisa', 'Ramattra', 'Reinhardt', 'Roadhog', 'Sigma', 'Winston', 'Wrecking Ball', 'Zarya']
-        self.dps = ['Ashe', 'Bastion', 'Cassidy', 'Echo', 'Genji', 'Hanzo', 'Junkrat', 'Mei', 'Pharah', 'Reaper', 'Sojourn', 'Soldier: 76', 'Sombra', 'Symmetra', 'Torbjörn', 'Tracer', 'Widowmaker']
-        self.support = ['Ana', 'Baptiste', 'Brigitte', 'Kiriko', 'Lúcio', 'Lifeweaver', 'Mercy', 'Moira', 'Zenyatta']
-        self.all = list(self.tank + self.dps + self.support)
+    async def db_connect(self, command: str, role: tuple[str | None]) -> list[tuple[str]]:
+        with sqlite3.connect('Utils/Game Stuff.db') as db:
+          cursor = db.cursor()
+          if all(role):
+            return [course for course in cursor.execute(command, role)]
 
-        self.role_names = ['Tank', 'DPS', 'Support']
+          else:
+            return [course for course in cursor.execute(command)]
 
     async def color(self, selection: str):
-        if selection in self.tank:
+        tank = [hero[1] for hero in await self.db_connect('SELECT * FROM "Overwatch 2 Heroes" WHERE Role = ?', ('Tank',))]
+        dps = [hero[1] for hero in await self.db_connect('SELECT * FROM "Overwatch 2 Heroes" WHERE Role = ?', ('DPS',))]
+        support = [hero[1] for hero in await self.db_connect('SELECT * FROM "Overwatch 2 Heroes" WHERE Role = ?', ('Support',))]
+        
+        if selection in tank:
             return discord.Color.blue()
         
-        elif selection in self.dps:
+        elif selection in dps:
             return discord.Color.red()
         
-        elif selection in self.support:
+        elif selection in support:
             return discord.Color.gold()
-        
-    async def embed_setup(self, interaction: discord.Interaction, selection: str):
-        color = await self.color(selection)
-        embed = discord.Embed(title = 'Overwatch 2 Character Randomizer', description = 'Enjoy playing a game with the following character! :)', color = color)
+    
+    async def embed_setup(self, interaction: discord.Interaction, selection: tuple[str]) -> discord.Embed:
+        color = await self.color(selection[0])
+        embed = discord.Embed(title = 'Overwatch 2 Character Randomizer', description = f'Enjoy playing a game with the following {selection[1]} character! :)', color = color)
         embed.set_author(name = interaction.user.display_name, icon_url = interaction.user.display_avatar)
-        embed.add_field(name = 'You got...', value = f'**{selection}**! Hope you enjoy!')
+        embed.add_field(name = 'You got...', value = f'**{selection[0]}**! Hope you enjoy!')
         embed.set_footer(text = 'If you don\'t wanna play this character, reroll by using the command again')
 
         return embed
         
     @app_commands.command(name = 'ow_hero', description = 'Rolls a hero for you in Overwatch 2')
-    async def ow_hero(self, interaction: discord.Interaction, role: str = None):
-        roles = {'Tank': self.tank, 'DPS': self.dps, 'Support': self.support}
+    async def ow_hero(self, interaction: discord.Interaction, role: str = None) -> None:
 
-        if role != None:
-            for i in self.role_names:
-                if role.title().strip() == i:
-                    selection = random.choice(roles[role.title().strip()])
-                    embed = await self.embed_setup(interaction = interaction, selection = selection)
+        if role is not None:
+            role = role.title().strip()
+            if role.upper() == 'DPS':
+                role = role.upper()
 
-                elif role.upper().strip() == i:
-                    selection = random.choice(roles[role.upper().strip()])
-                    embed = await self.embed_setup(interaction = interaction, selection = selection)
-                
+            if role in ['Tank', 'DPS', 'Support']:
+                command = 'SELECT Hero, Role FROM "Overwatch 2 Heroes" WHERE Role = ?'
+
+            else:
+                await interaction.response.send_message(f'{role} is not a valid role in Overwatch 2', ephemeral = True)
         else:
-            randomized_role = random.choice(self.role_names)
-            selection = random.choice(roles[randomized_role])
-            embed = await self.embed_setup(interaction = interaction, selection = selection)
+            command = 'SELECT Hero, Role FROM "Overwatch 2 Heroes"'
 
-        try:
-            await interaction.response.send_message(embed = embed, ephemeral = True)
-        
-        except UnboundLocalError:
-            await interaction.response.send_message(content = 'String not recognized', ephemeral = True)
+        heroes = await self.db_connect(command = command, role = (role,))
+        selection = random.choice(heroes)
+
+        embed = await self.embed_setup(interaction = interaction, selection = selection)
+        await interaction.response.send_message(embed = embed, ephemeral = True)
         
     @ow_hero.autocomplete('role')
     async def ow_hero_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
