@@ -94,7 +94,7 @@ class SplatfestTeamChoices(commands.Cog):
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
         data = fetch_data()
-        if interaction.user.id != await self.bot.is_owner(interaction.user):
+        if await self.bot.is_owner(interaction.user) is False:
             await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
         
         elif data['isVotable'] is not True:
