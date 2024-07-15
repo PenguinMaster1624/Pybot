@@ -10,6 +10,7 @@ class ApiResponse(BaseModel):
     BigRun: list[dict]
     EggstraWork: list[dict]
     Splatfest: list[dict]
+    Tricolor: list[dict]
 
 class Stage(BaseModel):
     name: str
@@ -61,6 +62,11 @@ class Splatfest(BaseModel):
     mode: str | None
     fest_active: bool
 
+class Tricolor(BaseModel):
+    availability: TimeSlots
+    stage: Stage
+    is_available: bool
+
 class GameModes(BaseModel):
     turf_war: TurfWar | None
     anarchy_series: Ranked | None
@@ -72,6 +78,7 @@ class GameModes(BaseModel):
     eggstra_work: EggstraWork | None
     splatfest_open: Splatfest | None
     splatfest_pro: Splatfest | None
+    tricolor_battle: Tricolor | None
 
 class ModeEmbeds(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed = True)
@@ -86,3 +93,4 @@ class ModeEmbeds(BaseModel):
     eggstra_work: Embed | None
     splatfest_open: list[Embed] | None
     splatfest_pro: list[Embed] | None
+    tricolor_battle: Embed | None
