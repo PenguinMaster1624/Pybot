@@ -196,13 +196,10 @@ class maps_modes(commands.Cog):
         if (eggstra_work_info := self.modes[0].eggstra_work) is None:
             return None
 
-        eggstra_work = discord.Embed(
-            title='EGGSTRA WORK', description=f'Start time: <t:{eggstra_work_info.time.start}:f>, <t:{eggstra_work_info.time.start}:R>\nEnd Time: <t:{eggstra_work_info.time.end}:f>, <t:{eggstra_work_info.time.end}:R>', color=discord.Color.gold())
-        eggstra_work.add_field(name=f"{eggstra_work_info.stage.name}", value='\n'.join(
-            weapon for weapon in eggstra_work_info.weapons))
+        eggstra_work = discord.Embed(title='EGGSTRA WORK', description=f'Start time: <t:{eggstra_work_info.time.start}:f>, <t:{eggstra_work_info.time.start}:R>\nEnd Time: <t:{eggstra_work_info.time.end}:f>, <t:{eggstra_work_info.time.end}:R>', color=discord.Color.gold())
+        eggstra_work.add_field(name=f"{eggstra_work_info.stage.name}", value='\n'.join(weapon for weapon in eggstra_work_info.weapons))
         eggstra_work.set_image(url=eggstra_work_info.stage.image)
-        eggstra_work.set_thumbnail(
-            url='https://cdn.wikimg.net/en/splatoonwiki/images/thumb/7/77/S3_Icon_Eggstra_Work.svg/120px-S3_Icon_Eggstra_Work.svg.png?20230220215341')
+        eggstra_work.set_thumbnail(url='https://cdn.wikimg.net/en/splatoonwiki/images/thumb/7/77/S3_Icon_Eggstra_Work.svg/120px-S3_Icon_Eggstra_Work.svg.png?20230220215341')
         eggstra_work.set_footer(text='Enjoy the event!')
 
         return eggstra_work
@@ -213,11 +210,10 @@ class maps_modes(commands.Cog):
         '''
         splatfest_info = self.modes[node].splatfest_open
 
-        if splatfest_info is None or splatfest_info is False:
+        if splatfest_info is None or splatfest_info.fest_active is False:
             return None
 
-        splatfest_one = discord.Embed(
-            title=f'Splatfest Battle - {splatfest_info.mode}', color=discord.Color.dark_blue())
+        splatfest_one = discord.Embed(title=f'Splatfest Battle - {splatfest_info.mode}', color=discord.Color.dark_blue())
         splatfest_one.set_image(url=splatfest_info.maps[0].image)
         splatfest_one.set_footer(text=splatfest_info.maps[0].name)
 
