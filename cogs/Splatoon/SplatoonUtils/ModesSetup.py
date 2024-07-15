@@ -11,6 +11,12 @@ class MapsModesSetup:
         '''
         self.gamemodes: list[GameModes] | None = None
 
+    
+    async def setup_wrapper(func):
+        def wrapper(*args, **kwargs):
+            func(*args, **kwargs)
+        
+        return wrapper
 
     async def generate_timestamp(self, time: str) -> int:
         '''
@@ -33,11 +39,11 @@ class MapsModesSetup:
                                  XBattles = js['xSchedules']['nodes'],
                                  BigRun = js['coopGroupingSchedule']['bigRunSchedules']['nodes'],
                                  EggstraWork = js['coopGroupingSchedule']['teamContestSchedules']['nodes'],
-                                 Splatfest = js['festSchedules']['nodes']
+                                 Splatfest = js['festSchedules']['nodes'],
+                                 Tricolor = js['currentFest']
             )
 
             self.response = modes
-
 
     async def turf_war(self, node: int) -> TurfWar | None:
         mode = self.response.TurfWar
@@ -225,7 +231,17 @@ class MapsModesSetup:
                             fest_active = False if mode_info is None else True)
         
         return splatfest_info
-
+    
+    async def tricolor_battle(self) -> Tricolor | None:
+        if (mode := self.response.Tricolor) is None:
+            return None
+        
+        stage_info = mode['tricolorStage']
+        tricolor_info = Tricolor(availability = TimeSlots(start = await self.generate_timestamp(mode['midtermTime']), end = await self.generate_timestamp(mode['endTime'])),
+                                 stage = Stage(name = stage_info['name'], image = ['image']['url']),
+                                 is_available = True if mode['state'] == 'SECOND_HALF' else False)
+        
+        return tricolor_info
     
     async def gather(self, nodes: list[int]) -> None:
         await self.api_call()
@@ -241,6 +257,7 @@ class MapsModesSetup:
                 big_run = await self.big_run(), 
                 eggstra_work = await self.eggstra_work(),
                 splatfest_open = await self.splatfest_open(node),
-                splatfest_pro = await self.splatfest_pro(node)
+                splatfest_pro = await self.splatfest_pro(node),
+                tricolor_battle = await self.tricolor_battle()
                 ) for node in nodes]
         
