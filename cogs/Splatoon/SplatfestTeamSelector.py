@@ -101,9 +101,11 @@ class SplatfestTeamChoices(commands.Cog):
             await interaction.response.send_message('No Splatfest soon', ephemeral = True)
     
         else:
-            embed = discord.Embed(title = 'Splatfest Teams', description = 'The current Splatfest teams')
+            embed = discord.Embed(title = data['title'], description = f'Start Time: <t:{data['startTime']}:t>, t:{data['startTime']}:R>\nEnd TIme: <t:{data['endTime']}:t>, t:{data['endTime']}:R>')
             for i in range(3):
                 embed.add_field(name = data['teams'][i]['teamName'], value = data['teams'][i]['teamName'], inline = True)
+            
+            embed.set_image(data['image']['url'])
             embed.set_footer(text = 'Happy Splatting :)')
 
             await interaction.response.send_message(embed = embed, view = SplatfestButtons())
