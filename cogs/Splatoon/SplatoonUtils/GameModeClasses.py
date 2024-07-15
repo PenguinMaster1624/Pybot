@@ -10,7 +10,7 @@ class ApiResponse(BaseModel):
     BigRun: list[dict]
     EggstraWork: list[dict]
     Splatfest: list[dict]
-    Tricolor: list[dict]
+    Tricolor: dict | None
 
 class Stage(BaseModel):
     name: str
