@@ -94,14 +94,14 @@ class SplatfestTeamChoices(commands.Cog):
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
         data = fetch_data()
-        if interaction.user.id != self.bot.is_owner(interaction.user):
+        if interaction.user.id != await self.bot.is_owner(interaction.user):
             await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
         
         elif data['isVotable'] is not True:
             await interaction.response.send_message('No Splatfest soon', ephemeral = True)
     
         else:
-            embed = discord.Embed(title = data['title'], description = f'Start Time: <t:{data['startTime']}:t>, t:{data['startTime']}:R>\nEnd TIme: <t:{data['endTime']}:t>, t:{data['endTime']}:R>')
+            embed = discord.Embed(title = data['title'], description = f"Start Time: <t:{data}:t>, t:{data['startTime']}:R>\nEnd TIme: <t:{data['endTime']}:t>, t:{data['endTime']}:R>")
             for i in range(3):
                 embed.add_field(name = data['teams'][i]['teamName'], value = data['teams'][i]['teamName'], inline = True)
             
