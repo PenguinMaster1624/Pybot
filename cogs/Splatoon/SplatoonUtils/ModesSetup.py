@@ -232,7 +232,7 @@ class MapsModesSetup:
         
         stage_info = mode['tricolorStage']
         tricolor_info = Tricolor(availability = TimeSlots(start = await self.generate_timestamp(mode['midtermTime']), end = await self.generate_timestamp(mode['endTime'])),
-                                 stage = Stage(name = stage_info['name'], image = ['image']['url']),
+                                 stage = Stage(name = stage_info['name'], image = stage_info['image']['url']),
                                  is_available = True if mode['state'] == 'SECOND_HALF' else False)
         
         return tricolor_info
