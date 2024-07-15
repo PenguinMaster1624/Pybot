@@ -1,9 +1,20 @@
 from discord import app_commands
 from discord.ext import commands
-import discord
+import discord, requests
 
 
-teams = ['Same Ol\'', 'Bucket List', 'Save the Day', 'Undecided']
+
+def fetch_data() -> dict:
+    with requests.get('https://splatoon3.ink/data/festivals.json') as response:
+        js = response.json()
+        return js['US']['data']['festRecords']['nodes'][0]
+        
+def team_names() -> list[str]:
+    data = fetch_data()
+    return [data['teams'][i]['teamName'] for i in range(3)]
+
+teams = team_names()
+
 class SplatfestButtons(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout = None)
@@ -11,10 +22,10 @@ class SplatfestButtons(discord.ui.View):
         self.total = {
             'Shiver': [],
             'Frye': [],
-            'Big Man': [],
-            'Undecided': []
+            'Big Man': []
         }
-        
+
+
     async def player_check(self, user_name: str, team: str) -> str | None:
         for person, players in self.total.items():
             if person != team:
@@ -29,13 +40,13 @@ class SplatfestButtons(discord.ui.View):
 
     async def embed_setup(self) -> discord.Embed:
         players = list(self.total.values())
-        for i in range(len(self.children)):
-            self.children[i].label = f'{teams[i]}: {len(players[i])}'
+        for num in range(len(self.children)):
+            self.children[num].label = f'{teams}: {len(players[num])}'
 
         embed = discord.Embed(title = 'Splatfest Teams', colour =  discord.Color.orange())
         for j in range(len(players)):
             player_list = '\n'.join(players[j])
-            embed.add_field(name = teams[j], value = player_list if player_list else None)
+            embed.add_field(name = teams, value = player_list if player_list else None)
 
         return embed
     
@@ -75,18 +86,6 @@ class SplatfestButtons(discord.ui.View):
             embed = await self.embed_setup()
             await interaction.response.edit_message(embed = embed, view = self) 
 
-    @discord.ui.button(label = 'Undecided', style = discord.ButtonStyle.grey, custom_id = 'Undecided')
-    async def Undeclared(self, interaction: discord.Interaction, button: discord.ui.Button):
-        user_name = interaction.user.display_name
-        helper = await self.player_check(user_name = user_name, team = 'Undecided')
-
-        if interaction.response.is_done() == False and helper != None:
-            await interaction.response.send_message(content = helper, ephemeral = True)
-        
-        else:
-            embed = await self.embed_setup()
-            await interaction.response.edit_message(embed = embed, view = self)
-
 
 class SplatfestTeamChoices(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -94,16 +93,18 @@ class SplatfestTeamChoices(commands.Cog):
     
     @app_commands.command(name = 'splatfest', description = 'Sends an embed in which people vote for which Splatfest Team they\'re on')
     async def SplatfestTeams(self, interaction: discord.Interaction):
+        data = fetch_data()
         if interaction.user.id != self.bot.is_owner(interaction.user):
             await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
+        
+        elif data['isVotable'] is not True:
+            await interaction.response.send_message('No Splatfest soon', ephemeral = True)
     
         else:
             embed = discord.Embed(title = 'Splatfest Teams', description = 'The current Splatfest teams')
-            embed.add_field(name = teams[0], value = 'Shiver', inline = True)
-            embed.add_field(name = teams[1], value = 'Frye', inline = True)
-            embed.add_field(name = teams[2], value = 'Big Man', inline = True)
-            embed.add_field(name = teams[3], value = 'Dunno yet')
-            embed.set_footer(text = 'If undecided or not participating, choose the gray button')
+            for i in range(3):
+                embed.add_field(name = data['teams'][i]['teamName'], value = data['teams'][i]['teamName'], inline = True)
+            embed.set_footer(text = 'Happy Splatting :)')
 
             await interaction.response.send_message(embed = embed, view = SplatfestButtons())
 
