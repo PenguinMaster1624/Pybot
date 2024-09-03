@@ -1,4 +1,3 @@
-from cogs.Splatoon.SplatfestTeamSelector import SplatfestButtons
 from PackageVersionChecker import package_check
 from Utils.errors import OutdatedPackagesError
 from discord.ext import commands
@@ -42,7 +41,6 @@ class Pybot(commands.Bot):
                     await self.load_extension(f'cogs.{folder}.{file[:-3]}')
 
         await self.tree.sync()
-        self.add_view(SplatfestButtons())
 
     async def on_ready(self) -> None:
         try:
