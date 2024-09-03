@@ -18,6 +18,8 @@ class Splatoon3RandomWeapon(commands.Cog):
 
 
   @app_commands.command(name = 'rsw', description = 'Rolls a random Splatoon 3 weapon')
+  @app_commands.allowed_installs(guilds=True, users=True)
+  @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
   async def rsw(self, interaction: discord.Interaction, weapon_class: str = None):
     if weapon_class is not None:
       weapon_class = weapon_class.title().strip()
@@ -46,6 +48,8 @@ class Splatoon3RandomWeapon(commands.Cog):
     return [app_commands.Choice(name = Class, value = Class) for Class in classes if current.lower() in Class.lower()]
 
   @app_commands.command(name = 'rss', description = 'Rolls a random Splatoon 3 weapon based on Sub Weapon')
+  @app_commands.allowed_installs(guilds=True, users=True)
+  @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
   async def rss(self, interaction: discord.Interaction, sub_weapon: str):
     sub_weapon = sub_weapon.title().strip()
     if not sub_weapon in ['Splat Bomb', 'Suction Bomb', 'Burst Bomb', 'Sprinkler', 'Splash Wall', 'Fizzy Bomb', 'Curling Bomb', 'Auto Bomb', 'Squid Beakon', 'Point Sensor', 'Ink Mine', 'Toxic Mist', 'Angle Shooter', 'Torpedo']:
@@ -69,6 +73,8 @@ class Splatoon3RandomWeapon(commands.Cog):
     return [app_commands.Choice(name = sub_weapon, value = sub_weapon) for sub_weapon in subs if current.lower() in sub_weapon.lower()]
       
   @app_commands.command(name = 'rsp', description = 'Rolls a random Splatoon 3 weapon based on Special')
+  @app_commands.allowed_installs(guilds=True, users=True)
+  @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
   async def rsp(self, interaction: discord.Interaction, special: str):
     special = special.title().strip()
     if not special in ['Trizooka', 'Big Bubbler', 'Zipcaster', 'Tenta Missiles', 'Ink Storm', 'Booyah Bomb', 'Wave Breaker', 'Ink Vac', 'Killer Wail 5.1', 'Inkjet', 'Ultra Stamp', 'Crab Tank', 'Triple Inkstrike', 'Tacticooler', 'Super Chump', 'Kraken Royale']:
