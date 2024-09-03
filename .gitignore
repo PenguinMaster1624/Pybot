@@ -4,3 +4,4 @@ cogs/*/__pycache__/*.pyc
 venv/**
 __pycache__
 Pybot.bat
+servers.json
