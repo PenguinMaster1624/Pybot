@@ -39,6 +39,8 @@ class OverwatchRandomHero(commands.Cog):
         return embed
         
     @app_commands.command(name = 'ow_hero', description = 'Rolls a hero for you in Overwatch 2')
+    @app_commands.allowed_installs(guilds=True, users=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def ow_hero(self, interaction: discord.Interaction, role: str = None) -> None:
 
         if role is not None:
