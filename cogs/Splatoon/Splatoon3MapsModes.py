@@ -7,9 +7,7 @@ import requests
 import asyncio
 import datetime
 import discord
-import os
-
-os.getenv('./.env')
+import json
 
 
 def time_calc() -> datetime.time:
@@ -255,6 +253,8 @@ class maps_modes(commands.Cog):
 
 
     @app_commands.command(name='s3_maps', description='Displays the current rotations for Splatoon 3')
+    @app_commands.allowed_installs(users=True, guilds=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def s3_maps_modes(self, interaction: discord.Interaction, mode: str = 'All'):
         mode = mode.title().strip()
 
@@ -334,13 +334,10 @@ class maps_modes(commands.Cog):
 
     @s3_maps_modes.autocomplete('mode')
     async def s3_maps_modes_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
-        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open',
-                 'Challenge', 'Salmon Run', 'Eggstra Work', 'Big Run']
+        modes = ['Turf War', 'Anarchy Series', 'Anarchy Open', 'X Battles', 'Challenge', 'Salmon Run', 'Eggstra Work', 'Big Run']
         return [app_commands.Choice(name=mode, value=mode) for mode in modes if current.lower() in mode.lower()]
 
-    async def channel_setup(self, guild_id: int, channel_id: int) -> None:
-        guild = self.bot.get_guild(guild_id)
-        channel = guild.get_channel(channel_id)
+    async def channel_setup(self, channel: discord.TextChannel) -> None:
         await channel.purge()
         await asyncio.sleep(1)
 
@@ -393,18 +390,54 @@ class maps_modes(commands.Cog):
         await channel.send(embeds=future_gamemodes)
         await channel.send(embeds=future_salmon_stuff)
 
-    @tasks.loop(seconds=10)
-    async def embed_send(self):
+
+    @app_commands.command(name='schedule_task', description='Use this command to start the task in the used channel')
+    async def schedule_task(self, interaction: discord.Interaction) -> None:
+        guild_id = str(interaction.guild_id)
+        
+        if await self.bot.is_owner(interaction.user) is False:
+            await interaction.response.send_message('You need to be the bot owner to use this!', ephemeral=True)
+            return
+        
+
+        with open('servers.json', 'r+') as file:
+            js: dict = json.load(file)
+
+            if guild_id in js.keys():
+                if interaction.channel.name in js[guild_id]['Channels']:
+                    await interaction.response.send_message('Splatoon 3 rotations are already being displayed here', ephemeral=True)
+                    return
+                
+                else:
+                    js[guild_id]['Guild Name'] = interaction.guild.name
+                    js[guild_id]['Channels'][interaction.channel.name] = interaction.channel_id
+            
+            else:
+                js[guild_id] = {'Guild Name': interaction.guild.name, 'Channels': {interaction.channel.name: interaction.channel_id}}
+
+            file.seek(0)
+            json.dump(js, file, indent=4)
+
+        await interaction.response.send_message('Splatoon 3 rotations should be updating here', ephemeral=True)
+                
+                
+    @tasks.loop(seconds=10.0)
+    async def embed_send(self) -> None:
         await self.api_call()
-        await self.channel_setup(int(os.getenv('SELF_SERVER')), int(os.getenv('SELF_SCHEDULE')))
-        await self.channel_setup(int(os.getenv('PERIDOT_SERVER')), int(os.getenv('PERIDOT_SCHEDULE')))
+
+        with open('servers.json', 'r') as file:
+            js: dict = json.load(file)
+
+        for guild in js:
+            for channel in js[guild]['Channels']:
+                channel = await self.bot.fetch_channel(js[guild]['Channels'][channel])
+                await self.channel_setup(channel)
 
         self.embed_send.change_interval(time=time_calc())
 
     @embed_send.before_loop
     async def before_embed_send_loop(self):
         await self.bot.wait_until_ready()
-
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(maps_modes(bot))
