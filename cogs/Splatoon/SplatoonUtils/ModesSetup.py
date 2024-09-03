@@ -1,6 +1,5 @@
+from .SplatoonUtils import generate_timestamp
 from .GameModeClasses import *
-from zoneinfo import ZoneInfo
-import datetime
 import aiohttp
 
 
@@ -10,15 +9,6 @@ class MapsModesSetup:
         classes for Splatoon 3 Maps and Modes
         '''
         self.gamemodes: list[GameModes] | None = None
-
-
-    async def generate_timestamp(self, time: str) -> int:
-        '''
-        Generates a timestamp as a string for use in Discord Embeds
-        '''
-        time = str(datetime.datetime.fromisoformat(time[:-1]).replace(tzinfo = ZoneInfo('UTC')).timestamp())[:-2]
-        new_time = int(time)
-        return new_time
     
 
     async def api_call(self) -> None:
@@ -48,7 +38,7 @@ class MapsModesSetup:
         except IndexError:
             return None
         
-        turf_info = TurfWar(times = TimeSlots(start = await self.generate_timestamp(turf_war['startTime']), end = await self.generate_timestamp(turf_war['endTime'])),
+        turf_info = TurfWar(times = TimeSlots(start = await generate_timestamp(turf_war['startTime']), end = await generate_timestamp(turf_war['endTime'])),
                             maps = [Stage(name = turf_war['regularMatchSetting']['vsStages'][stage]['name'], image = turf_war['regularMatchSetting']['vsStages'][stage]['image']['url']) for stage in range(2)] if turf_war['regularMatchSetting'] else None,
                             fest_active = True if turf_war['festMatchSettings'] else False)
         
@@ -65,7 +55,7 @@ class MapsModesSetup:
         except TypeError:
             return None
 
-        series_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(mode[node]['startTime']),  end = await self.generate_timestamp(mode[node]['endTime'])), 
+        series_info = Ranked(times = TimeSlots(start = await generate_timestamp(mode[node]['startTime']),  end = await generate_timestamp(mode[node]['endTime'])), 
                                     maps = [Stage(name = anarchy_series['vsStages'][stage]['name'], image = anarchy_series['vsStages'][stage]['image']['url']) for stage in range(2)] if anarchy_series else None,
                                     fest_active = True if info['festMatchSettings'] else False,
                                     gamemode = anarchy_series['vsRule']['name'])
@@ -83,7 +73,7 @@ class MapsModesSetup:
         except TypeError:
             return None
         
-        series_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(mode[node]['startTime']), end = await self.generate_timestamp(mode[node]['endTime'])), 
+        series_info = Ranked(times = TimeSlots(start = await generate_timestamp(mode[node]['startTime']), end = await generate_timestamp(mode[node]['endTime'])), 
                                     maps = [Stage(name = anarchy_open['vsStages'][stage]['name'],image = anarchy_open['vsStages'][stage]['image']['url']) for stage in range(2)] if anarchy_open else None,
                                     fest_active = True if info['festMatchSettings'] else False,
                                     gamemode = anarchy_open['vsRule']['name'])
@@ -100,7 +90,7 @@ class MapsModesSetup:
         except IndexError:
             return None
         
-        x_info = Ranked(times = TimeSlots(start = await self.generate_timestamp(mode[node]['startTime']), end = await self.generate_timestamp(mode[node]['endTime'])), 
+        x_info = Ranked(times = TimeSlots(start = await generate_timestamp(mode[node]['startTime']), end = await generate_timestamp(mode[node]['endTime'])), 
                         maps = [Stage(name = x_battles['vsStages'][stage]['name'], image = x_battles['vsStages'][stage]['image']['url']) for stage in range(2)] if x_battles else None, 
                         fest_active = True if mode[node]['festMatchSettings'] else False,
                         gamemode = x_battles['vsRule']['name'] if x_battles else None)
@@ -114,7 +104,7 @@ class MapsModesSetup:
         try:
             challenges_info = mode[node]
             
-        except TypeError:
+        except TypeError | IndexError:
             return None
         
         challenges_timeslots = challenges_info['timePeriods']
@@ -130,7 +120,7 @@ class MapsModesSetup:
         challenges = Challenge(title = challenges_info['leagueMatchEvent']['name'],
                                description = processed_desc,
                                extended_description = processed_regulation,
-                               times = [TimeSlots(start = await self.generate_timestamp(challenges_timeslots[slot]['startTime']), end = await self.generate_timestamp(challenges_timeslots[slot]['endTime'])) for slot, data in enumerate(challenges_timeslots)],
+                               times = [TimeSlots(start = await generate_timestamp(challenges_timeslots[slot]['startTime']), end = await generate_timestamp(challenges_timeslots[slot]['endTime'])) for slot, data in enumerate(challenges_timeslots)],
                                maps = [Stage(name = challenge_maps[stage]['name'], image = challenge_maps[stage]['image']['url']) for stage in range(2)],
                                gamemode = challenges_info['vsRule']['name'])
         
@@ -147,7 +137,7 @@ class MapsModesSetup:
             return None
         
         salmon_info = SalmonRun(times = TimeSlots(
-            start = await self.generate_timestamp(salmon_run['startTime']), end = await self.generate_timestamp(salmon_run['endTime'])),
+            start = await generate_timestamp(salmon_run['startTime']), end = await generate_timestamp(salmon_run['endTime'])),
             stage = Stage(
                 name = salmon_run['setting']['coopStage']['name'], image = salmon_run['setting']['coopStage']['image']['url']),
                 weapons = [salmon_run['setting']['weapons'][i]['name'] for i in range(4)],
@@ -166,7 +156,7 @@ class MapsModesSetup:
         except IndexError:
             return None
                 
-        big_run_info = BigRun(time = TimeSlots(start = await self.generate_timestamp(big_run['startTime']), end = await self.generate_timestamp(big_run['endTime'])),
+        big_run_info = BigRun(time = TimeSlots(start = await generate_timestamp(big_run['startTime']), end = await generate_timestamp(big_run['endTime'])),
                               stage = Stage(name = big_run['setting']['coopStage']['name'], image = big_run['setting']['coopStage']['image']['url']),
                               weapons =  [big_run['setting']['weapons'][i]['name'] for i in range(4)],
                               boss = big_run['setting']['boss']['name'])
@@ -183,7 +173,7 @@ class MapsModesSetup:
         except IndexError:
             return None
         
-        eggstra_work_info = EggstraWork(time = TimeSlots(start = await self.generate_timestamp(eggstra_work['startTime']), end = await self.generate_timestamp(eggstra_work['endTime'])),
+        eggstra_work_info = EggstraWork(time = TimeSlots(start = await generate_timestamp(eggstra_work['startTime']), end = await generate_timestamp(eggstra_work['endTime'])),
                                         stage = Stage(name = eggstra_work['setting']['coopStage']['name'], image = eggstra_work['setting']['coopStage']['image']['url']),
                                         weapons = [eggstra_work['setting']['weapons'][weapon]['name'] for weapon in range(4)])
         
@@ -200,7 +190,7 @@ class MapsModesSetup:
         
         mode_info = splatfest['festMatchSettings']
 
-        splatfest_info = Splatfest(times = TimeSlots(start = await self.generate_timestamp(splatfest['startTime']), end = await self.generate_timestamp(splatfest['endTime'])),
+        splatfest_info = Splatfest(times = TimeSlots(start = await generate_timestamp(splatfest['startTime']), end = await generate_timestamp(splatfest['endTime'])),
                             maps = [Stage(name = mode_info[0]['vsStages'][stage]['name'], image = mode_info[0]['vsStages'][stage]['image']['url']) for stage in range(2)] if mode_info else None,
                             mode = 'Pro' if mode_info else None,
                             fest_active = False if mode_info is None else True)
@@ -219,7 +209,7 @@ class MapsModesSetup:
         
         mode_info = splatfest['festMatchSettings']
 
-        splatfest_info = Splatfest(times = TimeSlots(start = await self.generate_timestamp(splatfest['startTime']), end = await self.generate_timestamp(splatfest['endTime'])),
+        splatfest_info = Splatfest(times = TimeSlots(start = await generate_timestamp(splatfest['startTime']), end = await generate_timestamp(splatfest['endTime'])),
                             maps = [Stage(name = mode_info[1]['vsStages'][stage]['name'], image = mode_info[1]['vsStages'][stage]['image']['url']) for stage in range(2)] if mode_info else None,
                             mode = 'Open' if mode_info else None,
                             fest_active = False if mode_info is None else True)
@@ -231,7 +221,7 @@ class MapsModesSetup:
             return None
         
         stage_info = mode['tricolorStage']
-        tricolor_info = Tricolor(availability = TimeSlots(start = await self.generate_timestamp(mode['midtermTime']), end = await self.generate_timestamp(mode['endTime'])),
+        tricolor_info = Tricolor(availability = TimeSlots(start = await generate_timestamp(mode['midtermTime']), end = await generate_timestamp(mode['endTime'])),
                                  stage = Stage(name = stage_info['name'], image = stage_info['image']['url']),
                                  is_available = True if mode['state'] == 'SECOND_HALF' else False)
         
