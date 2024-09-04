@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from discord import Embed
+from discord import Embed, File
 
 class ApiResponse(BaseModel):
     TurfWar: list[dict]
@@ -83,14 +83,14 @@ class GameModes(BaseModel):
 class ModeEmbeds(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed = True)
 
-    turf_war: list[Embed] | None
-    anarchy_series: list[Embed] | None
-    anarchy_open: list[Embed] | None
-    x_battle: list[Embed] | None
+    turf_war: list[Embed | File] | None
+    anarchy_series: list[Embed | File] | None
+    anarchy_open: list[Embed | File] | None
+    x_battle: list[Embed | File] | None
     salmon_run: Embed | None
-    challenge: list[Embed] | None
+    challenge: list[Embed | File] | None
     big_run: Embed | None
     eggstra_work: Embed | None
-    splatfest_open: list[Embed] | None
-    splatfest_pro: list[Embed] | None
+    splatfest_open: list[Embed | File] | None
+    splatfest_pro: list[Embed | File] | None
     tricolor_battle: Embed | None
