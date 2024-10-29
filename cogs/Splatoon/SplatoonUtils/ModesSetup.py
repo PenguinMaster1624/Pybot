@@ -104,7 +104,7 @@ class MapsModesSetup:
         try:
             challenges_info = mode[node]
             
-        except TypeError | IndexError:
+        except (TypeError, IndexError):
             return None
         
         challenges_timeslots = challenges_info['timePeriods']
@@ -136,13 +136,10 @@ class MapsModesSetup:
         except IndexError:
             return None
         
-        salmon_info = SalmonRun(times = TimeSlots(
-            start = await generate_timestamp(salmon_run['startTime']), end = await generate_timestamp(salmon_run['endTime'])),
-            stage = Stage(
-                name = salmon_run['setting']['coopStage']['name'], image = salmon_run['setting']['coopStage']['image']['url']),
-                weapons = [salmon_run['setting']['weapons'][i]['name'] for i in range(4)],
-                boss = salmon_run['setting']['boss']['name']
-                )
+        salmon_info = SalmonRun(times = TimeSlots(start = await generate_timestamp(salmon_run['startTime']), end = await generate_timestamp(salmon_run['endTime'])),
+                                stage = Stage(name = salmon_run['setting']['coopStage']['name'], image = salmon_run['setting']['coopStage']['image']['url']),
+                                weapons = [salmon_run['setting']['weapons'][weapon]['name'] for weapon in range(4)],
+                                boss = salmon_run['setting']['boss']['name'])
         
         return salmon_info
     
@@ -158,7 +155,7 @@ class MapsModesSetup:
                 
         big_run_info = BigRun(time = TimeSlots(start = await generate_timestamp(big_run['startTime']), end = await generate_timestamp(big_run['endTime'])),
                               stage = Stage(name = big_run['setting']['coopStage']['name'], image = big_run['setting']['coopStage']['image']['url']),
-                              weapons =  [big_run['setting']['weapons'][i]['name'] for i in range(4)],
+                              weapons =  [big_run['setting']['weapons'][weapon]['name'] for weapon in range(4)],
                               boss = big_run['setting']['boss']['name'])
         
         return big_run_info
@@ -192,7 +189,7 @@ class MapsModesSetup:
 
         splatfest_info = Splatfest(times = TimeSlots(start = await generate_timestamp(splatfest['startTime']), end = await generate_timestamp(splatfest['endTime'])),
                             maps = [Stage(name = mode_info[0]['vsStages'][stage]['name'], image = mode_info[0]['vsStages'][stage]['image']['url']) for stage in range(2)] if mode_info else None,
-                            mode = 'Pro' if mode_info else None,
+                            gamemode = 'Pro' if mode_info else None,
                             fest_active = False if mode_info is None else True)
         
         return splatfest_info
@@ -211,7 +208,7 @@ class MapsModesSetup:
 
         splatfest_info = Splatfest(times = TimeSlots(start = await generate_timestamp(splatfest['startTime']), end = await generate_timestamp(splatfest['endTime'])),
                             maps = [Stage(name = mode_info[1]['vsStages'][stage]['name'], image = mode_info[1]['vsStages'][stage]['image']['url']) for stage in range(2)] if mode_info else None,
-                            mode = 'Open' if mode_info else None,
+                            gamemode = 'Open' if mode_info else None,
                             fest_active = False if mode_info is None else True)
         
         return splatfest_info
@@ -220,9 +217,9 @@ class MapsModesSetup:
         if (mode := self.response.Tricolor) is None:
             return None
         
-        stage_info = mode['tricolorStage']
-        tricolor_info = Tricolor(availability = TimeSlots(start = await generate_timestamp(mode['midtermTime']), end = await generate_timestamp(mode['endTime'])),
-                                 stage = Stage(name = stage_info['name'], image = stage_info['image']['url']),
+        stage_info = mode['tricolorStages']
+        tricolor_info = Tricolor(times = TimeSlots(start = await generate_timestamp(mode['midtermTime']), end = await generate_timestamp(mode['endTime'])),
+                                 maps = [Stage(name = stage_info[node]['name'], image = stage_info[node]['image']['url']) for node in range(2)],
                                  is_available = True if mode['state'] == 'SECOND_HALF' else False)
         
         return tricolor_info
