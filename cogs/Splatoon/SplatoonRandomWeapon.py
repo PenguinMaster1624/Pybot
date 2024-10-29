@@ -38,7 +38,7 @@ class Splatoon3RandomWeapon(commands.Cog):
               url = f'https://splatoonwiki.org/wiki/File:S3_Weapon_Special_{weapon_name}.png'
 
           case _:
-              return 'Invalid URL'
+              return 'https://splatoonwiki.org/wiki/File:S2_Salmon_Run_question_mark_capsule.png'
          
 
       with requests.get(url) as response:
@@ -132,7 +132,7 @@ class Splatoon3RandomWeapon(commands.Cog):
     embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
     embed.set_image(url='attachment://kit.png')
     embed.set_thumbnail(url='attachment://class.png')
-    embed.set_footer(text = f'Introduced In {selection[1]}')
+    embed.set_footer(text = f'Introduced In {selection[4]}')
 
     await interaction.response.send_message(embed = embed, files = [class_image, kit_image], ephemeral = True)
 
@@ -161,7 +161,7 @@ class Splatoon3RandomWeapon(commands.Cog):
     embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
     embed.set_image(url='attachment://kit.png')
     embed.set_thumbnail(url='attachment://class.png')
-    embed.set_footer(text = f'Introduced In {selection[1]}')
+    embed.set_footer(text = f'Introduced In {selection[4]}')
 
     await interaction.response.send_message(embed = embed, files = [class_image, kit_image], ephemeral = True)
   
