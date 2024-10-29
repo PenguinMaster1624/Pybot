@@ -59,12 +59,12 @@ class EggstraWork(BaseModel):
 class Splatfest(BaseModel): 
     times: TimeSlots
     maps: list[Stage] | None
-    mode: str | None
+    gamemode: str | None
     fest_active: bool
 
 class Tricolor(BaseModel):
-    availability: TimeSlots
-    stage: Stage
+    times: TimeSlots
+    maps: list[Stage]
     is_available: bool
 
 class GameModes(BaseModel):
@@ -93,4 +93,4 @@ class ModeEmbeds(BaseModel):
     eggstra_work: Embed | None
     splatfest_open: list[Embed | File] | None
     splatfest_pro: list[Embed | File] | None
-    tricolor_battle: Embed | None
+    tricolor_battle: list[Embed | File] | None
