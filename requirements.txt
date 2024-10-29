@@ -1,7 +1,7 @@
 discord.py==2.4.0
 requests==2.32.3
-tzdata==2024.1
-pydantic==2.9.1
-pillow==10.4.0
+tzdata==2024.2
+pydantic==2.9.2
+pillow==11.0.0
 beautifulsoup4==4.12.3
 html5lib==1.1
