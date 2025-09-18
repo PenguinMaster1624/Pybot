@@ -63,7 +63,16 @@ class Splatoon3RandomWeapon(commands.Cog):
 
     return discord.File(fp=final, filename=f'kit.png')
     
-        
+  async def setup_embed(self, interaction: discord.Interaction, selection: tuple[str]) -> discord.Embed:
+    embed = discord.Embed(title = 'Splatoon 3 Random Weapon Selector', color = discord.Color.blue())
+    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
+    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
+    embed.set_image(url='attachment://kit.png')
+    embed.set_thumbnail(url='attachment://class.png')
+    embed.set_footer(text = f'Introduced In {selection[4]}')
+
+    return embed
+    
   async def get_class_image(self, weapon_class: str) -> discord.File:
     weapon_class = weapon_class.title().strip()
     if weapon_class in ['Blaster', 'Slosher']:
@@ -92,20 +101,16 @@ class Splatoon3RandomWeapon(commands.Cog):
     else:
       command = 'SELECT Main, Sub, Special, Class, Introduced FROM "Splatoon 3 Weapons"'
 
+    await interaction.response.defer(ephemeral=True, thinking=True)
     weapons = await self.db_connect(command = command, select = (weapon_class,))
     selection = random.choice(weapons)
 
     class_image = await self.get_class_image(selection[3])
     kit_image = await self.get_source(selection)
 
-    embed = discord.Embed(title = 'Splatoon 3 Random Weapon Selector', color = discord.Color.blue())
-    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
-    embed.set_image(url='attachment://kit.png')
-    embed.set_thumbnail(url='attachment://class.png')
-    embed.set_footer(text = f'Introduced In {selection[4]}')
+    embed = await self.setup_embed(interaction, selection)
     
-    await interaction.response.send_message(embed = embed, files = [class_image, kit_image], ephemeral = True)
+    await interaction.followup.send(embed = embed, files = [class_image, kit_image], ephemeral = True)
 
   @rsw.autocomplete('weapon_class')
   async def rsw_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
@@ -121,20 +126,15 @@ class Splatoon3RandomWeapon(commands.Cog):
       await interaction.response.send_message('That is not a valid sub weapon', ephemeral = True)
       return
       
+    await interaction.response.defer(ephemeral=True, thinking=True)
     weapons = await self.db_connect(command = 'SELECT Main, Sub, Special, Class, Introduced FROM "Splatoon 3 Weapons" WHERE Sub = ?', select = (sub_weapon,))
     selection = random.choice(weapons)
 
     class_image = await self.get_class_image(selection[3])
     kit_image = await self.get_source(selection)
 
-    embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Sub Weapon', color = discord.Color.blurple())
-    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
-    embed.set_image(url='attachment://kit.png')
-    embed.set_thumbnail(url='attachment://class.png')
-    embed.set_footer(text = f'Introduced In {selection[4]}')
-
-    await interaction.response.send_message(embed = embed, files = [class_image, kit_image], ephemeral = True)
+    embed = await self.setup_embed(interaction, selection)
+    await interaction.followup.send(embed = embed, files = [class_image, kit_image], ephemeral = True)
 
   @rss.autocomplete('sub_weapon')
   async def rss_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
@@ -150,20 +150,16 @@ class Splatoon3RandomWeapon(commands.Cog):
       await interaction.response.send_message('That is not a valid special', ephemeral = True)
       return
     
+    await interaction.response.defer(ephemeral=True, thinking=True)
     weapons = await self.db_connect(command = 'SELECT Main, Sub, Special, Class, Introduced FROM "Splatoon 3 Weapons" WHERE Special = ?', select = (special,))
     selection = random.choice(weapons)
 
     class_image = await self.get_class_image(selection[3])
     kit_image = await self.get_source(selection)
 
-    embed = discord.Embed(title = 'Splatoon 3 Weapon Randomizer Based On Special', description = f'{special} go brrr', color = discord.Color.purple())
-    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-    embed.add_field(name = 'The Council Has Decided Your Fate!', value = selection[0])
-    embed.set_image(url='attachment://kit.png')
-    embed.set_thumbnail(url='attachment://class.png')
-    embed.set_footer(text = f'Introduced In {selection[4]}')
+    embed = await self.setup_embed(interaction, selection)
 
-    await interaction.response.send_message(embed = embed, files = [class_image, kit_image], ephemeral = True)
+    await interaction.followup.send(embed = embed, files = [class_image, kit_image], ephemeral = True)
   
   @rsp.autocomplete('special')
   async def rsp_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
