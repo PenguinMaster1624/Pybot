@@ -1,4 +1,4 @@
-from .SplatoonUtils.GameModeClasses import TurfWar, Ranked, Splatfest, SalmonRun, BigRun, Tricolor, ModeEmbeds
+from .SplatoonUtils.GameModeClasses import TurfWar, Ranked, Splatfest, SalmonRun, BigRun, ModeEmbeds
 from .SplatoonUtils.ModesSetup import MapsModesSetup
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -27,13 +27,15 @@ def time_calc() -> datetime.time:
 
         end = datetime.datetime.fromisoformat(time['endTime'][:-1]).replace(tzinfo=ZoneInfo('UTC'))
 
-        return datetime.time(hour=end.hour, minute=end.minute, second=30, tzinfo=ZoneInfo('UTC'))
+        return datetime.time(hour=end.hour, minute=end.minute + 1, tzinfo=ZoneInfo('UTC'))    
 
+    return datetime.time.min.replace(tzinfo=ZoneInfo('UTC'))
 
 class maps_modes(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.embed_send.start()
+        self.bad_connection = False
         self.modes = None
 
 
@@ -62,17 +64,22 @@ class maps_modes(commands.Cog):
 
         modes = MapsModesSetup()
         await modes.gather([0, 1])
-        self.modes = modes.gamemodes
+        if modes.status_code == 200:
+            self.bad_connection = False
+            self.modes = modes.gamemodes
+        
+        else:
+            self.bad_connection = True
 
 
     async def s3_rotation_update(self, mode: TurfWar | Ranked | Splatfest | SalmonRun | BigRun) -> str:
         '''
         Returns a string embedded with Unix timestamps formatted in a way Discord displays local time
         '''
-        return f'Start Time: <t:{mode.times.start}:t>, <t:{mode.times.start}:R>\nEnd Time: <t:{mode.times.end}:t>, <t:{mode.times.end}:R>'
+        return f'Start Time: <t:{mode.time.start}:t>, <t:{mode.time.start}:R>\nEnd Time: <t:{mode.time.end}:t>, <t:{mode.time.end}:R>'
     
 
-    async def mode_setup(self, mode: str, info: TurfWar | Ranked | Splatfest | Tricolor, color: discord.Color) -> list[discord.Embed | discord.File]:
+    async def mode_setup(self, mode: str, info: TurfWar | Ranked | Splatfest, color: discord.Color) -> list[discord.Embed | discord.File]:
         '''
         Sets up the list containing the embed and file for some modes 
         '''
@@ -156,8 +163,8 @@ class maps_modes(commands.Cog):
         challenge.add_field(name=f"{challenges.gamemode} - {challenges.maps[0].name} | {challenges.maps[1].name}", value=challenges.extended_description, inline=False)
         timeslot = f''
 
-        for slot in range(len(challenges.times)):
-            timeslot += f'Starts <t:{challenges.times[slot].start}:F> <t:{challenges.times[slot].start}:R>\nEnds <t:{challenges.times[slot].end}:F> <t:{challenges.times[slot].end}:R>\n\n'
+        for slot in range(len(challenges.time)):
+            timeslot += f'Starts <t:{challenges.time[slot].start}:F> <t:{challenges.time[slot].start}:R>\nEnds <t:{challenges.time[slot].end}:F> <t:{challenges.time[slot].end}:R>\n\n'
 
         challenge.add_field(name='Time Slots For This Challenge', value=timeslot, inline=False)
         challenge.set_image(url='attachment://challenges.png')
@@ -244,7 +251,14 @@ class maps_modes(commands.Cog):
         if tricolor_info is None or tricolor_info.is_available is False:
             return None
         
-        return await self.mode_setup(mode='tricolor', info=tricolor_info, color=discord.Color.blue())
+        time = await self.s3_rotation_update(tricolor_info)
+
+        embed = discord.Embed(color=discord.Color.blue())
+        embed.add_field(name='Tricolor Battle', value=time)
+        embed.set_image(url=tricolor_info.maps[0].image)
+        embed.set_footer(text=tricolor_info.maps[0].name)
+
+        return [embed]
 
 
     @app_commands.command(name='s3_maps', description='Displays the current rotations for Splatoon 3')
@@ -287,7 +301,6 @@ class maps_modes(commands.Cog):
 
             case 'Anarchy Open':
                 anarchy_open = await self.anarchy_open(0)
-                print(anarchy_open)
                 await interaction.response.send_message(embed=anarchy_open[0], file=anarchy_open[1])
 
             case 'X Battles':
@@ -431,9 +444,13 @@ class maps_modes(commands.Cog):
         await interaction.response.send_message('Splatoon 3 rotations should be updating here', ephemeral=True)
                 
                 
-    @tasks.loop(seconds=10.0)
+    @tasks.loop(seconds=20.0)
     async def embed_send(self) -> None:
         await self.api_call()
+
+        if self.bad_connection:
+            self.embed_send.change_interval(hours=1)
+            return
 
         with open('servers.json', 'r') as file:
             js: dict = json.load(file)
