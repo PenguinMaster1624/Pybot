@@ -25,7 +25,7 @@ class MK8Map(commands.Cog):
         command = 'SELECT Course, Cup FROM "MK8DX Race Courses" WHERE Cup = ?'
 
       else:
-        await interaction.response.send_message(f'{cup} is not a valid weapon class', ephemeral = True)
+        await interaction.response.send_message(f'{cup} is not a valid Mario Kart cup', ephemeral = True)
     
     else:
       command = 'SELECT Course, Cup FROM "MK8DX Race Courses"'
