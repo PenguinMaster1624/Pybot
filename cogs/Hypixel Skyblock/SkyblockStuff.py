@@ -7,17 +7,32 @@ class SkyblockItems(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
+  # checks for and returns data from API when available
+  async def fetch_data(self, interaction: discord.Interaction) -> str | dict:
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://api.hypixel.net/resources/skyblock/election') as response:    
+        if response.status != 200:
+          return f'Error Code {response.status}, Data Inaccessible'
+
+        return response.json()
+  
+  async def embed_current(self, politic: dict) -> discord.Embed:
+    name = politic['name']
+    specialization = politic['key']
+
+    try:
+      perks = politic['perks']
+
+    except UnboundLocalError:
+      perks = politic['perk']
+
+    person = discord.Embed(title = f'Current Mayor - {name}', description = f'Specialization: {specialization}')
+
   @app_commands.command(name = 'mayor', description = 'Displays information on the current Hypixel Skyblock mayor')
   async def mayor(self, interaction: discord.Interaction):
-    async with aiohttp.ClientSession() as session:
-      async with session.get('https://api.hypixel.net/resources/skyblock/election') as response:
-        r = await response.json()
+    data = await self.fetch_data()
     
-    if response.status != 200:
-      await interaction.response.send_message('Data is inacessible')
-      return
-    
-    mayor = r['mayor']
+    mayor = data['mayor']
     name = mayor['name']
     mayor_type: str = mayor['key']
     mayor_stuff = mayor['perks']
@@ -31,6 +46,7 @@ class SkyblockItems(commands.Cog):
       filtered_desc = re.sub(r'§.', '', mayor_stuff[i]['description'])
       perks[mayor_stuff[i]['name']] = filtered_desc
 
+    minister = mayor['minister']
     # embed creation and setup
     embed = discord.Embed(title = 'Hypixel Skyblock\'s Current Mayor', color = discord.Color.random())
     embed.add_field(name = name, value = f'Specialization: {mayor_type}')
