@@ -21,18 +21,18 @@ class TimeSlots(BaseModel):
     end: int
 
 class TurfWar(BaseModel):
-    times: TimeSlots
+    time: TimeSlots
     maps: list[Stage] | None
     fest_active: bool
 
 class Ranked(BaseModel):
-    times: TimeSlots
+    time: TimeSlots
     maps: list[Stage] | None
     gamemode: str | None
     fest_active: bool
 
 class SalmonRun(BaseModel):
-    times: TimeSlots
+    time: TimeSlots
     stage: Stage
     weapons: list[str]
     boss: str
@@ -41,7 +41,7 @@ class Challenge(BaseModel):
     title: str
     description: str
     extended_description: str
-    times: list[TimeSlots]
+    time: list[TimeSlots]
     maps: list[Stage]
     gamemode: str
 
@@ -57,13 +57,13 @@ class EggstraWork(BaseModel):
     weapons: list[str]
 
 class Splatfest(BaseModel): 
-    times: TimeSlots
+    time: TimeSlots
     maps: list[Stage] | None
     gamemode: str | None
     fest_active: bool
 
 class Tricolor(BaseModel):
-    times: TimeSlots
+    time: TimeSlots
     maps: list[Stage]
     is_available: bool
 
