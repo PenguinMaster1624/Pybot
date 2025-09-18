@@ -1,4 +1,4 @@
-from .SplatoonUtils.SplatoonUtils import generate_timestamp
+from SplatoonUtils.SplatoonUtils import generate_timestamp
 from discord import app_commands
 from discord.ext import commands
 import discord, requests
@@ -21,11 +21,10 @@ class SplatfestButtons(discord.ui.View):
         self.embed = embed
 
         self.total = {
-            'Shiver': [],
-            'Frye': [],
-            'Big Man': []
+            teams[0]: [],
+            teams[1]: [],
+            teams[2]: []
         }
-
 
     async def player_check(self, user_name: str, team: str) -> str | None:
         for person, players in self.total.items():
@@ -44,9 +43,9 @@ class SplatfestButtons(discord.ui.View):
         for num in range(len(self.children)):
             self.children[num].label = f'{teams[num]}: {len(players[num])}'
 
-        for j in range(len(players)):
-            player_list = '\n'.join(players[j])
-            self.embed.set_field_at(index=j, name = teams[j], value = player_list if player_list else None)
+        for pos in range(len(players)):
+            player_list = '\n'.join(players[pos])
+            self.embed.set_field_at(index=pos, name = teams[pos], value = player_list if player_list else None)
 
     async def embed_change(self, interaction: discord.Interaction, helper: str | None) -> None:
         if interaction.response.is_done() is False and helper is not None:
@@ -56,24 +55,24 @@ class SplatfestButtons(discord.ui.View):
             await self.embed_setup()
             await interaction.response.edit_message(embed = self.embed, view = self)
 
-    @discord.ui.button(label = teams[0], style = discord.ButtonStyle.blurple, custom_id = 'Shiver')
+    @discord.ui.button(label = teams[0], style = discord.ButtonStyle.blurple)
     async def Shiver(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.display_name
-        helper = await self.player_check(user_name = user_name, team = 'Shiver')
+        helper = await self.player_check(user_name = user_name, team = teams[0])
 
         await self.embed_change(interaction=interaction, helper=helper)
 
     @discord.ui.button(label = teams[1], style = discord.ButtonStyle.red)
     async def Frye(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.display_name
-        helper = await self.player_check(user_name = user_name, team = 'Frye')
+        helper = await self.player_check(user_name = user_name, team = teams[1])
 
         await self.embed_change(interaction=interaction, helper=helper)
 
     @discord.ui.button(label = teams[2], style = discord.ButtonStyle.green)
     async def Beeg_Man(self, interaction: discord.Interaction, button: discord.ui.Button):
         user_name = interaction.user.display_name
-        helper = await self.player_check(user_name = user_name, team = 'Big Man')
+        helper = await self.player_check(user_name = user_name, team = teams[2])
 
         await self.embed_change(interaction=interaction, helper=helper)
 
