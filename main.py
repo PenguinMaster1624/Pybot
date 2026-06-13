@@ -1,19 +1,21 @@
 from PackageVersionChecker import package_check
-from Utils.errors import OutdatedPackagesError
+from utils.logger_config import LOGGING_CONFIG
+from utils.errors import OutdatedPackagesError
+from utils.sessions import get_session
 from discord.ext import commands
-import logging.handlers
+from dotenv import load_dotenv
+from logging import config
+from logging import handlers
 import logging
 import discord
 import os
 
-
-os.getenv('./.env')
-
+load_dotenv('.env')
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
 logging.getLogger('discord.http').setLevel(logging.INFO)
 
-handler = logging.handlers.RotatingFileHandler(
+handler = handlers.RotatingFileHandler(
     filename='discord.log',
     encoding='utf-8',
     maxBytes=32 * 1024 * 1024,  # 32 MiB
@@ -41,11 +43,12 @@ class Pybot(commands.Bot):
                     await self.load_extension(f'cogs.{folder}.{file[:-3]}')
 
         await self.tree.sync()
+        await get_session()
 
     async def on_ready(self) -> None:
         try:
             await package_check()
-            print('Pybot at your service')
+            logger.info('Pybot, at your command!')
 
         except OutdatedPackagesError as error:
             logger.warning(error)
