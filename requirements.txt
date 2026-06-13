@@ -1,7 +1,8 @@
-discord.py==2.4.0
-requests==2.32.3
-tzdata==2024.2
-pydantic==2.9.2
-pillow==11.0.0
-beautifulsoup4==4.12.3
+discord.py==2.7.1
+tzdata==2026.2
+pydantic==2.13.4
+sqlalchemy==2.0.50
+pillow==12.2.0
 html5lib==1.1
+python-dotenv==1.2.2
+aiohttp==3.14.1
