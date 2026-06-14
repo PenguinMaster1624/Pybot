@@ -3,12 +3,14 @@ from utils.sessions import fetch_data, get_session
 from models.SplatoonModels import PvP, PvE
 from discord.ext import commands, tasks
 from discord import app_commands
+from zoneinfo import ZoneInfo
 from datetime import datetime
 from io import BytesIO
 from PIL import Image
 import asyncio
 import discord
 import json
+
 
 class maps_modes(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -24,11 +26,6 @@ class maps_modes(commands.Cog):
         self.response = await fetch_data(url='https://splatoon3.ink/data/schedules.json', model=ScheduleResponse)
         self.session = await get_session()
 
-    async def get_time(self) -> datetime:
-        start = self.response.turf_war[0].start
-        time = start if start else self.response.splatfest_open[0].start
-
-        return time
 
     async def image_create[T: PvP](self, mode: type[T], filename: str) -> discord.File:
         '''
@@ -257,8 +254,6 @@ class maps_modes(commands.Cog):
     async def embed_send(self) -> None:
         await self.api_call()
 
-        self.embed_send.change_interval(hours=1)
-
         with open('servers.json', 'r') as file:
             js: dict = json.load(file)
 
@@ -266,8 +261,13 @@ class maps_modes(commands.Cog):
             for channel in js[guild]['Channels']:
                 channel = await self.bot.fetch_channel(js[guild]['Channels'][channel])
                 await self.channel_setup(channel)
-        time = await self.get_time()
-        self.embed_send.change_interval(time=time.time())
+
+        start = self.response.turf_war[1].start
+        time = start if start else self.response.splatfest_open[1].start
+        tz = ZoneInfo('America/New_York')
+        diff = time.astimezone(tz=tz) - datetime.now(tz=tz)
+        
+        self.embed_send.change_interval(seconds=diff.total_seconds())
 
     @embed_send.before_loop
     async def before_embed_send_loop(self):
