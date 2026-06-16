@@ -1,10 +1,9 @@
 from models import ScheduleResponse, ProcessedReturns
 from utils.sessions import fetch_data, get_session
 from models.SplatoonModels import PvP, PvE
+from datetime import datetime, timedelta
 from discord.ext import commands, tasks
 from discord import app_commands
-from zoneinfo import ZoneInfo
-from datetime import datetime
 from io import BytesIO
 from PIL import Image
 import asyncio
@@ -262,12 +261,12 @@ class maps_modes(commands.Cog):
                 channel = await self.bot.fetch_channel(js[guild]['Channels'][channel])
                 await self.channel_setup(channel)
 
-        start = self.response.turf_war[1].start
-        time = start if start else self.response.splatfest_open[1].start
-        tz = ZoneInfo('America/New_York')
-        diff = time.astimezone(tz=tz) - datetime.now(tz=tz)
+        start = self.response.turf_war[0].end
+        start_time = start if start else self.response.splatfest_open[0].end
+        start_time += timedelta(seconds=30)
+        print(start_time)
         
-        self.embed_send.change_interval(seconds=diff.total_seconds())
+        self.embed_send.change_interval(time=start_time.timetz())
 
     @embed_send.before_loop
     async def before_embed_send_loop(self):
