@@ -18,14 +18,6 @@ class maps_modes(commands.Cog):
         self.session = None
         self.embed_send.start()
 
-    async def api_call(self) -> None:
-        '''
-        Gathers the necessary information for the embeds
-        '''
-        self.response = await fetch_data(url='https://splatoon3.ink/data/schedules.json', model=ScheduleResponse)
-        self.session = await get_session()
-
-
     async def image_create[T: PvP](self, mode: type[T], filename: str) -> discord.File:
         '''
         Creates Discord File objects to use in other functions
@@ -80,7 +72,7 @@ class maps_modes(commands.Cog):
         '''
         if info is None or (info.gamemode is None and info.fest_active is False):
             return None
-        
+
         readable_mode = mode.replace('_', ' ').title()
 
         # readable_mode puts "Battles" inside of itself depending on what gamem ode is being processed
@@ -170,13 +162,11 @@ class maps_modes(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def s3_maps_modes(self, interaction: discord.Interaction, mode: str = None):
         await interaction.response.defer(thinking=True)
-        await self.api_call()
-
         if mode:
             mode = mode.title().strip()
 
         current = await self.prep_embeds(node=0)
-        
+
         if mode is None:
             current_info = list(current.values())
             modes = list(filter(None, [value.embed for value in current_info]))
@@ -184,16 +174,16 @@ class maps_modes(commands.Cog):
     
             await interaction.followup.send(embeds=modes, files=files)
             return
+
+        elif mode not in current.keys():
+            await interaction.followup.send(content='Mode unavailable or invalid', ephemeral=True)
+            return
+
+        if current[mode].file is not None:
+            await interaction.followup.send(embed=current[mode].embed, file=current[mode].file)
+            return
         
-        elif mode not in current:
-            await interaction.followup.send(content='That is not a valid game mode', ephemeral=True)
-            return
-
-        if current[mode] is None:
-            await interaction.followup.send('Mode unavailable', ephemeral=True)
-            return
-
-        await interaction.followup.send(embed=current[mode].embed, file=current[mode].file)
+        await interaction.followup.send(embed=current[mode].embed)
 
     @s3_maps_modes.autocomplete('mode')
     async def s3_maps_modes_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
@@ -206,7 +196,7 @@ class maps_modes(commands.Cog):
 
         current = await self.prep_embeds(node=0)
         future = await self.prep_embeds(node=1)
-        
+
         current = list(current.values())
         future = list(future.values())
 
@@ -251,7 +241,7 @@ class maps_modes(commands.Cog):
 
     @tasks.loop(seconds=20.0)
     async def embed_send(self) -> None:
-        await self.api_call()
+        self.response = await fetch_data(url='https://splatoon3.ink/data/schedules.json', model=ScheduleResponse)
 
         with open('servers.json', 'r') as file:
             js: dict = json.load(file)
@@ -263,15 +253,14 @@ class maps_modes(commands.Cog):
 
         start = self.response.turf_war[0].end
         start_time = start if start else self.response.splatfest_open[0].end
-        start_time += timedelta(seconds=30)
-        print(start_time)
-        
+        start_time += timedelta(minutes=1)
+
         self.embed_send.change_interval(time=start_time.timetz())
 
     @embed_send.before_loop
     async def before_embed_send_loop(self):
         await self.bot.wait_until_ready()
-
+        self.session = await get_session()
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(maps_modes(bot))
