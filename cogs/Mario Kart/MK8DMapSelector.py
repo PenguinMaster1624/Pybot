@@ -1,42 +1,52 @@
+from orm_models import Session, MK8DXTracks, MK8DXCups
 from discord.ext import commands
 from discord import app_commands
-import random, discord, sqlite3
+from sqlalchemy import select
+from io import BytesIO
+import discord
+import random
+
 
 class MK8Map(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  async def db_connect(self, command: str, cup: tuple[str | None]) -> list[tuple[str]]:
-    with sqlite3.connect('Utils/Game Stuff.db') as db:
-      cursor = db.cursor()
-      if all(cup):
-        return [course for course in cursor.execute(command, cup)]
-
-      else:
-        return [course for course in cursor.execute(command)]
-
-
   @app_commands.command(name = 'mk8m', description = 'Rolls a random map from the available Mario Kart 8 Deluxe maps, includes DLC')
   async def mk8m(self, interaction: discord.Interaction, cup: str = None):
+    stmt = select(MK8DXCups.name)
+    with Session.begin() as session:
+      cups = session.scalars(stmt)
 
     if cup is not None:
       cup = cup.title().strip()
-      if cup in ['Mushroom', 'Flower', 'Star', 'Special', 'Shell', 'Banana', 'Leaf', 'Lightning', 'Egg', 'Crossing', 'Triforce', 'Bell', 'Golden Dash', 'Lucky Cat', 'Turnip', 'Propeller', 'Rock', 'Moon', 'Fruit', 'Boomerang', 'Feather', 'Cherry', 'Acorn', 'Spiny']:
-        command = 'SELECT Course, Cup FROM "MK8DX Race Courses" WHERE Cup = ?'
+      if cup in cups:
+        command = select(MK8DXTracks).join(MK8DXCups, MK8DXTracks.cup_id == MK8DXCups.id).where(MK8DXCups.name == cup)
 
       else:
-        await interaction.response.send_message(f'{cup} is not a valid Mario Kart cup', ephemeral = True)
+        await interaction.response.send_message(f'{cup} Cup is not a valid Mario Kart cup', ephemeral = True)
+        return
     
     else:
-      command = 'SELECT Course, Cup FROM "MK8DX Race Courses"'
-
-    courses = await self.db_connect(command = command, cup = (cup,))
-    course = random.choice(courses)
+      command = select(MK8DXTracks).join(MK8DXCups, MK8DXTracks.cup_id == MK8DXCups.id)
 
     embed = discord.Embed(title = 'Mario Kart 8 Deluxe Map Selector', color = discord.Color.random())
-    embed.add_field(name = 'The Council Has Decided!', value = course[0])
-    embed.set_footer(text = f'Found in the {course[1]} Cup')
-    await interaction.response.send_message(embed = embed, ephemeral = True)
+
+    with Session.begin() as session:
+      courses = session.scalars(command).all()
+      course = random.choice(courses)
+
+      course_image = BytesIO(course.image)
+      cup_image = BytesIO(course.cup.image)
+
+      files = [discord.File(course_image, 'track.png'), discord.File(cup_image, 'cup.png')]
+      embed.add_field(name = course.name, value = '\u200b')
+      embed.set_footer(text = f'Found in the {course.cup.name} Cup')
+
+    embed.set_thumbnail(url = 'attachment://cup.png')
+    embed.set_image(url = 'attachment://track.png')
+    embed.set_author(name = interaction.user.display_name, icon_url=interaction.user.display_avatar)
+    
+    await interaction.response.send_message(embed = embed, files = files, ephemeral = True)
 
 
   @mk8m.autocomplete('cup')
