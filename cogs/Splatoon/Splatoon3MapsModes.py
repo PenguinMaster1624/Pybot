@@ -1,9 +1,9 @@
 from models import ScheduleResponse, ProcessedReturns
 from utils.sessions import fetch_data, get_session
 from models.SplatoonModels import PvP, PvE
-from datetime import datetime, timedelta
 from discord.ext import commands, tasks
 from discord import app_commands
+from datetime import timedelta
 from io import BytesIO
 from PIL import Image
 import asyncio
@@ -51,7 +51,7 @@ class maps_modes(commands.Cog):
     async def pve_modes[T: PvE](self, title: str, mode: type[T], color: discord.Color) -> ProcessedReturns | None:
         if mode is None:
             return None
-        
+
         if mode.boss is not None:
             stage = f'{mode.stage.name} - {mode.boss}'
 
@@ -76,11 +76,11 @@ class maps_modes(commands.Cog):
         readable_mode = mode.replace('_', ' ').title()
 
         # readable_mode puts "Battles" inside of itself depending on what gamem ode is being processed
-        # This is done due to modes such as Anarchy Battles are split into multiple verisons while 
+        # This is done due to modes such as Anarchy Battles are split into multiple verisons while
         # Turf War and X Battles are just one game mode each
         if readable_mode not in ['Turf War', 'Tricolor', 'Splatfest Open', 'Splatfest Pro']:
             readable_mode = f'{readable_mode} - {info.gamemode}'
-        
+
         file = await self.image_create(info, mode)
         time = await self.s3_rotation_update(info)
 
@@ -182,7 +182,7 @@ class maps_modes(commands.Cog):
         if current[mode].file is not None:
             await interaction.followup.send(embed=current[mode].embed, file=current[mode].file)
             return
-        
+
         await interaction.followup.send(embed=current[mode].embed)
 
     @s3_maps_modes.autocomplete('mode')
