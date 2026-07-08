@@ -19,7 +19,7 @@ class PvP(TimeSlots):
     maps: list[Stage]
     gamemode: str
     rule: Optional[str] = None
-    fest_active: Annotated[bool,Field(validation_alias=AliasPath('festMatchSettings')), BeforeValidator(lambda x: bool(x))] = False
+    fest_active: Annotated[bool, Field(alias='festMatchSettings'), BeforeValidator(lambda x: bool(x))] = False
 
 class PvE(TimeSlots):
     stage: Stage
@@ -93,9 +93,9 @@ class SplatfestPro(Splatfest):
     gamemode: Annotated[Optional[str], Field(validation_alias=AliasPath('festMatchSettings', 0, 'vsRule', 'name'))] = None
 
 class Tricolor(PvP):                                                                    # come back to this. Fields, not properly known how to define
-    start: Annotated[AwareDatetime, Field(validation_alias=AliasPath('midtermTime'))]
-    maps: Annotated[list[Stage], Field(validation_alias=AliasPath('tricolorStages'))]
-    is_available: Annotated[bool, Field('state'), BeforeValidator(lambda x: True if x == 'SECOND_HALF' else False)]
+    start: Annotated[AwareDatetime, Field(alias='midtermTime')]
+    maps: Annotated[list[Stage], Field(alias='tricolorStages')]
+    is_available: Annotated[bool, Field(alias='state'), BeforeValidator(lambda x: True if x == 'SECOND_HALF' else False)]
 
 class ScheduleResponse(BaseModel):
     turf_war: Annotated[Optional[list[TurfWar]], Field(validation_alias=AliasPath('data', 'regularSchedules', 'nodes'))] = None
@@ -132,5 +132,5 @@ class FestivalsResponse(TimeSlots):
 
 class Votes(BaseModel):
     team_name: str
-    members: Optional[list[User]] = []
+    members: list[User] = []
     model_config = ConfigDict(arbitrary_types_allowed=True)
