@@ -10,7 +10,6 @@ class SplatfestButtons(discord.ui.View):
         self.bot = bot
         self.embed = embed
 
-
     async def setup(self) -> None:
         self.model = await fetch_data(url='https://splatoon3.ink/data/festivals.json', model=FestivalsResponse)
         self.votes = [Votes(team_name=team.name) for team in self.model.teams]
@@ -20,8 +19,9 @@ class SplatfestButtons(discord.ui.View):
             if team == teams.team_name and member in teams.members:
                 return 'You\'re already on that team, you can\'t vote for the same team you\'re repping!'
             
-            elif team != teams.team_name and member in teams.members:
-                teams.members.remove(member)
+            elif team != teams.team_name:
+                if member in teams.members:
+                    teams.members.remove(member)
             
             else:
                 teams.members.append(member)
@@ -31,8 +31,8 @@ class SplatfestButtons(discord.ui.View):
             self.children[num].label = f'{self.votes[num].team_name}: {len(self.votes[num].members)}'
 
         for index in range(len(self.votes)):
-            player_list = f'\n'.join(self.votes[index].members)
-            self.embed.set_field_at(index=index, name=self.votes[index].team_name, value= player_list if player_list else None)
+            player_list = f'\n'.join(member.display_name for member in self.votes[index].members)
+            self.embed.set_field_at(index=index, name=self.votes[index].team_name, value=player_list if player_list else None)
 
     async def embed_change(self, interaction: discord.Interaction, helper: str | None) -> None:
         if interaction.response.is_done() is False and helper is not None:
@@ -69,7 +69,7 @@ class SplatfestTeamChoices(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def SplatfestTeams(self, interaction: discord.Interaction):
         model = await fetch_data(url='https://splatoon3.ink/data/festivals.json', model=FestivalsResponse)
-        print(model)
+        
         if await self.bot.is_owner(interaction.user) is False:
             await interaction.response.send_message(content = 'You need to be the bot owner to use this command', ephemeral = True)
             return
@@ -78,8 +78,8 @@ class SplatfestTeamChoices(commands.Cog):
             await interaction.response.send_message('No Splatfest soon', ephemeral = True)
             return
     
-        start = int(model.start)
-        end = int(model.end)
+        start = int(model.start.timestamp())
+        end = int(model.end.timestamp())
 
         embed = discord.Embed(title = model.title, description = f"Start Time: <t:{start}:t>,<t:{start}:R>\nEnd TIme: <t:{end}:t>, <t:{end}:R>", color=discord.Color.orange())
         for i in range(3):
@@ -88,7 +88,9 @@ class SplatfestTeamChoices(commands.Cog):
         embed.set_image(url = model.image_url)
         embed.set_footer(text = 'Happy Splatting :)')
 
-        await interaction.response.send_message(embed = embed, view = SplatfestButtons(embed=embed, bot=self.bot))
+        view =  SplatfestButtons(embed=embed, bot=self.bot)
+        await view.setup()
+        await interaction.response.send_message(embed = embed, view = view)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(SplatfestTeamChoices(bot))
