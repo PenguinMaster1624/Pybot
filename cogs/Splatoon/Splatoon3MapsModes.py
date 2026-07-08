@@ -95,10 +95,10 @@ class maps_modes(commands.Cog):
         '''
         Returns Challenge information
         '''
-
-        if (challenges := self.response.challenge[node]) is None:
+        if self.response.challenge is None:
             return None
 
+        challenges = self.response.challenge[node]
         file = await self.image_create(challenges, 'challenges')
 
         challenge = discord.Embed(title=f'Challenge: {challenges.title}', description=challenges.description, color=discord.Color.from_rgb(244, 79, 148))
