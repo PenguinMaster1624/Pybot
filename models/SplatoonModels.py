@@ -17,7 +17,7 @@ class TimeSlots(BaseModel):
 
 class PvP(TimeSlots):
     maps: list[Stage]
-    gamemode: str
+    gamemode: str = None
     rule: Optional[str] = None
     fest_active: Annotated[bool, Field(alias='festMatchSettings'), BeforeValidator(lambda x: bool(x))] = False
 
@@ -29,7 +29,7 @@ class PvE(TimeSlots):
 
 class TurfWar(PvP):
     maps: Annotated[Optional[list[Stage]], Field(validation_alias=AliasPath('regularMatchSetting', 'vsStages'))] = None
-    gamemode: Annotated[Optional[str], Field(validation_alias=AliasPath('regularMatchSetting', 'vsRule', 'name'))]
+    gamemode: Annotated[Optional[str], Field(validation_alias=AliasPath('regularMatchSetting', 'vsRule', 'name'))] = None
     rule: Annotated[Optional[str], Field(validation_alias=AliasPath('regularMatchSetting', 'vsRule', 'rule'))] = None
 
 class Ranked(PvP):
@@ -94,6 +94,7 @@ class SplatfestPro(Splatfest):
 
 class Tricolor(PvP):                                                                    # come back to this. Fields, not properly known how to define
     start: Annotated[AwareDatetime, Field(alias='midtermTime')]
+    end: Annotated[AwareDatetime, Field(alias='endTime')]
     maps: Annotated[list[Stage], Field(alias='tricolorStages')]
     is_available: Annotated[bool, Field(alias='state'), BeforeValidator(lambda x: True if x == 'SECOND_HALF' else False)]
 
@@ -108,7 +109,7 @@ class ScheduleResponse(BaseModel):
     eggstra_work: Annotated[Optional[list[EggstraWork]], Field(validation_alias=AliasPath('data', 'coopGroupingSchedule', 'teamContestSchedules', 'nodes'))] = None
     splatfest_open: Annotated[Optional[list[SplatfestOpen]], Field(validation_alias=AliasPath('data', 'festSchedules', 'nodes'))] = None
     splatfest_pro: Annotated[Optional[list[SplatfestPro]], Field(validation_alias=AliasPath('data', 'festSchedules', 'nodes'))] = None
-    tricolor_battles: Annotated[Optional[list[Tricolor]], Field(validation_alias=AliasPath('data', 'currentFest'))] = None
+    tricolor_battles: Annotated[Optional[Tricolor], Field(validation_alias=AliasPath('data', 'currentFest'))] = None
 
 class ProcessedReturns(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)

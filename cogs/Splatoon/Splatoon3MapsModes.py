@@ -117,16 +117,15 @@ class maps_modes(commands.Cog):
 
         return ProcessedReturns(embed=challenge, file=file)
 
-    async def tricolor_battle(self, node: int) -> ProcessedReturns | None:
+    async def tricolor_battle(self) -> ProcessedReturns | None:
         tricolor_info = self.response.tricolor_battles
 
         if tricolor_info is None:
             return None
 
-        if tricolor_info[node].is_available is False:
+        if tricolor_info.is_available is False:
             return None
 
-        tricolor_info = tricolor_info[node]
         time = await self.s3_rotation_update(tricolor_info)
 
         embed = discord.Embed(color=discord.Color.blue())
@@ -151,7 +150,7 @@ class maps_modes(commands.Cog):
             'Eggstra Work': await self.pve_modes(title='Eggstra Work', mode=await self.proper(data=self.response.eggstra_work, index=node), color=discord.Colour.gold()),
             'Splatfest Open': await self.pvp_modes(mode='splatfest_open', info=await self.proper(data=self.response.splatfest_open, index=node), color=discord.Colour.dark_blue()),
             'Splatfest Pro': await self.pvp_modes(mode='splatfest_pro', info=await self.proper(data=self.response.splatfest_pro, index=node), color=discord.Colour.dark_blue()),
-            'Tricolor Battle': await self.tricolor_battle(node=node)
+            'Tricolor Battle': await self.tricolor_battle()
         }
 
         filtered = {k: v for k, v in modes.items() if v is not None}
