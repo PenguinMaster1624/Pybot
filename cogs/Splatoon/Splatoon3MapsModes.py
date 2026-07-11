@@ -144,10 +144,10 @@ class maps_modes(commands.Cog):
             'Anarchy Series': await self.pvp_modes(mode='anarchy_series', info=await self.proper(data=self.response.anarchy_series, index=node), color=discord.Colour.orange()),
             'Anarchy Open': await self.pvp_modes(mode='anarchy_open', info=await self.proper(data=self.response.anarchy_open, index=node), color=discord.Colour.dark_orange()),
             'X Battles': await self.pvp_modes(mode='x_battles', info=await self.proper(data=self.response.x_battles, index=node), color=discord.Colour.dark_green()),
-            'Challenge': await self.challenges(node),
             'Splatfest Open': await self.pvp_modes(mode='splatfest_open', info=await self.proper(data=self.response.splatfest_open, index=node), color=discord.Colour.dark_blue()),
             'Splatfest Pro': await self.pvp_modes(mode='splatfest_pro', info=await self.proper(data=self.response.splatfest_pro, index=node), color=discord.Colour.dark_blue()),
             'Tricolor Battle': await self.tricolor_battle(),
+            'Challenge': await self.challenges(node),
             'Salmon Run': await self.pve_modes(title='Salmon Run', mode=await self.proper(data=self.response.salmon_run, index=node), color=discord.Colour.purple()),
             'Big Run': await self.pve_modes(title='Big Run', mode=await self.proper(data=self.response.big_run, index=0), color=discord.Colour.purple()),
             'Eggstra Work': await self.pve_modes(title='Eggstra Work', mode=await self.proper(data=self.response.eggstra_work, index=node), color=discord.Colour.gold())
