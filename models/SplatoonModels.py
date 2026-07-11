@@ -17,7 +17,7 @@ class TimeSlots(BaseModel):
 
 class PvP(TimeSlots):
     maps: list[Stage]
-    gamemode: str = None
+    gamemode: Optional[str] = None
     rule: Optional[str] = None
     fest_active: Annotated[bool, Field(alias='festMatchSettings'), BeforeValidator(lambda x: bool(x))] = False
 
